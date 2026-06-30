@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { getFlag } from '@/lib/flags';
-import { Button } from '@/components/ui/Button';
 
 export default async function Page({
   params: { locale },
@@ -33,7 +33,12 @@ export default async function Page({
       </p>
 
       <div className="mt-12">
-        <Button variant="primary">{t('cta')}</Button>
+        <Link
+          href="/signup"
+          className="inline-flex items-center justify-center bg-accent px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent"
+        >
+          {t('cta')}
+        </Link>
       </div>
 
       <footer className="mt-24 text-xs text-text-muted">

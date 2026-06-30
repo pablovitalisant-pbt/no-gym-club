@@ -64,9 +64,9 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Slice 2b completado (2026-06-30). Próximo: Slice 2c.
-- **Contador de slices desde último ponytail audit:** 0
-- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. 1 finding: -8 líneas CSS vars muertas (aplicado). Próximo: contador 0, correr en ~5 slices (~Slice 5-6).
+- **Fase actual:** Slice 2 completo (2a/2b/2c). Próximo: Slice 3.
+- **Contador de slices desde último ponytail audit:** 1
+- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: contador 1, correr en ~5 slices (~Slice 6-7).
 - **Próximo paso:** Pablo dice "siguiente slice".
 
 ### Slice 1a — Setup base (completado 2026-06-30)
@@ -139,6 +139,22 @@ Archivos modificados:
 > **Nota:** login/signup son Client Components (`'use client'`). Layout de `(auth)` es Server Component.
 > Callback redirige a `/dashboard` sin locale — next-intl lo resuelve.
 
+### Slice 2c — Auth guard + dashboard + CTA migration (completado 2026-06-30)
+
+Archivos creados:
+- `app/[locale]/(app)/layout.tsx` — Server Component, shell mínimo (header + contenido)
+- `app/[locale]/(app)/dashboard/page.tsx` — Server Component, gateado por flag `dashboard`
+- `i18n/navigation.ts` — `createSharedPathnamesNavigation` → `{ Link, redirect }`
+- `tests/dashboard-guard.test.ts` — 7 tests (guard selectividad, CTA Link, Button intacto, flag, keys, layout SSG, page exists)
+
+Archivos modificados:
+- `middleware.ts` — auth guard: verifica `getUser()` en rutas `/(app)`, redirect `/login`
+- `app/[locale]/page.tsx` — CTA: `<Button>` → `<Link href="/signup">` de `@/i18n/navigation`
+- `messages/es.json` + `en.json` — keys `dashboard.fallback`
+- `config/feature-flags.json` — `"dashboard": false`
+
+> **Nota scope creep:** `i18n/navigation.ts` no estaba en el contrato. Apareció en Fase C porque next-intl v3 exporta `Link` vía factory `createSharedPathnamesNavigation`, no como import directo. Archivo necesario, bajo impacto (5 líneas).
+
 ---
 
 ## Backlog de slices (MVP)
@@ -150,7 +166,7 @@ Archivos modificados:
 2. Auth + onboarding → dividido en:
    - **2a. Supabase infra (clients + middleware)** ✅ (2026-06-30)
    - **2b. Auth pages (login, signup, callback)** ✅ (2026-06-30)
-   - **2c. Auth guard (app) + migración CTA + dashboard placeholder
+   - **2c. Auth guard (app) + migración CTA + dashboard placeholder** ✅ (2026-06-30)
 3. Schema DB + RLS + import del catálogo (free-exercise-db filtrado)
 4. Assessment: perfil + PAR-Q + equipamiento
 5. Assessment: test físico guiado

@@ -1,1 +1,5 @@
-{"landing_page":false,"auth":false}
+{
+  "landing_page": false,
+  "auth": false,
+  "dashboard": false
+}

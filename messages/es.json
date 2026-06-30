@@ -23,5 +23,8 @@
       "required": "Este campo es obligatorio",
       "passwordMismatch": "Las contraseñas no coinciden"
     }
+  },
+  "dashboard": {
+    "fallback": "Dashboard — próximamente"
   }
 }

@@ -23,5 +23,8 @@
       "required": "This field is required",
       "passwordMismatch": "Passwords do not match"
     }
+  },
+  "dashboard": {
+    "fallback": "Dashboard — coming soon"
   }
 }
