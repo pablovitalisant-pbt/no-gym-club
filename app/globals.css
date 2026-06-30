@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-accent: #e8570a;
+    --color-surface-900: #0a0a0a;
+    --color-surface-800: #111111;
+    --color-surface-700: #1a1a1a;
+    --color-border: #2a2a2a;
+    --color-text-primary: #f5f5f5;
+    --color-text-muted: #888888;
+  }
+
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    @apply bg-surface-900 text-text-primary font-sans antialiased;
+  }
+}

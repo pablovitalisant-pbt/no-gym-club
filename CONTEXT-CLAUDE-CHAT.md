@@ -64,15 +64,36 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Sesión 0 completada. Listo para primer slice con Claude Code.
-- **Contador de slices desde último ponytail audit:** 0
-- **Próximo paso:** Pablo abre Claude Code y dice "siguiente slice".
+- **Fase actual:** Slice 1a completado (2026-06-30). Próximo: Slice 1b.
+- **Contador de slices desde último ponytail audit:** 1
+- **Próximo paso:** Pablo dice "siguiente slice".
+
+### Slice 1a — Setup base (completado)
+
+Archivos creados:
+- `package.json` — dependencias del stack
+- `tsconfig.json` — strict, paths `@/*`
+- `next.config.mjs` — config base (ver nota técnica abajo)
+- `tailwind.config.ts` — colores del sistema de diseño + Inter
+- `postcss.config.mjs` — tailwind + autoprefixer
+- `app/globals.css` — tailwind directives + vars CSS + estilos base
+- `.env.local.example` — template de variables de entorno
+- `vitest.config.ts` — configuración de Vitest (infraestructura para tests)
+- `tests/smoke.test.ts` — smoke test (4 tests: package.json, tsconfig, .gitignore, tailwind)
+
+Archivos modificados:
+- `.gitignore` — expandido con `.env*.local`, `.turbo`, `*.tsbuildinfo`, `coverage/`, `playwright-report/`, `test-results/`
+
+> **Nota técnica `next.config.mjs`:** el plugin `next-intl` está comentado con marcador `ponytail:` porque requiere `i18n/request.ts` que no existe aún. Se reactiva en Slice 1b cuando se cree ese módulo. Sin el plugin, `npm run dev` arranca correctamente.
 
 ---
 
-## Backlog sugerido de slices (MVP)
+## Backlog de slices (MVP)
 
-1. Setup base + i18n + landing (manifiesto)
+1. ~~Setup base~~ → dividido en:
+   - **1a. Setup base + configs** ✅ (completado 2026-06-30)
+   - **1b. i18n setup + root layout** (next-intl middleware, messages, request.ts)
+   - **1c. Landing page (manifiesto)**
 2. Auth + onboarding (Supabase Auth)
 3. Schema DB + RLS + import del catálogo (free-exercise-db filtrado)
 4. Assessment: perfil + PAR-Q + equipamiento
