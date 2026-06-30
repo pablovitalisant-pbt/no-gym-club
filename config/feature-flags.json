@@ -1,5 +1,6 @@
 {
   "landing_page": false,
   "auth": false,
-  "dashboard": false
+  "dashboard": false,
+  "schema_types": false
 }

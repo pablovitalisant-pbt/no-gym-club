@@ -10,7 +10,8 @@ function readFlags(): Record<string, boolean> {
 }
 
 function writeFlags(flags: Record<string, boolean>) {
-  writeFileSync(flagsPath, JSON.stringify(flags, null, 2));
+  const current = JSON.parse(readFileSync(flagsPath, 'utf-8'));
+  writeFileSync(flagsPath, JSON.stringify({ ...current, ...flags }, null, 2));
 }
 
 // preservar estado original y restaurar al terminar
