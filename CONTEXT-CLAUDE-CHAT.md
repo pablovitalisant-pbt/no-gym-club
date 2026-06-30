@@ -64,8 +64,8 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Slice 1b completado (2026-06-30). Próximo: Slice 1c.
-- **Contador de slices desde último ponytail audit:** 2
+- **Fase actual:** Slice 1c completado (2026-06-30). Próximo: Slice 2.
+- **Contador de slices desde último ponytail audit:** 3
 - **Próximo paso:** Pablo dice "siguiente slice".
 
 ### Slice 1a — Setup base (completado 2026-06-30)
@@ -92,6 +92,21 @@ Archivos creados:
 Archivos modificados:
 - `next.config.mjs` — plugin next-intl reactivado (cierra marcador `ponytail:` de Slice 1a)
 
+### Slice 1c — Landing page (manifiesto) (completado 2026-06-30)
+
+Archivos creados:
+- `lib/flags.ts` — `getFlag(key)` lee `config/feature-flags.json`, sync
+- `components/ui/Button.tsx` — variantes `primary`/`ghost`, soporta `as="button"|"a"`
+- `tests/landing-smoke.test.ts` — 8 tests (getFlag ×4, Button export, keys simétricas, feature-flags.json válido, hydration guard)
+
+Archivos modificados:
+- `app/[locale]/page.tsx` — placeholder → landing completa, gateada por `getFlag('landing_page')`
+- `messages/es.json` — keys `landing.*` agregadas
+- `messages/en.json` — keys `landing.*` (simétricas)
+- `config/feature-flags.json` — `{ "landing_page": false }` (sin BOM)
+
+> **Nota:** CTA es `<Button as="button">` sin href. Slice 2 lo migra a `<Link href="/signup">` cuando la ruta exista.
+
 ---
 
 ## Backlog de slices (MVP)
@@ -99,7 +114,7 @@ Archivos modificados:
 1. ~~Setup base~~ → dividido en:
    - **1a. Setup base + configs** ✅ (2026-06-30)
    - **1b. i18n setup + root layout** ✅ (2026-06-30)
-   - **1c. Landing page (manifiesto)**
+   - **1c. Landing page (manifiesto)** ✅ (2026-06-30)
 2. Auth + onboarding (Supabase Auth)
 3. Schema DB + RLS + import del catálogo (free-exercise-db filtrado)
 4. Assessment: perfil + PAR-Q + equipamiento

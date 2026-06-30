@@ -2,5 +2,12 @@
   "meta": {
     "title": "No Gym Club",
     "description": "La calle es mi gimnasio. Entrenamiento adaptativo guiado por ciencia del deporte."
+  },
+  "landing": {
+    "hero": "NO GYM CLUB",
+    "tagline": "La calle es mi gimnasio",
+    "manifesto": "Disciplina por sobre motivación. Acción por sobre comodidad. Progreso brutal y silencioso.",
+    "cta": "Empezar ahora",
+    "fallback": "Próximamente"
   }
 }

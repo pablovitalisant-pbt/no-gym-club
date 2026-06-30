@@ -2,5 +2,12 @@
   "meta": {
     "title": "No Gym Club",
     "description": "The street is my gym. Adaptive training guided by sport science."
+  },
+  "landing": {
+    "hero": "NO GYM CLUB",
+    "tagline": "The street is my gym",
+    "manifesto": "Discipline over motivation. Action over comfort. Brutal, silent progress.",
+    "cta": "Start now",
+    "fallback": "Coming soon"
   }
 }
