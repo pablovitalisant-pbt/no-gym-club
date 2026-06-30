@@ -64,9 +64,9 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Slice 3a completado (2026-06-30). Próximo: Slice 3b.
-- **Contador de slices desde último ponytail audit:** 2
-- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: contador 2, correr en ~Slice 6-7.
+- **Fase actual:** Slice 3b completado (2026-06-30). Próximo: Slice 4.
+- **Contador de slices desde último ponytail audit:** 3
+- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: contador 3, correr en ~Slice 6-7.
 - **Próximo paso:** Pablo dice "siguiente slice".
 
 ### Slice 1a — Setup base (completado 2026-06-30)
@@ -155,6 +155,32 @@ Archivos modificados:
 
 > **Nota scope creep:** `i18n/navigation.ts` no estaba en el contrato. Apareció en Fase C porque next-intl v3 exporta `Link` vía factory `createSharedPathnamesNavigation`, no como import directo. Archivo necesario, bajo impacto (5 líneas).
 
+### Slice 3a — Schema documentation + types (completado 2026-06-30)
+
+Archivos creados:
+- `supabase/migrations/0001_initial_schema.sql` — 6 tablas + enums + RLS + trigger
+- `supabase/migrations/0002_fix_function_search_path.sql` — fix security definer
+- `supabase/schema.sql` — referencia completa
+- `lib/supabase/types.ts` — Database interface (Row/Insert/Update para 6 tablas)
+- `tests/schema-smoke.test.ts` — 7 tests
+
+Archivos modificados:
+- `config/feature-flags.json` — `schema_types: false`
+- `tests/landing-smoke.test.ts` — fix race condition: writeFlags mergea (scope creep #5)
+
+> **Contexto:** schema aplicado via MCP por el Director Tecnico. Este slice documenta.
+> **Lineas:** 592 (DDL documentation-heavy).
+
+### Slice 3b — Seed catalog (completado 2026-06-30)
+
+Archivos creados:
+- `supabase/seed.sql` — 33 ejercicios de calle (7 categorias x 3 niveles, 5 equipamientos)
+- `tests/seed-smoke.test.ts` — 7 tests
+
+Archivos modificados: ninguno (seed standalone).
+
+> **Nota:** seed se aplica via MCP. Ejercicios 100% calle. URLs placeholder.
+
 ---
 
 ## Backlog de slices (MVP)
@@ -167,7 +193,9 @@ Archivos modificados:
    - **2a. Supabase infra (clients + middleware)** ✅ (2026-06-30)
    - **2b. Auth pages (login, signup, callback)** ✅ (2026-06-30)
    - **2c. Auth guard (app) + migración CTA + dashboard placeholder** ✅ (2026-06-30)
-3. Schema DB + RLS + import del catálogo (free-exercise-db filtrado)
+3. Schema DB + RLS + import del catalogo → dividido en:
+   - **3a. Schema documentation + types** ✅ (2026-06-30)
+   - **3b. Seed catalog (33 ejercicios de calle)** ✅ (2026-06-30)
 4. Assessment: perfil + PAR-Q + equipamiento
 5. Assessment: test físico guiado
 6. Setup ChromaDB + corpus inicial de ciencia del deporte
