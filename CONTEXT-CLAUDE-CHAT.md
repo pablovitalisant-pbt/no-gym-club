@@ -64,35 +64,41 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Slice 1a completado (2026-06-30). Próximo: Slice 1b.
-- **Contador de slices desde último ponytail audit:** 1
+- **Fase actual:** Slice 1b completado (2026-06-30). Próximo: Slice 1c.
+- **Contador de slices desde último ponytail audit:** 2
 - **Próximo paso:** Pablo dice "siguiente slice".
 
-### Slice 1a — Setup base (completado)
+### Slice 1a — Setup base (completado 2026-06-30)
 
 Archivos creados:
-- `package.json` — dependencias del stack
-- `tsconfig.json` — strict, paths `@/*`
-- `next.config.mjs` — config base (ver nota técnica abajo)
-- `tailwind.config.ts` — colores del sistema de diseño + Inter
-- `postcss.config.mjs` — tailwind + autoprefixer
-- `app/globals.css` — tailwind directives + vars CSS + estilos base
-- `.env.local.example` — template de variables de entorno
-- `vitest.config.ts` — configuración de Vitest (infraestructura para tests)
-- `tests/smoke.test.ts` — smoke test (4 tests: package.json, tsconfig, .gitignore, tailwind)
+- `package.json`, `tsconfig.json`, `next.config.mjs`, `tailwind.config.ts`, `postcss.config.mjs`
+- `app/globals.css`, `.env.local.example`, `vitest.config.ts`, `tests/smoke.test.ts`
 
 Archivos modificados:
-- `.gitignore` — expandido con `.env*.local`, `.turbo`, `*.tsbuildinfo`, `coverage/`, `playwright-report/`, `test-results/`
+- `.gitignore` — expandido con entradas de tooling
 
-> **Nota técnica `next.config.mjs`:** el plugin `next-intl` está comentado con marcador `ponytail:` porque requiere `i18n/request.ts` que no existe aún. Se reactiva en Slice 1b cuando se cree ese módulo. Sin el plugin, `npm run dev` arranca correctamente.
+### Slice 1b — i18n setup + root layout (completado 2026-06-30)
+
+Archivos creados:
+- `i18n/config.ts` — locales `['es', 'en']`, default `es`
+- `i18n/request.ts` — carga de mensajes por locale para next-intl
+- `middleware.ts` — middleware de next-intl, matcher de exclusión estándar
+- `messages/es.json` — metadata ES
+- `messages/en.json` — metadata EN (keys simétricas con ES)
+- `app/[locale]/layout.tsx` — root layout con Inter + NextIntlClientProvider
+- `app/[locale]/page.tsx` — placeholder de una línea (reemplazado en Slice 1c)
+- `tests/i18n-smoke.test.ts` — 4 tests (config, mensajes, middleware, matcher)
+
+Archivos modificados:
+- `next.config.mjs` — plugin next-intl reactivado (cierra marcador `ponytail:` de Slice 1a)
 
 ---
 
 ## Backlog de slices (MVP)
 
 1. ~~Setup base~~ → dividido en:
-   - **1a. Setup base + configs** ✅ (completado 2026-06-30)
-   - **1b. i18n setup + root layout** (next-intl middleware, messages, request.ts)
+   - **1a. Setup base + configs** ✅ (2026-06-30)
+   - **1b. i18n setup + root layout** ✅ (2026-06-30)
    - **1c. Landing page (manifiesto)**
 2. Auth + onboarding (Supabase Auth)
 3. Schema DB + RLS + import del catálogo (free-exercise-db filtrado)
