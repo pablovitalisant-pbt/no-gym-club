@@ -65,8 +65,8 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 ## Estado del proyecto
 
 - **Fase actual:** Slice 2b completado (2026-06-30). Próximo: Slice 2c.
-- **Contador de slices desde último ponytail audit:** 5
-- **Ponytail audit:** diferido a después de Slice 2 completo. El contador puede llegar a 5 durante los sub-slices de Auth — no interrumpir el bloque. Correr al terminar Slice 2.
+- **Contador de slices desde último ponytail audit:** 0
+- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. 1 finding: -8 líneas CSS vars muertas (aplicado). Próximo: contador 0, correr en ~5 slices (~Slice 5-6).
 - **Próximo paso:** Pablo dice "siguiente slice".
 
 ### Slice 1a — Setup base (completado 2026-06-30)
