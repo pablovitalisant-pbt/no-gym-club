@@ -18,7 +18,12 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const locale = pathname.split('/')[1] || defaultLocale;
 
-  if (pathname.startsWith(`/${locale}/dashboard`)) {
+  const PROTECTED_PATHS = ['/dashboard', '/assessment'];
+  const isProtected = PROTECTED_PATHS.some(
+    (path) => pathname.startsWith(`/${locale}${path}`),
+  );
+
+  if (isProtected) {
     // ponytail: sin credenciales, redirigir a login (mismo patron que updateSession)
     if (
       !process.env.NEXT_PUBLIC_SUPABASE_URL ||

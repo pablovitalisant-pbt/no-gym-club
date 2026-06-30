@@ -64,8 +64,8 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Slice 3b completado (2026-06-30). Próximo: Slice 4.
-- **Contador de slices desde último ponytail audit:** 3
+- **Fase actual:** Slice 4a completado (2026-06-30). Próximo: Slice 4b.
+- **Contador de slices desde último ponytail audit:** 4
 - **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: contador 3, correr en ~Slice 6-7.
 - **Próximo paso:** Pablo dice "siguiente slice".
 
@@ -183,6 +183,24 @@ Archivos modificados: ninguno (seed standalone).
 
 ---
 
+### Slice 4a — Assessment: perfil + equipamiento + PAR-Q (completado 2026-06-30)
+
+Archivos creados:
+- `app/[locale]/(app)/assessment/page.tsx` — Client Component, multi-step form (perfil → equipamiento → PAR-Q)
+- `app/[locale]/(app)/assessment/actions.ts` — Server Action, saveProfile (INSERT a profiles)
+- `tests/assessment-smoke.test.ts` — 9 tests
+
+Archivos modificados:
+- `middleware.ts` — PROTECTED_PATHS = ['/dashboard', '/assessment']
+- `app/[locale]/(app)/layout.tsx` — lee getFlag('assessment'), gatea acceso
+- `messages/es.json` + `en.json` — keys assessment.* (profile, equipment, parq)
+- `config/feature-flags.json` — `assessment: false`
+
+> **Nota:** primer INSERT real a la DB. PAR-Q bloqueante: si algún SÍ → redirect ?parq=blocked.
+> **Lineas:** 365 + 140 test = 505 (form JSX domina).
+
+---
+
 ## Backlog de slices (MVP)
 
 1. ~~Setup base~~ → dividido en:
@@ -196,7 +214,10 @@ Archivos modificados: ninguno (seed standalone).
 3. Schema DB + RLS + import del catalogo → dividido en:
    - **3a. Schema documentation + types** ✅ (2026-06-30)
    - **3b. Seed catalog (33 ejercicios de calle)** ✅ (2026-06-30)
-4. Assessment: perfil + PAR-Q + equipamiento
+4. Assessment → dividido en:
+   - **4a. Perfil + equipamiento + PAR-Q** ✅ (2026-06-30)
+   - **4b. Test físico guiado**
+   - **4c. Integración DeepSeek + primera sesión
 5. Assessment: test físico guiado
 6. Setup ChromaDB + corpus inicial de ciencia del deporte
 7. Generación de sesión diaria por IA (DeepSeek + RAG)

@@ -26,5 +26,51 @@
   },
   "dashboard": {
     "fallback": "Dashboard — coming soon"
+  },
+  "assessment": {
+    "fallback": "Assessment — coming soon",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Save",
+    "profile": {
+      "title": "Your profile",
+      "age": "Age",
+      "weight": "Weight (kg)",
+      "height": "Height (cm)",
+      "experience": "Experience level",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced",
+      "goal": "Main goal",
+      "lose_weight": "Lose weight",
+      "build_muscle": "Build muscle",
+      "improve_endurance": "Improve endurance",
+      "master_skills": "Master skills",
+      "general_fitness": "General fitness",
+      "days": "Available days per week"
+    },
+    "equipment": {
+      "title": "Available equipment",
+      "hint": "Select all the equipment you have access to.",
+      "bodyweight": "Bodyweight",
+      "bar": "Pull-up bar",
+      "ground": "Ground",
+      "wall": "Wall",
+      "dumbbell": "Dumbbells"
+    },
+    "parq": {
+      "title": "Safety Screening (PAR-Q)",
+      "description": "Answer honestly. If you answer YES to any question, we recommend consulting a doctor before continuing.",
+      "yes": "Yes",
+      "no": "No",
+      "q1": "Have you ever been diagnosed with a heart condition?",
+      "q2": "Do you feel chest pain during exercise?",
+      "q3": "Have you had dizziness or loss of consciousness in the last month?",
+      "q4": "Do you have a joint or muscle injury that could worsen with exercise?",
+      "q5": "Do you have uncontrolled high blood pressure?",
+      "q6": "Has a doctor told you to avoid physical exercise?",
+      "q7": "Is there any other reason you should consult a doctor before starting?",
+      "blocked": "PAR-Q not cleared. Please consult a doctor before continuing with the training program."
+    }
   }
 }

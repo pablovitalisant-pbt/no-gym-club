@@ -2,5 +2,6 @@
   "landing_page": false,
   "auth": false,
   "dashboard": false,
-  "schema_types": false
+  "schema_types": false,
+  "assessment": false
 }

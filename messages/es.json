@@ -26,5 +26,51 @@
   },
   "dashboard": {
     "fallback": "Dashboard — próximamente"
+  },
+  "assessment": {
+    "fallback": "Assessment — próximamente",
+    "next": "Siguiente",
+    "back": "Atrás",
+    "submit": "Guardar",
+    "profile": {
+      "title": "Tu perfil",
+      "age": "Edad",
+      "weight": "Peso (kg)",
+      "height": "Altura (cm)",
+      "experience": "Nivel de experiencia",
+      "beginner": "Principiante",
+      "intermediate": "Intermedio",
+      "advanced": "Avanzado",
+      "goal": "Objetivo principal",
+      "lose_weight": "Perder peso",
+      "build_muscle": "Ganar músculo",
+      "improve_endurance": "Mejorar resistencia",
+      "master_skills": "Dominar habilidades",
+      "general_fitness": "Acondicionamiento general",
+      "days": "Días disponibles por semana"
+    },
+    "equipment": {
+      "title": "Equipamiento disponible",
+      "hint": "Seleccioná todo el equipamiento al que tenés acceso.",
+      "bodyweight": "Peso corporal",
+      "bar": "Barra de parque",
+      "ground": "Suelo",
+      "wall": "Muro / Pared",
+      "dumbbell": "Mancuernas"
+    },
+    "parq": {
+      "title": "Cuestionario de seguridad (PAR-Q)",
+      "description": "Respondé con sinceridad. Si respondés SÍ a alguna pregunta, te recomendamos consultar con un médico antes de continuar.",
+      "yes": "Sí",
+      "no": "No",
+      "q1": "¿Alguna vez te diagnosticaron un problema cardíaco?",
+      "q2": "¿Sentís dolor en el pecho al hacer ejercicio?",
+      "q3": "¿Has tenido mareos o pérdida de conocimiento en el último mes?",
+      "q4": "¿Tenés alguna lesión articular o muscular que pueda empeorar con el ejercicio?",
+      "q5": "¿Tenés hipertensión arterial no controlada?",
+      "q6": "¿Algún médico te ha indicado que evites el ejercicio físico?",
+      "q7": "¿Hay algún otro motivo por el cual deberías consultar con un médico antes de empezar?",
+      "blocked": "PAR-Q no superado. Consultá con un médico antes de continuar con el programa de entrenamiento."
+    }
   }
 }
