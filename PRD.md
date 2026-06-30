@@ -94,4 +94,4 @@ Primeros 6 meses: escala pequeña (validación). DeepSeek pay-per-token escala s
 
 | Archivo / módulo | Riesgo | Qué no tocar sin revisar |
 |-----------------|--------|--------------------------|
-| (se completa durante el desarrollo) | | |
+| `middleware.ts` | Fusión de cookies: `updateSession` + `intlMiddleware` mergean cookies manualmente. Si next-intl futuramente setea cookies propias (locale preference), pueden colisionar con las de Supabase. | Revisar el orden de merge y los nombres de cookies antes de agregar nuevas cookies al middleware. |
