@@ -64,8 +64,8 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Slice 2a completado (2026-06-30). Próximo: Slice 2b.
-- **Contador de slices desde último ponytail audit:** 4
+- **Fase actual:** Slice 2b completado (2026-06-30). Próximo: Slice 2c.
+- **Contador de slices desde último ponytail audit:** 5
 - **Ponytail audit:** diferido a después de Slice 2 completo. El contador puede llegar a 5 durante los sub-slices de Auth — no interrumpir el bloque. Correr al terminar Slice 2.
 - **Próximo paso:** Pablo dice "siguiente slice".
 
@@ -120,7 +120,24 @@ Archivos modificados:
 - `middleware.ts` — encadenado: updateSession → intlMiddleware → merge cookies
 
 > **Confirmado:** `config.matcher` es idéntico al de Slice 1b: `['/((?!api|_next|.*\\..*).*)']`.
-> El middleware no crashea con credenciales vacías — Supabase SSR acepta strings vacíos en construcción, falla en la primera operación real (eso es Slice 2b).
+> **Corrección Fase D Slice 2b:** `createServerClient` lanza si env vars son empty strings. Agregado guard en `updateSession`: sin credenciales → `NextResponse.next()` sin crashear.
+
+### Slice 2b — Auth pages (completado 2026-06-30)
+
+Archivos creados:
+- `app/[locale]/(auth)/layout.tsx` — Server Component, lee `getFlag('auth')`, centrado dark
+- `app/[locale]/(auth)/login/page.tsx` — Client Component, signInWithPassword
+- `app/[locale]/(auth)/signup/page.tsx` — Client Component, signUp + confirm password
+- `app/api/auth/callback/route.ts` — GET handler, exchangeCodeForSession → `/dashboard`
+- `tests/auth-smoke.test.ts` — 6 tests (2 hydration guards, callback, keys, flag)
+
+Archivos modificados:
+- `messages/es.json` + `messages/en.json` — keys `auth.*` (9 keys, simétricas)
+- `config/feature-flags.json` — `{ landing_page: false, auth: false }`
+- `lib/supabase/middleware.ts` — guard env vars vacías
+
+> **Nota:** login/signup son Client Components (`'use client'`). Layout de `(auth)` es Server Component.
+> Callback redirige a `/dashboard` sin locale — next-intl lo resuelve.
 
 ---
 
@@ -132,7 +149,7 @@ Archivos modificados:
    - **1c. Landing page (manifiesto)** ✅ (2026-06-30)
 2. Auth + onboarding → dividido en:
    - **2a. Supabase infra (clients + middleware)** ✅ (2026-06-30)
-   - **2b. Auth pages (login, signup, callback)**
+   - **2b. Auth pages (login, signup, callback)** ✅ (2026-06-30)
    - **2c. Auth guard (app) + migración CTA + dashboard placeholder
 3. Schema DB + RLS + import del catálogo (free-exercise-db filtrado)
 4. Assessment: perfil + PAR-Q + equipamiento

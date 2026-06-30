@@ -6,6 +6,7 @@ type CookieToSet = { name: string; value: string; options: CookieOptions };
 export function createClient() {
   const cookieStore = cookies();
 
+  // ponytail: sin credenciales, el cliente falla en la primera operacion — no en construccion
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

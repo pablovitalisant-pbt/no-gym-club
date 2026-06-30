@@ -9,5 +9,19 @@
     "manifesto": "Disciplina por sobre motivación. Acción por sobre comodidad. Progreso brutal y silencioso.",
     "cta": "Empezar ahora",
     "fallback": "Próximamente"
+  },
+  "auth": {
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "confirmPassword": "Confirmar contraseña",
+    "login": "Iniciar sesión",
+    "signup": "Crear cuenta",
+    "loginButton": "Entrar",
+    "signupButton": "Registrarse",
+    "fallback": "Próximamente",
+    "error": {
+      "required": "Este campo es obligatorio",
+      "passwordMismatch": "Las contraseñas no coinciden"
+    }
   }
 }

@@ -9,5 +9,19 @@
     "manifesto": "Discipline over motivation. Action over comfort. Brutal, silent progress.",
     "cta": "Start now",
     "fallback": "Coming soon"
+  },
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "login": "Log in",
+    "signup": "Create account",
+    "loginButton": "Log in",
+    "signupButton": "Sign up",
+    "fallback": "Coming soon",
+    "error": {
+      "required": "This field is required",
+      "passwordMismatch": "Passwords do not match"
+    }
   }
 }
