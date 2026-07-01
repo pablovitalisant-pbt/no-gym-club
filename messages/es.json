@@ -71,6 +71,30 @@
       "q6": "¿Algún médico te ha indicado que evites el ejercicio físico?",
       "q7": "¿Hay algún otro motivo por el cual deberías consultar con un médico antes de empezar?",
       "blocked": "PAR-Q no superado. Consultá con un médico antes de continuar con el programa de entrenamiento."
+    },
+    "test": {
+      "pushups": "Flexiones",
+      "pullups": "Dominadas",
+      "squats": "Sentadillas",
+      "dips": "Fondos",
+      "plank": "Plancha",
+      "pushupsTitle": "Flexiones máximas",
+      "pullupsTitle": "Dominadas máximas",
+      "squatsTitle": "Sentadillas máximas",
+      "dipsTitle": "Fondos máximos",
+      "plankTitle": "Plancha máxima",
+      "pushupsHint": "Hacé la mayor cantidad de flexiones seguidas que puedas con buena técnica. Pecho toca el suelo, brazos se extienden completamente.",
+      "pullupsHint": "Hacé la mayor cantidad de dominadas seguidas que puedas. Mentón pasa la barra, brazos se extienden abajo.",
+      "squatsHint": "Hacé la mayor cantidad de sentadillas seguidas que puedas. Muslos paralelos al suelo, espalda recta.",
+      "dipsHint": "Hacé la mayor cantidad de fondos seguidos que puedas en barra paralela. Codos a 90°, brazos se extienden arriba.",
+      "plankHint": "Mantené la posición de plancha el mayor tiempo posible. Cuerpo recto, core firme, antebrazos apoyados.",
+      "reps": "Repeticiones",
+      "plankStart": "Iniciar",
+      "plankStop": "Parar",
+      "plankManual": "O ingresá los segundos manualmente",
+      "back": "Atrás",
+      "next": "Siguiente",
+      "submit": "Guardar resultados"
     }
   }
 }

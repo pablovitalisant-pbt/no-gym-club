@@ -71,6 +71,30 @@
       "q6": "Has a doctor told you to avoid physical exercise?",
       "q7": "Is there any other reason you should consult a doctor before starting?",
       "blocked": "PAR-Q not cleared. Please consult a doctor before continuing with the training program."
+    },
+    "test": {
+      "pushups": "Push-Ups",
+      "pullups": "Pull-Ups",
+      "squats": "Squats",
+      "dips": "Dips",
+      "plank": "Plank",
+      "pushupsTitle": "Max Push-Ups",
+      "pullupsTitle": "Max Pull-Ups",
+      "squatsTitle": "Max Squats",
+      "dipsTitle": "Max Dips",
+      "plankTitle": "Max Plank",
+      "pushupsHint": "Do as many consecutive push-ups as you can with good form. Chest touches ground, arms fully extend.",
+      "pullupsHint": "Do as many consecutive pull-ups as you can. Chin over bar, arms fully extend at bottom.",
+      "squatsHint": "Do as many consecutive squats as you can. Thighs parallel to ground, back straight.",
+      "dipsHint": "Do as many consecutive dips as you can on parallel bars. Elbows at 90°, arms fully extend at top.",
+      "plankHint": "Hold the plank position as long as possible. Body straight, core tight, on forearms.",
+      "reps": "Reps",
+      "plankStart": "Start",
+      "plankStop": "Stop",
+      "plankManual": "Or enter seconds manually",
+      "back": "Back",
+      "next": "Next",
+      "submit": "Save results"
     }
   }
 }

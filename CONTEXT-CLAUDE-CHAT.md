@@ -66,7 +66,7 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 - **Fase actual:** Slice 4a completado (2026-06-30). Próximo: Slice 4b.
 - **Contador de slices desde último ponytail audit:** 4
-- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: contador 3, correr en ~Slice 6-7.
+- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: contador 4, correr al terminar Slice 4 completo (4b o 4c — no interrumpir el bloque).
 - **Próximo paso:** Pablo dice "siguiente slice".
 
 ### Slice 1a — Setup base (completado 2026-06-30)
