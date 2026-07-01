@@ -17,7 +17,7 @@ Identidad: manifiesto No Gym Club. Disciplina sobre motivación. Anti-fitness-mo
 - Next.js 14 (App Router) + TypeScript + Tailwind
 - Supabase: Auth + PostgreSQL (RLS) + Storage
 - DeepSeek V4 Flash (`deepseek-v4-flash`) vía SDK `openai`
-- pgvector (extensión Supabase) para RAG — tabla `sport_science_corpus`
+- **RAG:** pgvector (extensión Supabase, vector(1024)). Embeddings via NVIDIA NIM `nvidia/nv-embedqa-e5-v5` (endpoint `https://integrate.api.nvidia.com/v1`). Migración 0004: ajuste 1536→1024 dims + función search_corpus actualizada.
 - Vercel para deploy
 - i18n bilingüe ES/EN desde el inicio
 

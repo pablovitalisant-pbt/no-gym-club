@@ -9,7 +9,7 @@ create table sport_science_corpus (
   content text not null,
   category text not null,
   tags text[] default array[]::text[],
-  embedding vector(1536),
+  embedding vector(1024),
   created_at timestamptz default now()
 );
 
@@ -21,7 +21,7 @@ create index idx_corpus_category on sport_science_corpus(category);
 alter table sport_science_corpus enable row level security;
 
 create or replace function search_corpus(
-  query_embedding vector(1536),
+  query_embedding vector(1024),
   match_count int default 5,
   filter_category text default null
 )
