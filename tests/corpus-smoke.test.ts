@@ -66,14 +66,15 @@ describe('Slice 4c-corpus — sport science corpus', () => {
     expect(raw).toContain('embed');
   });
 
-  it('seed-corpus.ts usa nvidia/client y supabase-js (standalone)', () => {
+  it('seed-corpus.ts usa nvidia/client y genera SQL con embeddings', () => {
     const raw = readFileSync(
       resolve(root, 'scripts/seed-corpus.ts'),
       'utf-8',
     );
     expect(raw).toContain('@/lib/nvidia/client');
-    // script standalone usa createClient de supabase-js directo (service role)
-    expect(raw).toContain('@supabase/supabase-js');
+    // script genera SQL output con embeddings (no conecta a Supabase)
+    expect(raw).toContain('getEmbedding');
+    expect(raw).toContain('INSERT INTO');
   });
 
   it('SQL es sintacticamente valido', () => {

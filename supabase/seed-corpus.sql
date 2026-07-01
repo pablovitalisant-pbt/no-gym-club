@@ -48,7 +48,7 @@ INSERT INTO sport_science_corpus (title, content, category, tags) VALUES (
   ARRAY['TUT', 'tempo', 'fase excentrica', 'Schoenfeld', 'ejecucion']
 );
 
-INSERT INTO exercise (title, content, category, tags) VALUES (
+INSERT INTO sport_science_corpus (title, content, category, tags) VALUES (
   'Progresiones y regresiones en calistenia',
   'Las cadenas de progresión y regresión son el equivalente en calistenia al aumento de peso en el gimnasio. Cada ejercicio tiene variantes más fáciles (regresiones) y más difíciles (progresiones) que manipulan la palanca biomecánica para ajustar la intensidad. Por ejemplo, la cadena de flexiones va: pared → rodillas → estándar → diamante → declinada → pica → handstand push-up. La cadena de dominadas: remo inclinado → australianas → chin-ups → pull-ups → arqueras → muscle-ups. El principio es cambiar el centro de masa relativo al punto de apoyo, aumentando o disminuyendo el porcentaje del peso corporal que los músculos deben mover. Un practicante debe progresar cuando puede hacer 8-12 repeticiones con buena técnica en una variante; si no puede hacer al menos 5, debe regresar a la variante anterior. Esta metodología permite sobrecarga progresiva sin pesos externos.',
   'progressive_overload',
@@ -239,7 +239,7 @@ INSERT INTO sport_science_corpus (title, content, category, tags) VALUES (
   ARRAY['descanso entre sesiones', 'frecuencia', 'upper-lower', 'señales', 'sobreentrenamiento']
 );
 
-INSERT INTO "sport_science_corpus" (title, content, category, tags) VALUES (
+INSERT INTO sport_science_corpus (title, content, category, tags) VALUES (
   'Nutrición post-entrenamiento para la recuperación',
   'La nutrición post-entrenamiento tiene tres objetivos: reponer glucógeno muscular, proporcionar aminoácidos para la síntesis proteica, y rehidratar. Para reponer glucógeno se recomiendan 1-1.2 g de carbohidratos por kg de peso corporal en las primeras 2 horas, idealmente de alto índice glucémico (arroz, papa, fruta). La proteína debe ser de alto valor biológico (huevo, suero, carne magra) en dosis de 0.3-0.5 g/kg. La combinación de carbohidratos + proteína en proporción 3:1 o 4:1 estimula mayor liberación de insulina, que a su vez acelera la captación de aminoácidos y glucosa por el músculo. La ventana de 2 horas no es un interruptor binario a las 2:01, sino una curva que decae gradualmente. Si la siguiente comida completa ocurre dentro de las 2-3 horas post-ejercicio, no es necesario un batido específico; esa comida cubre las necesidades.',
   'recovery',
