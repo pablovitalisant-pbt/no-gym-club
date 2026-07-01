@@ -10,7 +10,7 @@ Documento operativo para Claude Code. Leer junto con `~/.claude/CLAUDE.md` (semi
 - **Estilos:** Tailwind CSS
 - **Auth + DB + Storage:** Supabase (PostgreSQL con Row Level Security)
 - **LLM:** DeepSeek V4 Flash (`deepseek-v4-flash`) vía SDK `openai` (endpoint compatible OpenAI)
-- **RAG:** ChromaDB (corpus de ciencia del deporte)
+- **RAG:** pgvector (extensión PostgreSQL en Supabase) — tabla `sport_science_corpus` + función `search_corpus()`
 - **i18n:** next-intl (ES default, EN secundario)
 - **Deploy:** Vercel
 
@@ -84,7 +84,6 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=
 SUPABASE_SERVICE_ROLE_KEY=
 DEEPSEEK_API_KEY=
 DEEPSEEK_BASE_URL=https://api.deepseek.com
-CHROMA_URL=
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 

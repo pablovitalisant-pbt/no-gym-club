@@ -50,7 +50,7 @@ La app es **bilingüe ES/EN desde el día uno**.
 
 - **DeepSeek API** (modelo `deepseek-v4-flash`) vía SDK `openai` — generación adaptativa de sesiones. Pay-per-token. Endpoint compatible con OpenAI.
 - **Supabase** — Auth, PostgreSQL (con RLS) y Storage (videos/imágenes de ejercicios).
-- **ChromaDB** — base de conocimiento vectorial con el corpus de ciencia del deporte para RAG.
+- **pgvector** (extensión de Supabase) — base de conocimiento vectorial con tabla `sport_science_corpus` + función `search_corpus()` para RAG. Reemplazó a ChromaDB.
 
 ### Fuentes de datos del catálogo (import único, sin dependencia en producción)
 

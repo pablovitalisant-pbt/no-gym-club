@@ -17,7 +17,7 @@ Identidad: manifiesto No Gym Club. Disciplina sobre motivación. Anti-fitness-mo
 - Next.js 14 (App Router) + TypeScript + Tailwind
 - Supabase: Auth + PostgreSQL (RLS) + Storage
 - DeepSeek V4 Flash (`deepseek-v4-flash`) vía SDK `openai`
-- ChromaDB para RAG (corpus de ciencia del deporte)
+- pgvector (extensión Supabase) para RAG — tabla `sport_science_corpus`
 - Vercel para deploy
 - i18n bilingüe ES/EN desde el inicio
 
@@ -40,7 +40,7 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 2. **Detraining:** uso libre. La condición decae con la inactividad. MVP usa "días desde última sesión" como input simple; modelo fino es post-MVP.
 3. **Motor de sesión con tap:** Play → set → tap → cronómetro de descanso → aviso. Se registra el descanso real.
 4. **Tres ciclos de evaluación:** diario (genera sesión), semanal (reporte + ajuste), mensual (re-assessment). Solo el diario está en el MVP.
-5. **Inteligencia anclada:** RAG sobre ChromaDB. La IA no improvisa de memoria. Edad y grupo muscular como variables duras. Screening PAR-Q de seguridad antes de prescribir intensidad.
+5. **Inteligencia anclada:** RAG sobre pgvector (Supabase). La IA no improvisa de memoria. Edad y grupo muscular como variables duras. Screening PAR-Q de seguridad antes de prescribir intensidad.
 
 ---
 
@@ -219,7 +219,7 @@ Archivos modificados:
    - **4b. Test físico guiado**
    - **4c. Integración DeepSeek + primera sesión
 5. Assessment: test físico guiado
-6. Setup ChromaDB + corpus inicial de ciencia del deporte
+6. Setup pgvector + corpus inicial de ciencia del deporte (migración 0003 aplicada)
 7. Generación de sesión diaria por IA (DeepSeek + RAG)
 8. Motor de sesión con tap timer
 9. Log de sesión + RPE
