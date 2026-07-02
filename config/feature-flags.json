@@ -3,5 +3,6 @@
   "auth": false,
   "dashboard": false,
   "schema_types": false,
-  "assessment": false
+  "assessment": false,
+  "ai_session_generation": false
 }
