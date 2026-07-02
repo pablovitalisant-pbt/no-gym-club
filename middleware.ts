@@ -58,12 +58,16 @@ export default async function middleware(request: NextRequest) {
 
   // 3. Locale detection fix: normalize es-* variants (es-419, es-MX, etc.)
   //    next-intl lookup strategy does exact matching — es-419 ≠ es
+  //    Check ALL languages in Accept-Language, not just the first
   const localeFromPath = pathname.split('/')[1];
   const hasLocalePrefix = (locales as readonly string[]).includes(localeFromPath);
   if (!hasLocalePrefix) {
     const acceptLang = request.headers.get('accept-language') || '';
-    const firstLang = acceptLang.split(',')[0]?.trim() || '';
-    if (firstLang.startsWith('es-')) {
+    const hasSpanish = acceptLang.split(',').some((lang) => {
+      const [code] = lang.trim().split(';');
+      return code.trim().startsWith('es');
+    });
+    if (hasSpanish) {
       const newPath = pathname === '/' ? '/es' : `/es${pathname}`;
       return NextResponse.redirect(new URL(newPath, request.url));
     }
