@@ -4,6 +4,7 @@ import { generateChatCompletion } from '@/lib/deepseek/client';
 import { getEmbedding } from '@/lib/nvidia/client';
 import { buildSessionPrompt } from '@/lib/prompts/build-session-prompt';
 import type { CorpusDoc } from '@/lib/prompts/build-session-prompt';
+import type { PreviousSession } from '@/lib/prompts/build-session-prompt';
 
 export async function POST(request: NextRequest) {
   // 1. Auth check
@@ -40,7 +41,43 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Build semantic query from profile
+    // 4. Fetch previous completed session (for adaptation)
+    let prevSession: PreviousSession | undefined;
+    let daysSinceLast: number | null = null;
+
+    const { data: lastSession, error: lastError } = await supabase
+      .from('workout_sessions')
+      .select('rpe, session_data, completed_at')
+      .eq('user_id', user.id)
+      .not('completed_at', 'is', null)
+      .order('completed_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    if (!lastError && lastSession) {
+      // 5. Calculate days_since_last
+      const prevDate = new Date(lastSession.completed_at!);
+      const now = new Date();
+      daysSinceLast = Math.floor(
+        (now.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24),
+      );
+
+      // Extract main exercises from previous session
+      const sessionData = lastSession.session_data as Record<string, unknown>;
+      const main = (sessionData?.main as Array<{ exercise?: string }>) || [];
+      const mainExercises = main
+        .map((ex) => ex.exercise)
+        .filter((e): e is string => typeof e === 'string');
+
+      prevSession = {
+        rpe: lastSession.rpe,
+        completedAt: lastSession.completed_at!,
+        daysSinceLast,
+        mainExercises,
+      };
+    }
+
+    // 6. Build semantic query from profile
     const queryText = [
       `training program for ${profile.experience_level} athlete`,
       `primary goal: ${profile.primary_goal?.replace(/_/g, ' ')}`,
@@ -48,7 +85,7 @@ export async function POST(request: NextRequest) {
       `training ${profile.available_days_per_week} days per week`,
     ].join(', ');
 
-    // 5. Get embedding + search corpus
+    // 7. Get embedding + search corpus
     const embedding = await getEmbedding(queryText, 'query');
 
     const { data: corpusResults, error: corpusError } = await supabase.rpc(
@@ -83,8 +120,12 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    // 6. Build prompt + call DeepSeek
-    const { system, user: userPrompt } = buildSessionPrompt(profile, corpusDocs);
+    // 8. Build prompt + call DeepSeek
+    const { system, user: userPrompt } = buildSessionPrompt(
+      profile,
+      corpusDocs,
+      prevSession,
+    );
 
     const rawResponse = await generateChatCompletion(
       [
@@ -94,7 +135,7 @@ export async function POST(request: NextRequest) {
       { temperature: 0.7, maxTokens: 2048, jsonMode: true },
     );
 
-    // 7. Parse + validate JSON
+    // 9. Parse + validate JSON
     let sessionData: unknown;
     try {
       sessionData = JSON.parse(rawResponse);
@@ -105,13 +146,14 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 8. Insert session
+    // 10. Insert session
     const { data: inserted, error: insertError } = await supabase
       .from('workout_sessions')
       .insert({
         user_id: user.id,
         session_data: sessionData as Record<string, unknown>,
         scheduled_date: new Date().toISOString().split('T')[0],
+        days_since_last: daysSinceLast,
       })
       .select('id, created_at')
       .single();
@@ -123,7 +165,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 9. Return session
+    // 11. Return session
     return NextResponse.json({
       session_id: inserted.id,
       created_at: inserted.created_at,

@@ -9,6 +9,13 @@ export interface CorpusDoc {
   similarity: number;
 }
 
+export interface PreviousSession {
+  rpe: number | null;
+  completedAt: string;
+  daysSinceLast: number;
+  mainExercises: string[];
+}
+
 export interface SessionPrompt {
   system: string;
   user: string;
@@ -25,7 +32,8 @@ You generate training sessions anchored in sport science. Rules:
 - Rest periods: 60-180s for strength, 30-90s for hypertrophy/endurance.
 - Warmup: 3-5 mobility/dynamic exercises. Cooldown: 2-3 static stretches.
 - "science_refs" lists the sport science categories that support this session design.
-- If the user's goal is general_fitness, balance push/pull/legs/core. If hypertrophy, bias volume. If endurance, bias circuit-style. If master_skills, include skill practice blocks.`;
+- If the user's goal is general_fitness, balance push/pull/legs/core. If hypertrophy, bias volume. If endurance, bias circuit-style. If master_skills, include skill practice blocks.
+- ADAPTATION: if previous session data is provided, rotate muscle groups away from what was trained. Adjust volume: previous RPE ≥ 8 → reduce volume 10-20% (under-recovered). Previous RPE ≤ 5 → increase volume 10-20% (under-stimulated). Days since last > 3 → include re-adaptation phase with reduced intensity. Days since last = 1 → normal progression.`;
 
 function formatCorpusContext(docs: CorpusDoc[]): string {
   if (!docs.length) return '';
@@ -51,18 +59,40 @@ function formatProfile(profile: ProfileRow): string {
   return parts.join('\n');
 }
 
+function formatPreviousSession(prev: PreviousSession): string {
+  const rpeText = prev.rpe != null ? `${prev.rpe}/10` : 'not recorded';
+  const exerciseList =
+    prev.mainExercises.length > 0
+      ? prev.mainExercises.join(', ')
+      : 'unknown';
+
+  return `## Previous Session Summary
+- Completed: ${prev.daysSinceLast} day(s) ago
+- Overall RPE: ${rpeText}
+- Main exercises performed: ${exerciseList}
+
+Adapt today's session based on this history:
+- Rotate to muscle groups NOT trained in the previous session.
+- If previous RPE ≥ 8: reduce volume 10-20% (under-recovered).
+- If previous RPE ≤ 5: increase volume 10-20% (under-stimulated).
+- If days since last > 3: include re-adaptation, reduce intensity.
+- If days since last = 1: normal progression, slight overload.`;
+}
+
 export function buildSessionPrompt(
   profile: ProfileRow,
   corpusDocs: CorpusDoc[],
+  prevSession?: PreviousSession,
 ): SessionPrompt {
   const profileText = formatProfile(profile);
   const corpusText = formatCorpusContext(corpusDocs);
+  const prevText = prevSession ? formatPreviousSession(prevSession) : '';
 
   const user = `Generate today's training session for this athlete:
 
 ## Athlete Profile
 ${profileText}
-${corpusText}
+${prevText}${corpusText}
 
 ## Output Format
 {
