@@ -56,10 +56,23 @@ export default async function middleware(request: NextRequest) {
     }
   }
 
-  // 3. Enrutar por locale — next-intl maneja /es /en
+  // 3. Locale detection fix: normalize es-* variants (es-419, es-MX, etc.)
+  //    next-intl lookup strategy does exact matching — es-419 ≠ es
+  const localeFromPath = pathname.split('/')[1];
+  const hasLocalePrefix = (locales as readonly string[]).includes(localeFromPath);
+  if (!hasLocalePrefix) {
+    const acceptLang = request.headers.get('accept-language') || '';
+    const firstLang = acceptLang.split(',')[0]?.trim() || '';
+    if (firstLang.startsWith('es-')) {
+      const newPath = pathname === '/' ? '/es' : `/es${pathname}`;
+      return NextResponse.redirect(new URL(newPath, request.url));
+    }
+  }
+
+  // 4. Enrutar por locale — next-intl maneja /es /en
   const response = intlMiddleware(request);
 
-  // 4. Copiar cookies de sesion al response de i18n
+  // 5. Copiar cookies de sesion al response de i18n
   supabaseResponse.cookies.getAll().forEach(({ name, value }) => {
     response.cookies.set(name, value);
   });
