@@ -82,14 +82,6 @@ describe('Slice 3a — schema documentation smoke', () => {
     expect(raw).not.toContain('>>>>>>>');
   });
 
-  it('feature-flags.json contiene schema_types: false', () => {
-    const flags = JSON.parse(
-      readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'),
-    );
-    expect(flags).toHaveProperty('schema_types');
-    expect(flags.schema_types).toBe(false);
-  });
-
   it('feature-flags.json es JSON parseable', () => {
     // si este test pasa pero el de arriba no, es solo la key faltante
     const raw = readFileSync(

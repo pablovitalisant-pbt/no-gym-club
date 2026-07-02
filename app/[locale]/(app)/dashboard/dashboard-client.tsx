@@ -165,7 +165,13 @@ function SessionCard({
 
 // ─── Main component ───
 
-export default function DashboardClient({ locale }: { locale: string }) {
+export default function DashboardClient({
+  locale,
+  showLog,
+}: {
+  locale: string;
+  showLog: boolean;
+}) {
   const t = useTranslations('dashboard');
   const router = useRouter();
   const [viewState, setViewState] = useState<ViewState>('idle');
@@ -252,10 +258,12 @@ export default function DashboardClient({ locale }: { locale: string }) {
                 </Button>
               </div>
 
-              <LogForm
-                sessionId={sessionId}
-                onSaved={() => setViewState('completed')}
-              />
+              {showLog && (
+                <LogForm
+                  sessionId={sessionId}
+                  onSaved={() => setViewState('completed')}
+                />
+              )}
             </>
           )}
 

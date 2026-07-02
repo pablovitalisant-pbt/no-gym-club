@@ -19,6 +19,7 @@ export default async function DashboardPage({
   }
 
   const showAI = getFlag('ai_session_generation');
+  const showLog = getFlag('session_log');
 
   return (
     <div>
@@ -27,7 +28,7 @@ export default async function DashboardPage({
       </h1>
 
       {showAI ? (
-        <DashboardClient locale={locale} />
+        <DashboardClient locale={locale} showLog={showLog} />
       ) : (
         <p className="text-text-muted">{t('fallback')}</p>
       )}
