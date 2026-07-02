@@ -37,7 +37,20 @@
     "scienceRefs": "Based on",
     "error": "Failed to generate session. Please try again.",
     "retry": "Retry",
-    "regenerate": "Generate another session"
+    "regenerate": "Generate another session",
+    "logTitle": "Log results",
+    "rpeLabel": "How hard was the session? (RPE 1-10)",
+    "rpeVeryEasy": "Very easy",
+    "rpeEasy": "Easy",
+    "rpeModerate": "Moderate",
+    "rpeHard": "Hard",
+    "rpeVeryHard": "Very hard",
+    "rpeMaximal": "Maximal",
+    "notesLabel": "Notes (optional)",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Session logged!",
+    "logError": "Error saving"
   },
   "assessment": {
     "fallback": "Assessment — coming soon",

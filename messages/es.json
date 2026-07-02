@@ -37,7 +37,20 @@
     "scienceRefs": "Basado en",
     "error": "Error al generar la sesión. Intentá de nuevo.",
     "retry": "Reintentar",
-    "regenerate": "Generar otra sesión"
+    "regenerate": "Generar otra sesión",
+    "logTitle": "Registrar resultados",
+    "rpeLabel": "¿Qué tan dura fue la sesión? (RPE 1-10)",
+    "rpeVeryEasy": "Muy fácil",
+    "rpeEasy": "Fácil",
+    "rpeModerate": "Moderado",
+    "rpeHard": "Difícil",
+    "rpeVeryHard": "Muy difícil",
+    "rpeMaximal": "Máximo",
+    "notesLabel": "Notas (opcional)",
+    "save": "Guardar",
+    "saving": "Guardando...",
+    "saved": "¡Sesión registrada!",
+    "logError": "Error al guardar"
   },
   "assessment": {
     "fallback": "Assessment — próximamente",

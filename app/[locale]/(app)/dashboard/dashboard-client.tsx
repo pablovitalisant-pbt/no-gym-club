@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
+import LogForm from './log-form';
 
 // ─── Types ───
 
@@ -34,7 +35,7 @@ interface GenerateResponse {
   error?: string;
 }
 
-type ViewState = 'idle' | 'loading' | 'success' | 'error';
+type ViewState = 'idle' | 'loading' | 'success' | 'completed' | 'error';
 
 // ─── Helpers ───
 
@@ -188,6 +189,7 @@ export default function DashboardClient({ locale }: { locale: string }) {
   const t = useTranslations('dashboard');
   const [viewState, setViewState] = useState<ViewState>('idle');
   const [session, setSession] = useState<SessionData | null>(null);
+  const [sessionId, setSessionId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
 
   async function handleGenerate() {
@@ -216,6 +218,7 @@ export default function DashboardClient({ locale }: { locale: string }) {
       }
 
       setSession(data.session);
+      setSessionId(data.session_id ?? null);
       setViewState('success');
     } catch {
       setErrorMsg(t('error'));
@@ -258,7 +261,30 @@ export default function DashboardClient({ locale }: { locale: string }) {
         <div className="space-y-6">
           <SessionCard session={session} locale={locale} />
 
+          {sessionId && (
+            <LogForm
+              sessionId={sessionId}
+              onSaved={() => setViewState('completed')}
+            />
+          )}
+
           <div className="text-center pt-4 border-t border-border">
+            <Button variant="ghost" onClick={handleGenerate}>
+              {t('regenerate')}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* Completed state */}
+      {viewState === 'completed' && session && (
+        <div className="space-y-6">
+          <SessionCard session={session} locale={locale} />
+
+          <div className="border-t border-border pt-6 mt-6 text-center space-y-4">
+            <p className="text-green-400 text-sm font-medium">
+              {t('saved')}
+            </p>
             <Button variant="ghost" onClick={handleGenerate}>
               {t('regenerate')}
             </Button>
