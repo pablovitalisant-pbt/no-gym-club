@@ -50,7 +50,7 @@ no-gym-club/
 ├── lib/
 │   ├── supabase/            # client.ts, server.ts, middleware.ts
 │   ├── deepseek/            # client.ts (SDK openai apuntando a DeepSeek)
-│   ├── chroma/              # cliente y consultas al corpus
+│   ├── nvidia/              # cliente de embeddings NVIDIA NIM
 │   ├── prompts/             # construccion de prompts para generar sesiones
 │   └── utils.ts
 ├── messages/                # es.json, en.json
