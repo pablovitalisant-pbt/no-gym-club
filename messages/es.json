@@ -25,7 +25,19 @@
     }
   },
   "dashboard": {
-    "fallback": "Dashboard — próximamente"
+    "fallback": "Dashboard — próximamente",
+    "generate": "Generar sesión de hoy",
+    "generating": "Generando tu sesión...",
+    "idleHint": "Tu entrenamiento de hoy te está esperando.",
+    "sessionTitle": "Sesión de hoy",
+    "warmup": "Calentamiento",
+    "main": "Parte principal",
+    "cooldown": "Vuelta a la calma",
+    "rationale": "¿Por qué esta sesión?",
+    "scienceRefs": "Basado en",
+    "error": "Error al generar la sesión. Intentá de nuevo.",
+    "retry": "Reintentar",
+    "regenerate": "Generar otra sesión"
   },
   "assessment": {
     "fallback": "Assessment — próximamente",

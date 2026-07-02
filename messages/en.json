@@ -25,7 +25,19 @@
     }
   },
   "dashboard": {
-    "fallback": "Dashboard — coming soon"
+    "fallback": "Dashboard — coming soon",
+    "generate": "Generate today's session",
+    "generating": "Generating your session...",
+    "idleHint": "Today's workout is waiting for you.",
+    "sessionTitle": "Today's session",
+    "warmup": "Warmup",
+    "main": "Main",
+    "cooldown": "Cooldown",
+    "rationale": "Why this session?",
+    "scienceRefs": "Based on",
+    "error": "Failed to generate session. Please try again.",
+    "retry": "Retry",
+    "regenerate": "Generate another session"
   },
   "assessment": {
     "fallback": "Assessment — coming soon",

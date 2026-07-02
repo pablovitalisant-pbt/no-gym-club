@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { getFlag } from '@/lib/flags';
+import DashboardClient from './dashboard-client';
 
 export default async function DashboardPage({
   params: { locale },
@@ -17,9 +18,19 @@ export default async function DashboardPage({
     );
   }
 
+  const showAI = getFlag('ai_session_generation');
+
   return (
     <div>
-      <h1 className="text-2xl font-bold text-text-primary">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-text-primary mb-6">
+        Dashboard
+      </h1>
+
+      {showAI ? (
+        <DashboardClient locale={locale} />
+      ) : (
+        <p className="text-text-muted">{t('fallback')}</p>
+      )}
     </div>
   );
 }
