@@ -64,10 +64,10 @@ Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene top
 
 ## Estado del proyecto
 
-- **Fase actual:** Slice 4a completado (2026-06-30). Próximo: Slice 4b.
-- **Contador de slices desde último ponytail audit:** 4
-- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: contador 4, correr al terminar Slice 4 completo (4b o 4c — no interrumpir el bloque).
-- **Próximo paso:** Pablo dice "siguiente slice".
+- **Fase actual:** Slice 4c-corpus completado (2026-07-02). Próximo: Slice 4c-ai (integración DeepSeek + RAG).
+- **Contador de slices desde último ponytail audit:** 5
+- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: al terminar Slice 4c-ai (contador 6 — ya pasó el umbral de 4, ejecutar antes de seguir a Slice 5).
+- **Próximo paso:** Pablo dice "siguiente slice" → Slice 4c-ai.
 
 ### Slice 1a — Setup base (completado 2026-06-30)
 
@@ -199,6 +199,23 @@ Archivos modificados:
 > **Nota:** primer INSERT real a la DB. PAR-Q bloqueante: si algún SÍ → redirect ?parq=blocked.
 > **Lineas:** 365 + 140 test = 505 (form JSX domina).
 
+### Slice 4c-corpus — Sport science corpus + embeddings (completado 2026-07-02)
+
+Archivos creados:
+- `supabase/migrations/0003_pgvector.sql` — extensión pgvector + tabla `sport_science_corpus` (vector(1024))
+- `supabase/migrations/0004_adjust_embeddings_1024.sql` — ajuste dimensión 1536→1024 + función `search_corpus()`
+- `scripts/seed-corpus-json.ts` — script de generación de embeddings via NVIDIA NIM + inserción SQL
+- `supabase/corpus.json` — 50 documentos fuente (markdown, 8 categorías)
+- `supabase/seed-corpus-embeddings-clean.sql` — SQL con embeddings generados (1024d)
+
+Archivos modificados:
+- `CLAUDE.md` — RAG: ChromaDB → pgvector, embeddings NVIDIA NIM, variable `NVIDIA_API_KEY`
+
+> **Corpus:** 50 documentos en 8 categorías: progressive_overload (8), bodyweight_training (7), recovery (7), hypertrophy (6), periodization (6), rpe_autoregulation (6), endurance (5), safety_screening (5).
+> **Embeddings:** NVIDIA NIM `nvidia/nv-embedqa-e5-v5`, 1024 dimensiones, endpoint `https://integrate.api.nvidia.com/v1`.
+> **Búsqueda:** `search_corpus(query_embedding, match_threshold, match_count)` — cosine similarity via pgvector `<=>`.
+> **Nota:** La API key de NVIDIA tiene fecha de expiración (~90 días desde emisión). Monitorear en PRD.
+
 ---
 
 ## Backlog de slices (MVP)
@@ -216,11 +233,12 @@ Archivos modificados:
    - **3b. Seed catalog (33 ejercicios de calle)** ✅ (2026-06-30)
 4. Assessment → dividido en:
    - **4a. Perfil + equipamiento + PAR-Q** ✅ (2026-06-30)
-   - **4b. Test físico guiado**
-   - **4c. Integración DeepSeek + primera sesión
-5. Assessment: test físico guiado
-6. Setup pgvector + corpus inicial de ciencia del deporte (migración 0003 aplicada)
-7. Generación de sesión diaria por IA (DeepSeek + RAG)
+   - **4b. Test físico guiado** (postergado — el corpus y la generación de sesión tienen más valor)
+   - **4c-corpus. Sport science corpus + embeddings** ✅ (2026-07-02)
+   - **4c-ai. Integración DeepSeek + RAG → primera sesión** ← próximo
+5. ~~Setup pgvector + corpus inicial~~ → absorbido en 4c-corpus ✅
+6. Generación de sesión diaria por IA (DeepSeek + RAG) → en progreso como 4c-ai
+7. Assessment: test físico guiado
 8. Motor de sesión con tap timer
 9. Log de sesión + RPE
 10. Adaptación diaria (la sesión usa el log anterior)
