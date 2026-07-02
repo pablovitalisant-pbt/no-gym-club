@@ -2,32 +2,12 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import LogForm from './log-form';
+import type { SessionData, SessionExercise } from '@/lib/types/session';
 
 // ─── Types ───
-
-interface SessionExercise {
-  exercise: string;
-  duration_seconds?: number;
-  sets?: number;
-  reps?: string;
-  rpe?: number;
-  rest_seconds?: number;
-  notes_es?: string;
-  notes_en?: string;
-}
-
-interface SessionData {
-  title_es: string;
-  title_en: string;
-  warmup: SessionExercise[];
-  main: SessionExercise[];
-  cooldown: SessionExercise[];
-  rationale_es: string;
-  rationale_en: string;
-  science_refs: string[];
-}
 
 interface GenerateResponse {
   session_id?: string;
@@ -187,6 +167,7 @@ function SessionCard({
 
 export default function DashboardClient({ locale }: { locale: string }) {
   const t = useTranslations('dashboard');
+  const router = useRouter();
   const [viewState, setViewState] = useState<ViewState>('idle');
   const [session, setSession] = useState<SessionData | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
@@ -262,10 +243,20 @@ export default function DashboardClient({ locale }: { locale: string }) {
           <SessionCard session={session} locale={locale} />
 
           {sessionId && (
-            <LogForm
-              sessionId={sessionId}
-              onSaved={() => setViewState('completed')}
-            />
+            <>
+              <div className="text-center pt-4">
+                <Button
+                  onClick={() => router.push(`/session/${sessionId}`)}
+                >
+                  {t('startSession')}
+                </Button>
+              </div>
+
+              <LogForm
+                sessionId={sessionId}
+                onSaved={() => setViewState('completed')}
+              />
+            </>
           )}
 
           <div className="text-center pt-4 border-t border-border">

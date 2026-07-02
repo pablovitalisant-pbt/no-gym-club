@@ -5,5 +5,6 @@
   "schema_types": false,
   "assessment": false,
   "ai_session_generation": false,
-  "session_log": false
+  "session_log": false,
+  "session_runner": false
 }

@@ -38,6 +38,7 @@
     "error": "Error al generar la sesión. Intentá de nuevo.",
     "retry": "Reintentar",
     "regenerate": "Generar otra sesión",
+    "startSession": "Iniciar sesión",
     "logTitle": "Registrar resultados",
     "rpeLabel": "¿Qué tan dura fue la sesión? (RPE 1-10)",
     "rpeVeryEasy": "Muy fácil",
@@ -51,6 +52,23 @@
     "saving": "Guardando...",
     "saved": "¡Sesión registrada!",
     "logError": "Error al guardar"
+  },
+  "session": {
+    "fallback": "Motor de sesión — próximamente",
+    "start": "Comenzar",
+    "done": "Listo",
+    "skipRest": "Saltar descanso",
+    "nextExercise": "Siguiente",
+    "restComplete": "¡A entrenar!",
+    "complete": "¡Sesión completa!",
+    "completeMessage": "Volvé al dashboard para registrar tu RPE.",
+    "backToDashboard": "Volver al dashboard",
+    "progress": "Ejercicio {current} de {total}",
+    "exercise": "Ejercicio",
+    "rest": "Descanso",
+    "warmup": "Calentamiento",
+    "main": "Parte principal",
+    "cooldown": "Vuelta a la calma"
   },
   "assessment": {
     "fallback": "Assessment — próximamente",

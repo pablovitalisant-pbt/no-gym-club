@@ -38,6 +38,7 @@
     "error": "Failed to generate session. Please try again.",
     "retry": "Retry",
     "regenerate": "Generate another session",
+    "startSession": "Start session",
     "logTitle": "Log results",
     "rpeLabel": "How hard was the session? (RPE 1-10)",
     "rpeVeryEasy": "Very easy",
@@ -51,6 +52,23 @@
     "saving": "Saving...",
     "saved": "Session logged!",
     "logError": "Error saving"
+  },
+  "session": {
+    "fallback": "Session runner — coming soon",
+    "start": "Start",
+    "done": "Done",
+    "skipRest": "Skip rest",
+    "nextExercise": "Next",
+    "restComplete": "Let's go!",
+    "complete": "Session complete!",
+    "completeMessage": "Go back to the dashboard to log your RPE.",
+    "backToDashboard": "Back to dashboard",
+    "progress": "Exercise {current} of {total}",
+    "exercise": "Exercise",
+    "rest": "Rest",
+    "warmup": "Warmup",
+    "main": "Main",
+    "cooldown": "Cooldown"
   },
   "assessment": {
     "fallback": "Assessment — coming soon",
