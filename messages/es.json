@@ -56,6 +56,7 @@
     "exerciseLogTitle": "Resultados por ejercicio (reps reales)"
   },
   "catalog": {
+    "fallback": "Catálogo — próximamente",
     "title": "Catálogo de ejercicios",
     "allCategories": "Todas",
     "allDifficulties": "Todas",
@@ -70,6 +71,7 @@
     "backToCatalog": "Volver al catálogo"
   },
   "weekly": {
+    "fallback": "Reporte semanal — próximamente",
     "title": "Reporte Semanal",
     "sessionsThisWeek": "Sesiones",
     "averageRpe": "RPE promedio",
@@ -84,6 +86,7 @@
     "daysTrained": "Días entrenados"
   },
   "progress": {
+    "fallback": "Progreso — próximamente",
     "title": "Progreso",
     "reassessmentPrompt": "Han pasado {days} días desde tu último assessment. ¿Querés repetirlo para medir tu progreso?",
     "reassessButton": "Repetir assessment",

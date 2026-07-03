@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { getFlag } from '@/lib/flags';
 import Link from 'next/link';
 import type { Database } from '@/lib/supabase/types';
 
@@ -34,6 +35,15 @@ export default async function ProgressPage({
   params: { locale: string };
 }) {
   const t = await getTranslations({ locale, namespace: 'progress' });
+
+  if (!getFlag('progress')) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <p className="text-lg text-text-muted">{t('fallback')}</p>
+      </div>
+    );
+  }
+
   const supabase = createClient();
 
   const {

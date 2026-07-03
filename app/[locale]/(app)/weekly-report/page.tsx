@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { getFlag } from '@/lib/flags';
 
 type SessionRow = {
   rpe: number | null;
@@ -64,6 +65,15 @@ export default async function WeeklyReportPage({
   params: { locale: string };
 }) {
   const t = await getTranslations({ locale, namespace: 'weekly' });
+
+  if (!getFlag('weekly_report')) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <p className="text-lg text-text-muted">{t('fallback')}</p>
+      </div>
+    );
+  }
+
   const supabase = createClient();
 
   const {

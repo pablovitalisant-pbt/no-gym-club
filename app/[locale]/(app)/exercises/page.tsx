@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
+import { getFlag } from '@/lib/flags';
 import Link from 'next/link';
 import type { Database } from '@/lib/supabase/types';
 
@@ -22,6 +23,15 @@ export default async function ExercisesPage({
   searchParams: { category?: string; difficulty?: string };
 }) {
   const t = await getTranslations({ locale, namespace: 'catalog' });
+
+  if (!getFlag('exercises_catalog')) {
+    return (
+      <div className="flex items-center justify-center py-24">
+        <p className="text-lg text-text-muted">{t('fallback')}</p>
+      </div>
+    );
+  }
+
   const supabase = createClient();
 
   let query = supabase
