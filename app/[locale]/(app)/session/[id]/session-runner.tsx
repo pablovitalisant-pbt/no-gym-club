@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, type RestTimeEntry } from './actions';
+import { playBeep } from '@/lib/audio';
 
 type RunnerState = 'idle' | 'active' | 'rest' | 'done';
 type Section = 'warmup' | 'main' | 'cooldown';
@@ -98,6 +99,7 @@ export default function SessionRunner({
             if (timerRef.current) clearInterval(timerRef.current);
             timerRef.current = null;
             recordActualRest();
+            playBeep();
             // Auto-advance to next exercise
             setState('active');
             setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
