@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
+import { saveSessionTimes, type RestTimeEntry } from './actions';
 
 type RunnerState = 'idle' | 'active' | 'rest' | 'done';
 type Section = 'warmup' | 'main' | 'cooldown';
@@ -44,6 +45,13 @@ export default function SessionRunner({
   const [index, setIndex] = useState(0);
   const [restSeconds, setRestSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const restStartRef = useRef<number>(0);
+  const restInfoRef = useRef<{
+    exerciseIndex: number;
+    exercise: string;
+    prescribedRest: number;
+  }>({ exerciseIndex: 0, exercise: '', prescribedRest: 0 });
+  const restTimesRef = useRef<RestTimeEntry[]>([]);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -52,13 +60,36 @@ export default function SessionRunner({
     };
   }, []);
 
+  // Save rest times when session completes
+  useEffect(() => {
+    if (state === 'done' && restTimesRef.current.length > 0) {
+      saveSessionTimes(sessionId, restTimesRef.current);
+    }
+  }, [state, sessionId]);
+
   const current = allExercises[index];
   const isLast = index >= allExercises.length - 1;
 
   // ─── Actions ───
 
+  const recordActualRest = useCallback(() => {
+    const elapsed = Math.round((Date.now() - restStartRef.current) / 1000);
+    restTimesRef.current.push({
+      exerciseIndex: restInfoRef.current.exerciseIndex,
+      exercise: restInfoRef.current.exercise,
+      prescribedRest: restInfoRef.current.prescribedRest,
+      actualRest: elapsed,
+    });
+  }, []);
+
   const startRest = useCallback(
-    (seconds: number) => {
+    (seconds: number, exIndex: number, exName: string) => {
+      restStartRef.current = Date.now();
+      restInfoRef.current = {
+        exerciseIndex: exIndex,
+        exercise: exName,
+        prescribedRest: seconds,
+      };
       setRestSeconds(seconds);
       setState('rest');
       timerRef.current = setInterval(() => {
@@ -66,6 +97,7 @@ export default function SessionRunner({
           if (prev <= 1) {
             if (timerRef.current) clearInterval(timerRef.current);
             timerRef.current = null;
+            recordActualRest();
             // Auto-advance to next exercise
             setState('active');
             setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
@@ -75,7 +107,7 @@ export default function SessionRunner({
         });
       }, 1000);
     },
-    [allExercises.length],
+    [allExercises.length, recordActualRest],
   );
 
   const handleDone = useCallback(() => {
@@ -85,7 +117,7 @@ export default function SessionRunner({
     }
     const ex = current;
     if (ex?.rest_seconds && ex.rest_seconds > 0) {
-      startRest(ex.rest_seconds);
+      startRest(ex.rest_seconds, index, ex.exercise);
     } else if (isLast) {
       setState('done');
     } else {
@@ -98,6 +130,7 @@ export default function SessionRunner({
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
+    recordActualRest();
     setRestSeconds(0);
     if (isLast) {
       setState('done');
@@ -105,7 +138,7 @@ export default function SessionRunner({
       setState('active');
       setIndex((i) => i + 1);
     }
-  }, [isLast]);
+  }, [isLast, recordActualRest]);
 
   const nextEx = allExercises[index + 1];
 
