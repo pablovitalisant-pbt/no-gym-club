@@ -7,5 +7,6 @@
   "session_log": true,
   "session_runner": true,
   "exercises_catalog": true,
-  "weekly_report": true
+  "weekly_report": true,
+  "progress": true
 }

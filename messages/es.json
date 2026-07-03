@@ -83,6 +83,24 @@
     "noData": "Sin datos",
     "daysTrained": "Días entrenados"
   },
+  "progress": {
+    "title": "Progreso",
+    "reassessmentPrompt": "Han pasado {days} días desde tu último assessment. ¿Querés repetirlo para medir tu progreso?",
+    "reassessButton": "Repetir assessment",
+    "comparison": "Comparación vs anterior",
+    "exercise": "Ejercicio",
+    "current": "Actual",
+    "previous": "Anterior",
+    "change": "Cambio",
+    "history": "Historial",
+    "noData": "Sin datos de assessment todavía. Hacé tu primer test físico para empezar a trackear tu progreso.",
+    "daysAgo": "hace {days} días",
+    "pushups": "Flexiones",
+    "pullups": "Dominadas",
+    "squats": "Sentadillas",
+    "dips": "Fondos",
+    "plank": "Plancha"
+  },
   "session": {
     "fallback": "Motor de sesión — próximamente",
     "start": "Comenzar",

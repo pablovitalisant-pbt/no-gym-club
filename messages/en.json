@@ -83,6 +83,24 @@
     "noData": "No data",
     "daysTrained": "Days trained"
   },
+  "progress": {
+    "title": "Progress",
+    "reassessmentPrompt": "It's been {days} days since your last assessment. Want to retake it to measure your progress?",
+    "reassessButton": "Re-assess",
+    "comparison": "Comparison vs previous",
+    "exercise": "Exercise",
+    "current": "Current",
+    "previous": "Previous",
+    "change": "Change",
+    "history": "History",
+    "noData": "No assessment data yet. Take your first physical test to start tracking progress.",
+    "daysAgo": "{days} days ago",
+    "pushups": "Push-Ups",
+    "pullups": "Pull-Ups",
+    "squats": "Squats",
+    "dips": "Dips",
+    "plank": "Plank"
+  },
   "session": {
     "fallback": "Session runner — coming soon",
     "start": "Start",
