@@ -38,6 +38,7 @@
     "error": "Failed to generate session. Please try again.",
     "retry": "Retry",
     "regenerate": "Generate another session",
+    "streaming": "Receiving session...",
     "startSession": "Start session",
     "logTitle": "Log results",
     "rpeLabel": "How hard was the session? (RPE 1-10)",

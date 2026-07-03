@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { generateChatCompletion } from '@/lib/deepseek/client';
+import {
+  generateChatCompletion,
+  streamChatCompletion,
+} from '@/lib/deepseek/client';
 import { getEmbedding } from '@/lib/nvidia/client';
 import { buildSessionPrompt } from '@/lib/prompts/build-session-prompt';
 import type { CorpusDoc } from '@/lib/prompts/build-session-prompt';
@@ -62,7 +65,6 @@ export async function POST(request: NextRequest) {
         (now.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24),
       );
 
-      // Extract main exercises from previous session
       const sessionData = lastSession.session_data as Record<string, unknown>;
       const main = (sessionData?.main as Array<{ exercise?: string }>) || [];
       const mainExercises = main
@@ -120,20 +122,101 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    // 8. Build prompt + call DeepSeek
+    // 8. Build prompt
     const { system, user: userPrompt } = buildSessionPrompt(
       profile,
       corpusDocs,
       prevSession,
     );
 
-    const rawResponse = await generateChatCompletion(
-      [
-        { role: 'system', content: system },
-        { role: 'user', content: userPrompt },
-      ],
-      { temperature: 0.7, maxTokens: 2048, jsonMode: true },
-    );
+    const messages: Array<{
+      role: 'system' | 'user';
+      content: string;
+    }> = [
+      { role: 'system', content: system },
+      { role: 'user', content: userPrompt },
+    ];
+
+    // ─── Streaming mode ───
+    const wantsStreaming =
+      request.headers.get('Accept') === 'text/plain';
+
+    if (wantsStreaming) {
+      const encoder = new TextEncoder();
+      let accumulated = '';
+
+      const stream = new ReadableStream({
+        async start(controller) {
+          try {
+            for await (const token of streamChatCompletion(messages, {
+              temperature: 0.7,
+              maxTokens: 2048,
+              jsonMode: true,
+            })) {
+              accumulated += token;
+              controller.enqueue(encoder.encode(token));
+            }
+
+            // Parse and save
+            let sessionData: unknown;
+            try {
+              sessionData = JSON.parse(accumulated);
+            } catch {
+              controller.enqueue(
+                encoder.encode('\nSESSION_ID:error:invalid-json'),
+              );
+              controller.close();
+              return;
+            }
+
+            const { data: inserted, error: insertError } = await supabase
+              .from('workout_sessions')
+              .insert({
+                user_id: user.id,
+                session_data: sessionData as Record<string, unknown>,
+                scheduled_date: new Date().toISOString().split('T')[0],
+                days_since_last: daysSinceLast,
+              })
+              .select('id')
+              .single();
+
+            if (insertError) {
+              controller.enqueue(
+                encoder.encode(
+                  `\nSESSION_ID:error:${insertError.message}`,
+                ),
+              );
+            } else {
+              controller.enqueue(
+                encoder.encode(`\nSESSION_ID:${inserted.id}`),
+              );
+            }
+            controller.close();
+          } catch (err) {
+            const msg =
+              err instanceof Error ? err.message : 'stream error';
+            controller.enqueue(
+              encoder.encode(`\nSESSION_ID:error:${msg}`),
+            );
+            controller.close();
+          }
+        },
+      });
+
+      return new Response(stream, {
+        headers: {
+          'Content-Type': 'text/plain; charset=utf-8',
+          'Cache-Control': 'no-cache',
+        },
+      });
+    }
+
+    // ─── Non-streaming mode (original) ───
+    const rawResponse = await generateChatCompletion(messages, {
+      temperature: 0.7,
+      maxTokens: 2048,
+      jsonMode: true,
+    });
 
     // 9. Parse + validate JSON
     let sessionData: unknown;

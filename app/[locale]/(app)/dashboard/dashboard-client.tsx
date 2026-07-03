@@ -15,7 +15,13 @@ interface GenerateResponse {
   error?: string;
 }
 
-type ViewState = 'idle' | 'loading' | 'success' | 'completed' | 'error';
+type ViewState =
+  | 'idle'
+  | 'loading'
+  | 'streaming'
+  | 'success'
+  | 'completed'
+  | 'error';
 
 // ─── Helpers ───
 
@@ -178,34 +184,75 @@ export default function DashboardClient({
   const [session, setSession] = useState<SessionData | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [streamText, setStreamText] = useState('');
 
   async function handleGenerate() {
     setViewState('loading');
     setErrorMsg('');
+    setStreamText('');
 
     try {
       const res = await fetch('/api/generate-session', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'text/plain',
+        },
         body: JSON.stringify({ locale }),
       });
 
-      const data: GenerateResponse = await res.json();
-
-      if (!res.ok || data.error) {
-        setErrorMsg(data.error || 'Unknown error');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({ error: 'Unknown error' }));
+        setErrorMsg(data.error || `HTTP ${res.status}`);
         setViewState('error');
         return;
       }
 
-      if (!data.session) {
-        setErrorMsg('No session data in response');
+      // Streaming: read chunks
+      setViewState('streaming');
+      const reader = res.body!.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        fullText += decoder.decode(value, { stream: true });
+        setStreamText(fullText);
+      }
+
+      // Parse: split SESSION_ID marker from JSON
+      const metaIdx = fullText.lastIndexOf('\nSESSION_ID:');
+      let jsonText: string;
+      let metaValue: string | null = null;
+
+      if (metaIdx !== -1) {
+        jsonText = fullText.slice(0, metaIdx);
+        metaValue = fullText.slice(metaIdx + '\nSESSION_ID:'.length).trim();
+      } else {
+        jsonText = fullText;
+      }
+
+      // Validate meta
+      if (!metaValue || metaValue.startsWith('error:')) {
+        const errDetail = metaValue?.replace('error:', '') || 'stream failed';
+        setErrorMsg(errDetail);
         setViewState('error');
         return;
       }
 
-      setSession(data.session);
-      setSessionId(data.session_id ?? null);
+      // Parse JSON
+      let sessionData: SessionData;
+      try {
+        sessionData = JSON.parse(jsonText);
+      } catch {
+        setErrorMsg('Failed to parse AI response');
+        setViewState('error');
+        return;
+      }
+
+      setSession(sessionData);
+      setSessionId(metaValue);
       setViewState('success');
     } catch {
       setErrorMsg(t('error'));
@@ -230,6 +277,19 @@ export default function DashboardClient({
             <Spinner />
           </div>
           <p className="text-text-muted text-sm">{t('generating')}</p>
+        </div>
+      )}
+
+      {/* Streaming state */}
+      {viewState === 'streaming' && (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 text-sm text-text-muted">
+            <Spinner />
+            <span>{t('streaming')}</span>
+          </div>
+          <pre className="bg-surface-800 border border-border rounded p-4 text-xs text-text-primary font-mono whitespace-pre-wrap max-h-96 overflow-y-auto">
+            {streamText}
+          </pre>
         </div>
       )}
 
