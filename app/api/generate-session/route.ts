@@ -7,7 +7,7 @@ import {
 import { getEmbedding } from '@/lib/nvidia/client';
 import { buildSessionPrompt } from '@/lib/prompts/build-session-prompt';
 import type { CorpusDoc } from '@/lib/prompts/build-session-prompt';
-import type { PreviousSession } from '@/lib/prompts/build-session-prompt';
+import type { SessionHistory } from '@/lib/prompts/build-session-prompt';
 
 export async function POST(request: NextRequest) {
   // 1. Auth check
@@ -44,38 +44,73 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 4. Fetch previous completed session (for adaptation)
-    let prevSession: PreviousSession | undefined;
+    // 4. Fetch training history (last 5 sessions for multi-session analysis)
+    let sessionHistory: SessionHistory | undefined;
     let daysSinceLast: number | null = null;
 
-    const { data: lastSession, error: lastError } = await supabase
+    const { data: recentSessions, error: recentError } = await supabase
       .from('workout_sessions')
       .select('rpe, session_data, completed_at')
       .eq('user_id', user.id)
       .not('completed_at', 'is', null)
       .order('completed_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .limit(5);
 
-    if (!lastError && lastSession) {
-      // 5. Calculate days_since_last
-      const prevDate = new Date(lastSession.completed_at!);
+    if (!recentError && recentSessions && recentSessions.length > 0) {
+      // 5. Calculate days_since_last from most recent
+      const lastDate = new Date(recentSessions[0].completed_at!);
       const now = new Date();
       daysSinceLast = Math.floor(
-        (now.getTime() - prevDate.getTime()) / (1000 * 60 * 60 * 24),
+        (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24),
       );
 
-      const sessionData = lastSession.session_data as Record<string, unknown>;
-      const main = (sessionData?.main as Array<{ exercise?: string }>) || [];
-      const mainExercises = main
-        .map((ex) => ex.exercise)
-        .filter((e): e is string => typeof e === 'string');
+      // Extract exercises for each session
+      const sessions = recentSessions.map((s) => {
+        const sd = s.session_data as Record<string, unknown>;
+        const main = (sd?.main as Array<{ exercise?: string }>) || [];
+        return {
+          rpe: s.rpe,
+          completedAt: s.completed_at!,
+          mainExercises: main
+            .map((ex) => ex.exercise)
+            .filter((e): e is string => typeof e === 'string'),
+        };
+      });
 
-      prevSession = {
-        rpe: lastSession.rpe,
-        completedAt: lastSession.completed_at!,
-        daysSinceLast,
-        mainExercises,
+      // Calculate average RPE
+      const rpeValues = sessions
+        .filter((s) => s.rpe != null)
+        .map((s) => s.rpe!);
+      const averageRpe =
+        rpeValues.length > 0
+          ? rpeValues.reduce((a, b) => a + b, 0) / rpeValues.length
+          : null;
+
+      // Calculate RPE trend from last 3
+      const last3Rpe = sessions
+        .slice(0, 3)
+        .filter((s) => s.rpe != null)
+        .map((s) => s.rpe!);
+      let rpeTrend: SessionHistory['rpeTrend'] = 'insufficient_data';
+      if (last3Rpe.length >= 2) {
+        const diff = last3Rpe[0] - last3Rpe[last3Rpe.length - 1];
+        if (diff >= 2) rpeTrend = 'increasing';
+        else if (diff <= -1) rpeTrend = 'decreasing';
+        else rpeTrend = 'stable';
+      }
+
+      // Count sessions this week
+      const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const sessionsThisWeek = recentSessions.filter(
+        (s) => new Date(s.completed_at!) >= weekAgo,
+      ).length;
+
+      sessionHistory = {
+        sessions,
+        averageRpe,
+        rpeTrend,
+        sessionsThisWeek,
+        lastSessionDaysAgo: daysSinceLast,
       };
     }
 
@@ -126,7 +161,7 @@ export async function POST(request: NextRequest) {
     const { system, user: userPrompt } = buildSessionPrompt(
       profile,
       corpusDocs,
-      prevSession,
+      sessionHistory,
     );
 
     const messages: Array<{

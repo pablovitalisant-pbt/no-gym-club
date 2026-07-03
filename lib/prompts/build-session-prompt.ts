@@ -9,11 +9,16 @@ export interface CorpusDoc {
   similarity: number;
 }
 
-export interface PreviousSession {
-  rpe: number | null;
-  completedAt: string;
-  daysSinceLast: number;
-  mainExercises: string[];
+export interface SessionHistory {
+  sessions: {
+    rpe: number | null;
+    completedAt: string;
+    mainExercises: string[];
+  }[];
+  averageRpe: number | null;
+  rpeTrend: 'increasing' | 'decreasing' | 'stable' | 'insufficient_data';
+  sessionsThisWeek: number;
+  lastSessionDaysAgo: number;
 }
 
 export interface SessionPrompt {
@@ -33,7 +38,7 @@ You generate training sessions anchored in sport science. Rules:
 - Warmup: 3-5 mobility/dynamic exercises. Cooldown: 2-3 static stretches.
 - "science_refs" lists the sport science categories that support this session design.
 - If the user's goal is general_fitness, balance push/pull/legs/core. If hypertrophy, bias volume. If endurance, bias circuit-style. If master_skills, include skill practice blocks.
-- ADAPTATION: if previous session data is provided, rotate muscle groups away from what was trained. Adjust volume: previous RPE ≥ 8 → reduce volume 10-20% (under-recovered). Previous RPE ≤ 5 → increase volume 10-20% (under-stimulated). Days since last > 3 → include re-adaptation phase with reduced intensity. Days since last = 1 → normal progression.`;
+- ADAPTATION: if training history is provided, use trends to adjust. RPE trending up ≥2 points over last 3 sessions → reduce volume 15-25% (accumulated fatigue). RPE trending down → increase volume progressively. Fewer than 2 sessions this week → prioritize full-body, moderate intensity. Rotate muscle groups away from last 2 sessions.`;
 
 function formatCorpusContext(docs: CorpusDoc[]): string {
   if (!docs.length) return '';
@@ -59,40 +64,49 @@ function formatProfile(profile: ProfileRow): string {
   return parts.join('\n');
 }
 
-function formatPreviousSession(prev: PreviousSession): string {
-  const rpeText = prev.rpe != null ? `${prev.rpe}/10` : 'not recorded';
-  const exerciseList =
-    prev.mainExercises.length > 0
-      ? prev.mainExercises.join(', ')
-      : 'unknown';
+function formatSessionHistory(history: SessionHistory): string {
+  const rpeValues = history.sessions
+    .filter((s) => s.rpe != null)
+    .map((s) => s.rpe!)
+    .slice(0, 3)
+    .join(', ');
 
-  return `## Previous Session Summary
-- Completed: ${prev.daysSinceLast} day(s) ago
-- Overall RPE: ${rpeText}
-- Main exercises performed: ${exerciseList}
+  const recentMuscles = new Set<string>();
+  history.sessions.slice(0, 2).forEach((s) => {
+    s.mainExercises.forEach((ex) => recentMuscles.add(ex));
+  });
 
-Adapt today's session based on this history:
-- Rotate to muscle groups NOT trained in the previous session.
-- If previous RPE ≥ 8: reduce volume 10-20% (under-recovered).
-- If previous RPE ≤ 5: increase volume 10-20% (under-stimulated).
-- If days since last > 3: include re-adaptation, reduce intensity.
-- If days since last = 1: normal progression, slight overload.`;
+  return `## Training History (last ${history.sessions.length} sessions)
+- Completed sessions in history: ${history.sessions.length}
+- Sessions this week: ${history.sessionsThisWeek}
+- Average RPE: ${history.averageRpe != null ? history.averageRpe.toFixed(1) : 'N/A'}
+- RPE trend: ${history.rpeTrend}${rpeValues ? ` (${rpeValues})` : ''}
+- Days since last session: ${history.lastSessionDaysAgo}
+- Recent exercises: ${[...recentMuscles].join(', ') || 'none'}
+
+Adapt today's session considering:
+- If RPE trend is "increasing" with ≥2 point rise: reduce volume 15-25%.
+- If RPE trend is "decreasing": progressive overload is working, continue.
+- If sessionsThisWeek < 2: full-body session, moderate intensity (re-adaptation).
+- Rotate away from muscle groups targeted by recent exercises listed above.`;
 }
 
 export function buildSessionPrompt(
   profile: ProfileRow,
   corpusDocs: CorpusDoc[],
-  prevSession?: PreviousSession,
+  sessionHistory?: SessionHistory,
 ): SessionPrompt {
   const profileText = formatProfile(profile);
   const corpusText = formatCorpusContext(corpusDocs);
-  const prevText = prevSession ? formatPreviousSession(prevSession) : '';
+  const historyText = sessionHistory
+    ? formatSessionHistory(sessionHistory)
+    : '';
 
   const user = `Generate today's training session for this athlete:
 
 ## Athlete Profile
 ${profileText}
-${prevText}${corpusText}
+${historyText}${corpusText}
 
 ## Output Format
 {

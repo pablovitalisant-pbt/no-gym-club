@@ -67,12 +67,13 @@ describe('Slice 7 — daily adaptation', () => {
     const path = resolve(root, 'lib/prompts/build-session-prompt.ts');
     const raw = readFileSync(path, 'utf-8');
     expect(raw, 'debe exportar buildSessionPrompt').toContain('buildSessionPrompt');
-    // Debe tener un 3er parámetro opcional (prevSession o previous)
+    // Debe tener un 3er parámetro opcional (SessionHistory, prevSession o previous)
     const hasOptional =
+      raw.includes('SessionHistory') ||
       raw.includes('prevSession') ||
       raw.includes('previous') ||
       raw.includes('PreviousSession');
-    expect(hasOptional, 'debe aceptar parametro opcional de sesion anterior').toBe(true);
+    expect(hasOptional, 'debe aceptar parametro opcional de historial').toBe(true);
     // El parámetro debe ser opcional (con ?)
     expect(raw, '3er parametro debe ser opcional').toContain('?');
   });
