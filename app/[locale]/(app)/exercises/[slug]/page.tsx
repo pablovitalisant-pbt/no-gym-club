@@ -45,8 +45,16 @@ export default async function ExerciseDetailPage({
       </a>
 
       {/* Image placeholder */}
-      <div className="aspect-video bg-surface-800 rounded flex items-center justify-center text-text-muted text-4xl">
-        💪
+      <div className="aspect-video bg-surface-800 rounded flex items-center justify-center text-text-muted overflow-hidden">
+        {exercise.gif_url ? (
+          <img
+            src={exercise.gif_url}
+            alt={exercise.name_en}
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <span className="text-4xl">💪</span>
+        )}
       </div>
 
       {/* Title + badges */}

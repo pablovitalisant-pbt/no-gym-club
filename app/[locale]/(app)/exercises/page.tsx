@@ -110,8 +110,17 @@ export default async function ExercisesPage({
             href={`/${locale}/exercises/${ex.slug}`}
             className="block bg-surface-800 border border-border rounded p-4 hover:border-accent/50 transition-colors"
           >
-            <div className="aspect-video bg-surface-900 rounded mb-3 flex items-center justify-center text-text-muted text-xs">
-              {ex.image_url ? '📷' : '💪'}
+            <div className="aspect-video bg-surface-900 rounded mb-3 flex items-center justify-center text-text-muted overflow-hidden">
+              {ex.gif_url ? (
+                <img
+                  src={ex.gif_url}
+                  alt={ex.name_en}
+                  className="w-full h-full object-contain"
+                  loading="lazy"
+                />
+              ) : (
+                <span className="text-2xl">💪</span>
+              )}
             </div>
             <h3 className="text-sm font-semibold text-text-primary">
               {locale === 'en' ? ex.name_en : ex.name_es}
