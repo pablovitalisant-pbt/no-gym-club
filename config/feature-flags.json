@@ -6,5 +6,6 @@
   "ai_session_generation": true,
   "session_log": true,
   "session_runner": true,
-  "exercises_catalog": true
+  "exercises_catalog": true,
+  "weekly_report": true
 }

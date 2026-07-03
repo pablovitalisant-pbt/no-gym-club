@@ -69,6 +69,20 @@
     "regression": "▼ Regresión",
     "backToCatalog": "Volver al catálogo"
   },
+  "weekly": {
+    "title": "Reporte Semanal",
+    "sessionsThisWeek": "Sesiones",
+    "averageRpe": "RPE promedio",
+    "totalSets": "Sets totales",
+    "muscleDistribution": "Distribución muscular",
+    "consistency": "Consistencia",
+    "previousWeek": "Semana anterior",
+    "trendUp": "↑ RPE subiendo",
+    "trendDown": "↓ RPE bajando",
+    "trendStable": "→ RPE estable",
+    "noData": "Sin datos",
+    "daysTrained": "Días entrenados"
+  },
   "session": {
     "fallback": "Motor de sesión — próximamente",
     "start": "Comenzar",

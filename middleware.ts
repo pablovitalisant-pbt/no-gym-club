@@ -18,7 +18,7 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const locale = pathname.split('/')[1] || defaultLocale;
 
-  const PROTECTED_PATHS = ['/dashboard', '/assessment', '/session', '/exercises'];
+  const PROTECTED_PATHS = ['/dashboard', '/assessment', '/session', '/exercises', '/weekly-report'];
   const isProtected = PROTECTED_PATHS.some(
     (path) => pathname.startsWith(`/${locale}${path}`),
   );

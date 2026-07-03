@@ -69,6 +69,20 @@
     "regression": "▼ Regression",
     "backToCatalog": "Back to catalog"
   },
+  "weekly": {
+    "title": "Weekly Report",
+    "sessionsThisWeek": "Sessions",
+    "averageRpe": "Avg RPE",
+    "totalSets": "Total Sets",
+    "muscleDistribution": "Muscle Distribution",
+    "consistency": "Consistency",
+    "previousWeek": "Previous Week",
+    "trendUp": "↑ RPE increasing",
+    "trendDown": "↓ RPE decreasing",
+    "trendStable": "→ RPE stable",
+    "noData": "No data",
+    "daysTrained": "Days trained"
+  },
   "session": {
     "fallback": "Session runner — coming soon",
     "start": "Start",
