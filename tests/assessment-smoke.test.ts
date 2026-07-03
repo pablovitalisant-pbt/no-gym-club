@@ -151,6 +151,6 @@ describe('Slice 4a — assessment profile + PAR-Q', () => {
       readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'),
     );
     expect(flags).toHaveProperty('assessment');
-    expect(flags.assessment).toBe(false);
+    expect(flags.assessment).toBe(true);
   });
 });

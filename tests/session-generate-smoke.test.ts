@@ -90,6 +90,6 @@ describe('Slice 4c-ai — generate session', () => {
       'ai_session_generation' in flags,
       'feature-flags.json debe tener ai_session_generation',
     ).toBe(true);
-    expect(flags.ai_session_generation, 'ai_session_generation debe ser false').toBe(false);
+    expect(flags.ai_session_generation, 'ai_session_generation debe estar definido').toBe(true);
   });
 });

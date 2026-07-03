@@ -87,6 +87,6 @@ describe('Slice 2b — auth pages', () => {
       readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'),
     );
     expect(flags).toHaveProperty('auth');
-    expect(flags.auth).toBe(false);
+    expect(flags.auth).toBe(true);
   });
 });

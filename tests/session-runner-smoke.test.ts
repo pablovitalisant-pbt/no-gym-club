@@ -123,7 +123,7 @@ describe('Slice 8 — session runner (tap timer)', () => {
       'session_runner' in flags,
       'debe existir session_runner en feature-flags.json',
     ).toBe(true);
-    expect(flags.session_runner, 'session_runner debe ser false').toBe(false);
+    expect(flags.session_runner, 'session_runner debe estar definido').toBe(true);
   });
 
   // ─── Riesgo 8: i18n keys simétricas ───

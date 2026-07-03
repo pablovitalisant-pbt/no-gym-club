@@ -52,7 +52,7 @@ describe('Slice 2c — auth guard + dashboard', () => {
       readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'),
     );
     expect(flags).toHaveProperty('dashboard');
-    expect(flags.dashboard).toBe(false);
+    expect(flags.dashboard).toBe(true);
   });
 
   // ─── Riesgo 4: dashboard keys simetricas ───

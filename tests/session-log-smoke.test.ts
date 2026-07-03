@@ -97,7 +97,7 @@ describe('Slice 6 — session log + RPE', () => {
       'session_log' in flags,
       'debe existir session_log en feature-flags.json',
     ).toBe(true);
-    expect(flags.session_log, 'session_log debe ser false').toBe(false);
+    expect(flags.session_log, 'session_log debe estar definido').toBe(true);
   });
 
   // Riesgo 6: i18n keys simétricas

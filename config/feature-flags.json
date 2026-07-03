@@ -1,9 +1,9 @@
 {
-  "landing_page": false,
-  "auth": false,
-  "dashboard": false,
-  "assessment": false,
-  "ai_session_generation": false,
-  "session_log": false,
-  "session_runner": false
+  "landing_page": true,
+  "auth": true,
+  "dashboard": true,
+  "assessment": true,
+  "ai_session_generation": true,
+  "session_log": true,
+  "session_runner": true
 }

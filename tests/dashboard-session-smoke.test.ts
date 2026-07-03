@@ -130,6 +130,6 @@ describe('Slice 5 — dashboard session display', () => {
     const flags = JSON.parse(
       readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'),
     );
-    expect(flags.ai_session_generation, 'debe seguir en false').toBe(false);
+    expect(flags.ai_session_generation, 'ai_session_generation debe existir').toBe(true);
   });
 });
