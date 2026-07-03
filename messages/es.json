@@ -52,7 +52,8 @@
     "save": "Guardar",
     "saving": "Guardando...",
     "saved": "¡Sesión registrada!",
-    "logError": "Error al guardar"
+    "logError": "Error al guardar",
+    "exerciseLogTitle": "Resultados por ejercicio (reps reales)"
   },
   "session": {
     "fallback": "Motor de sesión — próximamente",

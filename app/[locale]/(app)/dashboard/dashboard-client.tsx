@@ -321,6 +321,7 @@ export default function DashboardClient({
               {showLog && (
                 <LogForm
                   sessionId={sessionId}
+                  session={session}
                   onSaved={() => setViewState('completed')}
                 />
               )}
