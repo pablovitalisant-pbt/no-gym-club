@@ -55,6 +55,20 @@
     "logError": "Error al guardar",
     "exerciseLogTitle": "Resultados por ejercicio (reps reales)"
   },
+  "catalog": {
+    "title": "Catálogo de ejercicios",
+    "allCategories": "Todas",
+    "allDifficulties": "Todas",
+    "filterCategory": "Categoría",
+    "filterDifficulty": "Dificultad",
+    "instructions": "Instrucciones",
+    "muscles": "Músculos principales",
+    "secondaryMuscles": "Músculos secundarios",
+    "equipment": "Equipamiento",
+    "progression": "▲ Progresión",
+    "regression": "▼ Regresión",
+    "backToCatalog": "Volver al catálogo"
+  },
   "session": {
     "fallback": "Motor de sesión — próximamente",
     "start": "Comenzar",

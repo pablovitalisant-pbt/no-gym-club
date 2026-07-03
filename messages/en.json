@@ -55,6 +55,20 @@
     "logError": "Error saving",
     "exerciseLogTitle": "Per-exercise results (actual reps)"
   },
+  "catalog": {
+    "title": "Exercise Catalog",
+    "allCategories": "All",
+    "allDifficulties": "All",
+    "filterCategory": "Category",
+    "filterDifficulty": "Difficulty",
+    "instructions": "Instructions",
+    "muscles": "Primary Muscles",
+    "secondaryMuscles": "Secondary Muscles",
+    "equipment": "Equipment",
+    "progression": "▲ Progression",
+    "regression": "▼ Regression",
+    "backToCatalog": "Back to catalog"
+  },
   "session": {
     "fallback": "Session runner — coming soon",
     "start": "Start",
