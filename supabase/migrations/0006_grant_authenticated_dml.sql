@@ -1,5 +1,6 @@
--- Otorgar permisos DML al rol authenticated en todas las tablas de la app
--- RLS controla qué filas, GRANT controla si el rol puede operar
+-- Grant DML permissions to authenticated role
+-- RLS controls which rows, GRANT controls if the role can operate at all
+-- Applied manually via MCP on 2026-07-02, now formalized in migrations
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE profiles TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE assessment_results TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE workout_sessions TO authenticated;
