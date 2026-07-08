@@ -114,6 +114,8 @@
     "prescribed": "Prescrito",
     "actualRepsLabel": "Reps reales",
     "confirmReps": "Confirmar",
+    "mute": "Silenciar alarma",
+    "unmute": "Activar alarma",
     "skipRest": "Saltar descanso",
     "nextExercise": "Siguiente",
     "restComplete": "¡A entrenar!",

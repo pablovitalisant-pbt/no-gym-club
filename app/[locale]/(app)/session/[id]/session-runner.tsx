@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/Button';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
+import { useAudioPreference } from '@/lib/useAudioPreference';
 
 type RunnerState = 'idle' | 'active' | 'timing' | 'reps' | 'rest' | 'done';
 type Section = 'warmup' | 'main' | 'cooldown';
@@ -57,6 +58,9 @@ export default function SessionRunner({
   const restTimesRef = useRef<RestTimeEntry[]>([]);
   const exerciseLogRef = useRef<RepEntry[]>([]);
   const repsSubmittedRef = useRef(false);
+  const [audioEnabled, toggleAudio] = useAudioPreference();
+  const audioRef = useRef(audioEnabled);
+  audioRef.current = audioEnabled;
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -110,7 +114,7 @@ export default function SessionRunner({
             if (timerRef.current) clearInterval(timerRef.current);
             timerRef.current = null;
             recordActualRest();
-            playBeep();
+            if (audioRef.current) playBeep();
             // Auto-advance to next exercise
             setState('active');
             setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
@@ -198,7 +202,7 @@ export default function SessionRunner({
         if (prev <= 1) {
           if (timerRef.current) clearInterval(timerRef.current);
           timerRef.current = null;
-          playBeep();
+          if (audioRef.current) playBeep();
           handleDone();
           return 0;
         }
@@ -212,7 +216,19 @@ export default function SessionRunner({
   // ─── Render ───
 
   return (
-    <div className="max-w-lg mx-auto">
+    <div className="max-w-lg mx-auto relative">
+      {/* Audio toggle — visible in active states */}
+      {state !== 'idle' && state !== 'done' && (
+        <button
+          onClick={toggleAudio}
+          className="absolute top-2 right-2 text-xs text-text-muted hover:text-text-primary transition-colors"
+          aria-label={audioEnabled ? t('mute') : t('unmute')}
+          title={audioEnabled ? t('mute') : t('unmute')}
+        >
+          {audioEnabled ? '🔊' : '🔇'}
+        </button>
+      )}
+
       {/* Idle: Start screen */}
       {state === 'idle' && (
         <div className="text-center py-16 space-y-6">

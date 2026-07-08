@@ -114,6 +114,8 @@
     "prescribed": "Prescribed",
     "actualRepsLabel": "Actual reps",
     "confirmReps": "Confirm",
+    "mute": "Mute alarm",
+    "unmute": "Enable alarm",
     "skipRest": "Skip rest",
     "nextExercise": "Next",
     "restComplete": "Let's go!",
