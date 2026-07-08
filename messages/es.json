@@ -108,6 +108,8 @@
     "fallback": "Motor de sesión — próximamente",
     "start": "Comenzar",
     "done": "Listo",
+    "startTimer": "¡Vamos!",
+    "timer": "Cronómetro",
     "skipRest": "Saltar descanso",
     "nextExercise": "Siguiente",
     "restComplete": "¡A entrenar!",

@@ -108,6 +108,8 @@
     "fallback": "Session runner — coming soon",
     "start": "Start",
     "done": "Done",
+    "startTimer": "Go!",
+    "timer": "Timer",
     "skipRest": "Skip rest",
     "nextExercise": "Next",
     "restComplete": "Let's go!",

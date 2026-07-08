@@ -8,7 +8,7 @@ import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, type RestTimeEntry } from './actions';
 import { playBeep } from '@/lib/audio';
 
-type RunnerState = 'idle' | 'active' | 'rest' | 'done';
+type RunnerState = 'idle' | 'active' | 'timing' | 'rest' | 'done';
 type Section = 'warmup' | 'main' | 'cooldown';
 
 interface FlatExercise extends SessionExercise {
@@ -45,6 +45,7 @@ export default function SessionRunner({
   const [state, setState] = useState<RunnerState>('idle');
   const [index, setIndex] = useState(0);
   const [restSeconds, setRestSeconds] = useState(0);
+  const [timingSeconds, setTimingSeconds] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const restStartRef = useRef<number>(0);
   const restInfoRef = useRef<{
@@ -142,6 +143,24 @@ export default function SessionRunner({
     }
   }, [isLast, recordActualRest]);
 
+  const handleStartTimer = useCallback(() => {
+    if (!current?.duration_seconds) return;
+    setTimingSeconds(current.duration_seconds);
+    setState('timing');
+    timerRef.current = setInterval(() => {
+      setTimingSeconds((prev) => {
+        if (prev <= 1) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          timerRef.current = null;
+          playBeep();
+          handleDone();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  }, [current, handleDone]);
+
   const nextEx = allExercises[index + 1];
 
   // ─── Render ───
@@ -206,8 +225,41 @@ export default function SessionRunner({
             )}
           </div>
 
-          {/* Done button */}
-          <Button onClick={handleDone}>{t('done')}</Button>
+          {/* Action button: Vamos! for timed, Done for sets/reps */}
+          {current.duration_seconds != null ? (
+            <Button onClick={handleStartTimer}>{t('startTimer')}</Button>
+          ) : (
+            <Button onClick={handleDone}>{t('done')}</Button>
+          )}
+        </div>
+      )}
+
+      {/* Timing: Countdown for timed exercises */}
+      {state === 'timing' && (
+        <div className="text-center py-16 space-y-6">
+          <p className="text-xs text-text-muted uppercase tracking-widest">
+            {t('timer')}
+          </p>
+
+          {/* Countdown */}
+          <p className="text-6xl font-bold tabular-nums text-accent">
+            {timingSeconds}
+          </p>
+
+          {/* Exercise name */}
+          <p className="text-lg text-text-primary font-semibold">
+            {current?.exercise}
+          </p>
+
+          {/* Next exercise preview */}
+          {nextEx && (
+            <p className="text-sm text-text-muted">
+              {t('nextExercise')}:{' '}
+              <span className="text-text-primary font-medium">
+                {nextEx.exercise}
+              </span>
+            </p>
+          )}
         </div>
       )}
 
