@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
+import LogForm from '../../dashboard/log-form';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
@@ -403,10 +404,15 @@ export default function SessionRunner({
           <p className="text-green-400 text-lg font-semibold">
             {t('complete')}
           </p>
-          <p className="text-sm text-text-muted">{t('completeMessage')}</p>
-          <Button onClick={() => router.push('/dashboard')}>
-            {t('backToDashboard')}
-          </Button>
+          <LogForm
+            sessionId={sessionId}
+            session={session}
+            onSaved={() => {
+              setTimeout(() => {
+                router.push('/dashboard');
+              }, 1500);
+            }}
+          />
         </div>
       )}
     </div>
