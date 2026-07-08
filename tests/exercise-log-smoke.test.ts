@@ -16,48 +16,41 @@ describe('Exercise log — per-exercise actuals', () => {
     expect(raw, 'debe recibir session prop').toContain('session');
   });
 
-  // Riesgo 2: LogForm muestra ejercicios del bloque main
-  it('log-form.tsx muestra ejercicios del main con inputs de reps', () => {
+  // Riesgo 2: session-runner captura reps reales en estado 'reps'
+  it('session-runner.tsx captura reps reales en estado reps con input', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/log-form.tsx',
+      'app/[locale]/(app)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
-    // Debe iterar sobre session.main o tener inputs por ejercicio
-    expect(raw, 'debe referenciar main exercises').toContain('main');
-    // Debe tener inputs o text fields para reps reales
-    const hasInput =
-      raw.includes('actualReps') ||
-      raw.includes('reps') ||
-      raw.includes('result');
-    expect(hasInput, 'debe tener campos para reps reales').toBe(true);
+    expect(raw, 'debe tener estado reps').toContain("'reps'");
+    expect(raw, 'debe tener input para reps').toContain('repsInput');
   });
 
-  // Riesgo 3: saveSessionLog acepta exerciseLog como parámetro
-  it('actions.ts saveSessionLog acepta parametro exerciseLog', () => {
+  // Riesgo 3: session/[id]/actions.ts exporta saveExerciseReps
+  it('session/[id]/actions.ts exporta saveExerciseReps', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/actions.ts',
+      'app/[locale]/(app)/session/[id]/actions.ts',
     );
     const raw = readFileSync(path, 'utf-8');
-    expect(raw, 'debe aceptar exerciseLog').toContain('exerciseLog');
+    expect(raw, 'debe ser server action').toContain("'use server'");
+    expect(raw, 'debe exportar saveExerciseReps').toContain('saveExerciseReps');
   });
 
-  // Riesgo 4: actions.ts hace SELECT antes del UPDATE (merge)
-  it('actions.ts hace SELECT de log_data antes del UPDATE para merge', () => {
+  // Riesgo 4: session/[id]/actions.ts mergea log_data (SELECT antes de UPDATE)
+  it('session/[id]/actions.ts hace SELECT de log_data antes del UPDATE', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/actions.ts',
+      'app/[locale]/(app)/session/[id]/actions.ts',
     );
     const raw = readFileSync(path, 'utf-8');
-    // Debe leer log_data existente antes de hacer UPDATE
-    const selectIdx = raw.indexOf('.select');
-    const updateIdx = raw.indexOf('.update');
+    const selectIdx = raw.indexOf('.select(');
+    const updateIdx = raw.indexOf('.update(');
     expect(selectIdx, 'debe hacer SELECT para leer log_data').toBeGreaterThan(
       -1,
     );
     expect(updateIdx, 'debe hacer UPDATE').toBeGreaterThan(-1);
-    // SELECT debe estar antes que UPDATE (merge strategy)
     expect(
       selectIdx < updateIdx,
       'SELECT debe ejecutarse antes del UPDATE',

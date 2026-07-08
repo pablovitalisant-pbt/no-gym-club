@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
-import { saveSessionLog, type ExerciseLogEntry } from './actions';
+import { saveSessionLog } from './actions';
 import type { SessionData } from '@/lib/types/session';
 
 const RPE_DESCRIPTORS = [
@@ -34,35 +34,16 @@ export default function LogForm({ sessionId, session, onSaved }: LogFormProps) {
   const [formState, setFormState] = useState<FormState>('idle');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Initialize exercise log from prescribed values
-  const [exerciseReps, setExerciseReps] = useState<Record<number, string>>(
-    () => {
-      const initial: Record<number, string> = {};
-      session.main.forEach((ex, i) => {
-        initial[i] = ex.reps || '';
-      });
-      return initial;
-    },
-  );
-
   async function handleSave() {
     if (rpe == null) return;
 
     setFormState('saving');
     setErrorMsg('');
 
-    const exerciseLog: ExerciseLogEntry[] = session.main.map((ex, i) => ({
-      exercise: ex.exercise,
-      prescribedSets: ex.sets || 0,
-      prescribedReps: ex.reps || '',
-      actualReps: exerciseReps[i] || '',
-    }));
-
     const result = await saveSessionLog(
       sessionId,
       rpe,
       notes || undefined,
-      exerciseLog,
     );
 
     if (!result.success) {
@@ -122,42 +103,6 @@ export default function LogForm({ sessionId, session, onSaved }: LogFormProps) {
           </p>
         )}
       </div>
-
-      {/* Exercise log */}
-      {session.main.length > 0 && (
-        <div>
-          <p className="text-xs text-text-muted mb-2">
-            {t('exerciseLogTitle')}
-          </p>
-          <div className="space-y-2">
-            {session.main.map((ex, i) => (
-              <div
-                key={i}
-                className="flex items-center gap-3 bg-surface-800 border border-border rounded px-3 py-2"
-              >
-                <span className="text-sm text-text-primary flex-1 min-w-0 truncate">
-                  {ex.exercise}
-                </span>
-                <span className="text-xs text-text-muted shrink-0">
-                  {ex.sets}×{ex.reps}
-                </span>
-                <input
-                  type="text"
-                  value={exerciseReps[i] || ''}
-                  onChange={(e) =>
-                    setExerciseReps((prev) => ({
-                      ...prev,
-                      [i]: e.target.value,
-                    }))
-                  }
-                  className="w-20 bg-surface-900 border border-border rounded px-2 py-1 text-xs text-text-primary text-center focus:outline-none focus:border-accent"
-                  placeholder={ex.reps}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Notes */}
       <div>

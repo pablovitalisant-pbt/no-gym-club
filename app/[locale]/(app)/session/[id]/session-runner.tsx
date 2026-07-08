@@ -5,10 +5,10 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
-import { saveSessionTimes, type RestTimeEntry } from './actions';
+import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
 
-type RunnerState = 'idle' | 'active' | 'timing' | 'rest' | 'done';
+type RunnerState = 'idle' | 'active' | 'timing' | 'reps' | 'rest' | 'done';
 type Section = 'warmup' | 'main' | 'cooldown';
 
 interface FlatExercise extends SessionExercise {
@@ -46,6 +46,7 @@ export default function SessionRunner({
   const [index, setIndex] = useState(0);
   const [restSeconds, setRestSeconds] = useState(0);
   const [timingSeconds, setTimingSeconds] = useState(0);
+  const [repsInput, setRepsInput] = useState('');
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const restStartRef = useRef<number>(0);
   const restInfoRef = useRef<{
@@ -54,6 +55,8 @@ export default function SessionRunner({
     prescribedRest: number;
   }>({ exerciseIndex: 0, exercise: '', prescribedRest: 0 });
   const restTimesRef = useRef<RestTimeEntry[]>([]);
+  const exerciseLogRef = useRef<RepEntry[]>([]);
+  const repsSubmittedRef = useRef(false);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -62,10 +65,17 @@ export default function SessionRunner({
     };
   }, []);
 
-  // Save rest times when session completes
+  // Flush accumulated data when session completes
   useEffect(() => {
-    if (state === 'done' && restTimesRef.current.length > 0) {
-      saveSessionTimes(sessionId, restTimesRef.current);
+    if (
+      state === 'done' &&
+      (restTimesRef.current.length > 0 || exerciseLogRef.current.length > 0)
+    ) {
+      saveSessionTimes(
+        sessionId,
+        restTimesRef.current,
+        exerciseLogRef.current,
+      );
     }
   }, [state, sessionId]);
 
@@ -119,6 +129,14 @@ export default function SessionRunner({
       timerRef.current = null;
     }
     const ex = current;
+    // Intercept sets/reps exercises: ask for actual reps before advancing
+    if (ex && ex.sets != null && ex.reps) {
+      repsSubmittedRef.current = false;
+      setRepsInput(ex.reps);
+      setState('reps');
+      return;
+    }
+    // Advance directly for non-sets/reps exercises
     if (ex?.rest_seconds && ex.rest_seconds > 0) {
       startRest(ex.rest_seconds, index, ex.exercise);
     } else if (isLast) {
@@ -127,6 +145,34 @@ export default function SessionRunner({
       setIndex((i) => i + 1);
     }
   }, [current, isLast, startRest]);
+
+  const handleConfirmReps = useCallback(() => {
+    if (repsSubmittedRef.current) return;
+    repsSubmittedRef.current = true;
+
+    const ex = current;
+    if (!ex) return;
+
+    const entry: RepEntry = {
+      exercise: ex.exercise,
+      prescribedSets: ex.sets || 0,
+      prescribedReps: ex.reps || '',
+      actualReps: repsInput,
+    };
+    exerciseLogRef.current.push(entry);
+    // Optimistic save: fire and forget — manda ref completo, no delta
+    // (mergeLogData reemplaza exerciseLog entero; si mandáramos [entry]
+    //  solo, se perderían las entradas anteriores en DB)
+    saveExerciseReps(sessionId, exerciseLogRef.current).catch(() => {});
+
+    if (ex.rest_seconds && ex.rest_seconds > 0) {
+      startRest(ex.rest_seconds, index, ex.exercise);
+    } else if (isLast) {
+      setState('done');
+    } else {
+      setIndex((i) => i + 1);
+    }
+  }, [current, isLast, repsInput, startRest, sessionId]);
 
   const handleSkipRest = useCallback(() => {
     if (timerRef.current) {
@@ -260,6 +306,42 @@ export default function SessionRunner({
               </span>
             </p>
           )}
+        </div>
+      )}
+
+      {/* Reps: Input actual reps for sets/reps exercises */}
+      {state === 'reps' && current && (
+        <div className="text-center py-12 space-y-6">
+          <p className="text-xs text-text-muted uppercase tracking-widest">
+            {t('repsPrompt')}
+          </p>
+
+          <h2 className="text-2xl font-bold text-text-primary">
+            {current.exercise}
+          </h2>
+
+          <p className="text-sm text-text-muted">
+            {t('prescribed')}: {current.sets} × {current.reps}
+            {current.rpe != null && ` · RPE ${current.rpe}`}
+          </p>
+
+          <div className="flex flex-col items-center gap-2">
+            <label className="text-sm text-text-muted">
+              {t('actualRepsLabel')}
+            </label>
+            <input
+              type="text"
+              value={repsInput}
+              onChange={(e) => setRepsInput(e.target.value)}
+              className="w-24 bg-surface-800 border border-border rounded px-3 py-2 text-xl text-text-primary text-center focus:outline-none focus:border-accent"
+              placeholder={current.reps}
+              autoFocus
+            />
+          </div>
+
+          <Button onClick={handleConfirmReps}>
+            {t('confirmReps')}
+          </Button>
         </div>
       )}
 
