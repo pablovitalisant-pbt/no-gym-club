@@ -42,6 +42,7 @@
     "loginButton": "Entrar",
     "signupButton": "Registrarse",
     "fallback": "Próximamente",
+    "brandSubtitle": "Disciplina / Acción / Resultado",
     "error": {
       "required": "Este campo es obligatorio",
       "passwordMismatch": "Las contraseñas no coinciden"

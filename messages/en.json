@@ -42,6 +42,7 @@
     "loginButton": "Log in",
     "signupButton": "Sign up",
     "fallback": "Coming soon",
+    "brandSubtitle": "Discipline / Action / Result",
     "error": {
       "required": "This field is required",
       "passwordMismatch": "Passwords do not match"

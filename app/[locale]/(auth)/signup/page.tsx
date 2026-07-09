@@ -3,8 +3,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
+import { AtSign, Lock, ArrowRight } from 'lucide-react';
 
 export default function SignupPage() {
   const t = useTranslations('auth');
@@ -41,72 +43,93 @@ export default function SignupPage() {
     router.push('/dashboard');
   }
 
-  return (
-    <>
-      <h1 className="text-xl font-bold text-text-primary">{t('signup')}</h1>
+  const inputCls = 'w-full bg-surface-900 brutalist-border brutalist-input pl-xl pr-sm py-md text-on-surface font-mono-data uppercase placeholder:text-on-surface-variant/30 transition-all duration-200';
 
-      <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-        <div>
-          <label className="block text-sm text-text-muted" htmlFor="email">
-            {t('email')}
-          </label>
+  return (
+    <form onSubmit={handleSubmit} className="space-y-md">
+      <h2 className="font-headline-md text-headline-md text-on-surface uppercase mb-base">{t('signup')}</h2>
+      {/* Email Field */}
+      <div className="space-y-xs">
+        <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="email">
+          {t('email')}
+        </label>
+        <div className="relative">
+          <AtSign size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
           <input
             id="email"
             type="email"
             required
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
+            className={inputCls}
+            placeholder="OPERATOR@NOGYMCLUB.COM"
           />
         </div>
+      </div>
 
-        <div>
-          <label className="block text-sm text-text-muted" htmlFor="password">
-            {t('password')}
-          </label>
+      {/* Password Field */}
+      <div className="space-y-xs">
+        <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="password">
+          {t('password')}
+        </label>
+        <div className="relative">
+          <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
           <input
             id="password"
             type="password"
             required
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
+            className={inputCls}
+            placeholder="********"
           />
         </div>
+      </div>
 
-        <div>
-          <label className="block text-sm text-text-muted" htmlFor="confirmPassword">
-            {t('confirmPassword')}
-          </label>
+      {/* Confirm Password Field */}
+      <div className="space-y-xs">
+        <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="confirmPassword">
+          {t('confirmPassword')}
+        </label>
+        <div className="relative">
+          <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
           <input
             id="confirmPassword"
             type="password"
             required
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
-            className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
+            className={inputCls}
+            placeholder="********"
           />
         </div>
+      </div>
 
-        {error && (
-          <p className="text-sm text-red-500">{error}</p>
-        )}
+      {/* Error */}
+      {error && (
+        <p className="text-sm text-error">{error}</p>
+      )}
 
+      {/* Submit */}
+      <div className="pt-base space-y-sm">
         <Button
           type="submit"
-          variant="primary"
           disabled={loading}
-          className="w-full"
+          iconRight={ArrowRight}
+          className="w-full uppercase font-headline-md text-headline-md !py-md active:scale-[0.98]"
         >
           {loading ? '...' : t('signupButton')}
         </Button>
-      </form>
 
-      <p className="mt-4 text-center text-xs text-text-muted">
-        <a href="/login" className="text-accent hover:underline">
-          {t('login')}
-        </a>
-      </p>
-    </>
+        <div className="flex flex-col items-center gap-sm mt-md">
+          <Link
+            href="/login"
+            className="font-label-bold text-label-bold text-primary hover:text-primary-container transition-colors uppercase border-b border-transparent hover:border-primary-container"
+          >
+            {t('login')}
+          </Link>
+        </div>
+      </div>
+    </form>
   );
 }
