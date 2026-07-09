@@ -60,6 +60,10 @@
     height: 1px;
     background: linear-gradient(90deg, #e8570a 0%, transparent 100%);
   }
+
+  .countdown-glow {
+    text-shadow: 0 0 40px rgba(232, 87, 10, 0.2);
+  }
 }
 
 @keyframes scan {

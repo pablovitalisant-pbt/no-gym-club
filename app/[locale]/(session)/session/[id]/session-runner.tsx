@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
+import { Volume2, VolumeX, Check } from 'lucide-react';
 import LogForm from '@/components/session/LogForm';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
@@ -26,9 +27,9 @@ function flattenSession(session: SessionData): FlatExercise[] {
 }
 
 const SECTION_BADGES: Record<Section, string> = {
-  warmup: 'bg-green-900 text-green-300 border-green-700',
-  main: 'bg-accent/20 text-accent border-accent/50',
-  cooldown: 'bg-blue-900 text-blue-300 border-blue-700',
+  warmup: 'bg-green-500/20 text-green-500 border-green-500/40',
+  main: 'bg-primary-container text-on-primary-container',
+  cooldown: 'bg-blue-500/20 text-blue-500 border-blue-500/40',
 };
 
 // ─── Main component ───
@@ -213,114 +214,119 @@ export default function SessionRunner({
   }, [current, handleDone]);
 
   const nextEx = allExercises[index + 1];
+  const restMins = Math.floor(restSeconds / 60);
+  const restSecs = restSeconds % 60;
+  const restDisplay = `${restMins}:${String(restSecs).padStart(2, '0')}`;
 
   // ─── Render ───
 
   return (
-    <div className="max-w-lg mx-auto relative">
+    <div className="max-w-lg mx-auto relative overflow-hidden min-h-screen bg-background flex flex-col">
       {/* Audio toggle — visible in active states */}
       {state !== 'idle' && state !== 'done' && (
         <button
           onClick={toggleAudio}
-          className="absolute top-2 right-2 text-xs text-text-muted hover:text-text-primary transition-colors"
+          className="absolute top-4 right-4 z-50 bg-surface-800 brutalist-border px-3 py-2 flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors text-xs"
           aria-label={audioEnabled ? t('mute') : t('unmute')}
           title={audioEnabled ? t('mute') : t('unmute')}
         >
-          {audioEnabled ? '🔊' : '🔇'}
+          {audioEnabled ? <Volume2 size={16} /> : <VolumeX size={16} />}
         </button>
       )}
 
       {/* Idle: Start screen */}
       {state === 'idle' && (
-        <div className="text-center py-16 space-y-6">
-          <h1 className="text-xl font-bold text-text-primary">
+        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile py-16 space-y-6">
+          <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
             {session.title_es}
           </h1>
-          <p className="text-sm text-text-muted">
+          <p className="font-body-md text-body-md text-on-surface-variant">
             {allExercises.length} {t('exercise')}s · {t('warmup')} ({session.warmup.length}) ·{' '}
             {t('main')} ({session.main.length}) · {t('cooldown')} ({session.cooldown.length})
           </p>
-          <Button onClick={() => setState('active')}>{t('start')}</Button>
+          <Button onClick={() => setState('active')} className="w-full max-w-xs !py-4 !text-body-md uppercase">
+            {t('start')}
+          </Button>
         </div>
       )}
 
       {/* Active: Current exercise */}
       {state === 'active' && current && (
-        <div className="text-center py-12 space-y-6">
+        <div className="flex-grow flex flex-col px-margin-mobile pt-sm pb-gutter overflow-hidden">
           {/* Progress */}
-          <p className="text-xs text-text-muted uppercase tracking-widest">
+          <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-sm">
             {t('progress', { current: index + 1, total: allExercises.length })}
           </p>
 
           {/* Section badge */}
-          <span
-            className={`inline-block text-xs px-3 py-0.5 rounded border ${SECTION_BADGES[current.section]}`}
-          >
+          <span className={`inline-block px-3 py-1 font-label-bold text-label-sm uppercase tracking-tighter mb-sm ${SECTION_BADGES[current.section]}`}>
             {t(current.section)}
           </span>
 
           {/* Exercise name */}
-          <h2 className="text-2xl font-bold text-text-primary">
+          <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase mb-1">
             {current.exercise}
           </h2>
 
-          {/* Details */}
-          <div className="space-y-1">
-            {current.sets != null && current.reps && (
-              <p className="text-lg text-text-primary font-semibold">
-                {current.sets} × {current.reps}
-                {current.rpe != null && (
-                  <span className="text-sm text-text-muted font-normal">
-                    {' '}· RPE {current.rpe}
-                  </span>
-                )}
-              </p>
-            )}
-            {current.duration_seconds != null && (
-              <p className="text-lg text-text-primary font-semibold">
-                {current.duration_seconds}s
-              </p>
-            )}
-            {current.notes_es && (
-              <p className="text-sm text-text-muted max-w-sm mx-auto">
+          {/* Prescription */}
+          {current.sets != null && current.reps && (
+            <p className="font-headline-md text-headline-md text-primary-container tracking-tight mb-md">
+              {current.sets} × {current.reps}
+              {current.rpe != null && <span className="text-body-md font-normal"> · RPE {current.rpe}</span>}
+            </p>
+          )}
+          {current.duration_seconds != null && (
+            <p className="font-headline-md text-headline-md text-primary-container tracking-tight mb-md">
+              {current.duration_seconds}s
+            </p>
+          )}
+
+          {/* Technique notes */}
+          {current.notes_es && (
+            <div className="brutalist-border p-sm bg-surface-800 mb-md shrink-0">
+              <h3 className="font-label-bold text-label-sm text-on-surface-variant uppercase mb-2">
+                {t('technique')}
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface">
                 {current.notes_es}
               </p>
-            )}
-          </div>
+            </div>
+          )}
 
-          {/* Action button: Vamos! for timed, Done for sets/reps */}
+          {/* Spacer */}
+          <div className="flex-grow" />
+
+          {/* Action button */}
           {current.duration_seconds != null ? (
-            <Button onClick={handleStartTimer}>{t('startTimer')}</Button>
+            <Button onClick={handleStartTimer} className="w-full h-16 !font-label-bold !text-headline-md uppercase">
+              {t('startTimer')}
+            </Button>
           ) : (
-            <Button onClick={handleDone}>{t('done')}</Button>
+            <Button onClick={handleDone} className="w-full h-16 !font-label-bold !text-headline-md uppercase">
+              {t('done')}
+            </Button>
           )}
         </div>
       )}
 
       {/* Timing: Countdown for timed exercises */}
       {state === 'timing' && (
-        <div className="text-center py-16 space-y-6">
-          <p className="text-xs text-text-muted uppercase tracking-widest">
+        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile">
+          <p className="font-label-bold text-label-sm uppercase text-on-surface-variant tracking-widest mb-md">
             {t('timer')}
           </p>
 
-          {/* Countdown */}
-          <p className="text-6xl font-bold tabular-nums text-accent">
+          <p className="font-display-lg text-[100px] leading-none text-primary countdown-glow tabular-nums">
             {timingSeconds}
           </p>
 
-          {/* Exercise name */}
-          <p className="text-lg text-text-primary font-semibold">
+          <p className="font-headline-md text-headline-md text-on-surface mt-md">
             {current?.exercise}
           </p>
 
-          {/* Next exercise preview */}
           {nextEx && (
-            <p className="text-sm text-text-muted">
-              {t('nextExercise')}:{' '}
-              <span className="text-text-primary font-medium">
-                {nextEx.exercise}
-              </span>
+            <p className="font-body-md text-body-md text-on-surface-variant mt-sm">
+              {t('nextExercise')}: <span className="text-on-surface font-medium">{nextEx.exercise}</span>
             </p>
           )}
         </div>
@@ -328,35 +334,35 @@ export default function SessionRunner({
 
       {/* Reps: Input actual reps for sets/reps exercises */}
       {state === 'reps' && current && (
-        <div className="text-center py-12 space-y-6">
-          <p className="text-xs text-text-muted uppercase tracking-widest">
+        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile space-y-6">
+          <p className="font-label-bold text-label-sm uppercase text-on-surface-variant tracking-widest">
             {t('repsPrompt')}
           </p>
 
-          <h2 className="text-2xl font-bold text-text-primary">
+          <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
             {current.exercise}
           </h2>
 
-          <p className="text-sm text-text-muted">
+          <p className="font-body-md text-body-md text-on-surface-variant">
             {t('prescribed')}: {current.sets} × {current.reps}
             {current.rpe != null && ` · RPE ${current.rpe}`}
           </p>
 
           <div className="flex flex-col items-center gap-2">
-            <label className="text-sm text-text-muted">
+            <label className="font-label-sm text-label-sm text-on-surface-variant">
               {t('actualRepsLabel')}
             </label>
             <input
               type="text"
               value={repsInput}
               onChange={(e) => setRepsInput(e.target.value)}
-              className="w-24 bg-surface-800 border border-border rounded px-3 py-2 text-xl text-text-primary text-center focus:outline-none focus:border-accent"
+              className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_#e8570a] outline-none transition-all"
               placeholder={current.reps}
               autoFocus
             />
           </div>
 
-          <Button onClick={handleConfirmReps}>
+          <Button onClick={handleConfirmReps} iconRight={Check} className="w-full max-w-xs !py-4 uppercase">
             {t('confirmReps')}
           </Button>
         </div>
@@ -364,34 +370,33 @@ export default function SessionRunner({
 
       {/* Rest: Countdown */}
       {state === 'rest' && (
-        <div className="text-center py-16 space-y-6">
-          <p className="text-xs text-text-muted uppercase tracking-widest">
+        <div className="flex-grow flex flex-col items-center justify-center relative px-margin-mobile w-full space-y-md">
+          <span className="font-label-bold text-label-sm uppercase text-primary-container mb-2 tracking-widest">
             {t('rest')}
-          </p>
+          </span>
 
-          {/* Countdown */}
-          <p
-            className={`text-6xl font-bold tabular-nums transition-colors
-              ${restSeconds <= 3 ? 'text-green-400 scale-110' : 'text-text-primary'}
-            `}
-          >
-            {restSeconds}
+          <p className={`font-display-lg text-[100px] leading-none countdown-glow font-extrabold tracking-tighter tabular-nums transition-all ${restSeconds <= 3 ? 'text-green-500 scale-110' : 'text-primary-container'}`}>
+            {restDisplay}
           </p>
 
           {/* Next exercise preview */}
           {nextEx && (
-            <p className="text-sm text-text-muted">
-              {t('nextExercise')}:{' '}
-              <span className="text-text-primary font-medium">
+            <div className="bg-surface-800 brutalist-border p-4 w-full max-w-sm">
+              <p className="font-label-bold text-label-sm uppercase text-on-surface-variant mb-1">
+                {t('nextExercise')}
+              </p>
+              <h3 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
                 {nextEx.exercise}
-              </span>
-              {nextEx.sets != null &&
-                nextEx.reps &&
-                ` · ${nextEx.sets}×${nextEx.reps}`}
-            </p>
+              </h3>
+              {nextEx.sets != null && nextEx.reps && (
+                <p className="font-mono-data text-mono-data text-on-surface mt-2">
+                  {nextEx.sets}×{nextEx.reps}
+                  {nextEx.rpe != null && ` · RPE ${nextEx.rpe}`}
+                </p>
+              )}
+            </div>
           )}
 
-          {/* Skip button */}
           <Button variant="ghost" onClick={handleSkipRest}>
             {t('skipRest')}
           </Button>
@@ -400,8 +405,8 @@ export default function SessionRunner({
 
       {/* Done: Complete */}
       {state === 'done' && (
-        <div className="text-center py-16 space-y-6">
-          <p className="text-green-400 text-lg font-semibold">
+        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile space-y-6">
+          <p className="font-headline-md text-headline-md text-green-500 uppercase">
             {t('complete')}
           </p>
           <LogForm
