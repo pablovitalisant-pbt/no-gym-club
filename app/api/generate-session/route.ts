@@ -9,13 +9,6 @@ import { buildSessionPrompt } from '@/lib/prompts/build-session-prompt';
 import type { CorpusDoc } from '@/lib/prompts/build-session-prompt';
 import type { SessionHistory } from '@/lib/prompts/build-session-prompt';
 
-// ponytail: Fluid Compute is enabled on this Vercel project, which raises
-// the Hobby-plan hard timeout from 10s to up to 300s. The full pipeline
-// (embedding + corpus search + DeepSeek streaming generation + insert)
-// was observed taking 22s in production, well past the 10s default --
-// this explicit maxDuration is the actual fix, not just relying on the
-// platform default. See BUGS.md.
-export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
   // ponytail: temporary timing instrumentation for Bug #3 — remove once root cause confirmed
