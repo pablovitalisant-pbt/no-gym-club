@@ -18,6 +18,10 @@ import type { SessionHistory } from '@/lib/prompts/build-session-prompt';
 export const maxDuration = 60;
 
 export async function POST(request: NextRequest) {
+  // ponytail: temporary timing instrumentation for Bug #3 — remove once root cause confirmed
+  console.time('generate:total');
+  console.time('generate:auth');
+
   // 1. Auth check
   const supabase = createClient();
   const {
@@ -28,6 +32,9 @@ export async function POST(request: NextRequest) {
   if (authError || !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
+
+  console.timeEnd('generate:auth');
+  console.time('generate:profile');
 
   try {
     // 2. Fetch profile
@@ -51,6 +58,9 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    console.timeEnd('generate:profile');
+    console.time('generate:history');
 
     // 4. Fetch training history (last 5 sessions for multi-session analysis)
     let sessionHistory: SessionHistory | undefined;
@@ -122,6 +132,9 @@ export async function POST(request: NextRequest) {
       };
     }
 
+    console.timeEnd('generate:history');
+    console.time('generate:embedding');
+
     // 6. Build semantic query from profile
     const queryText = [
       `training program for ${profile.experience_level} athlete`,
@@ -132,6 +145,8 @@ export async function POST(request: NextRequest) {
 
     // 7. Get embedding + search corpus
     const embedding = await getEmbedding(queryText, 'query');
+    console.timeEnd('generate:embedding');
+    console.time('generate:corpus');
 
     const { data: corpusResults, error: corpusError } = await supabase.rpc(
       'search_corpus',
@@ -180,6 +195,9 @@ export async function POST(request: NextRequest) {
       { role: 'user', content: userPrompt },
     ];
 
+    console.timeEnd('generate:corpus');
+    console.time('generate:deepseek');
+
     // ─── Streaming mode ───
     const wantsStreaming =
       request.headers.get('Accept') === 'text/plain';
@@ -199,6 +217,9 @@ export async function POST(request: NextRequest) {
               accumulated += token;
               controller.enqueue(encoder.encode(token));
             }
+
+            // DeepSeek stream ended — record time
+            console.timeEnd('generate:deepseek');
 
             // Parse and save
             let sessionData: unknown;
@@ -256,6 +277,7 @@ export async function POST(request: NextRequest) {
         },
       });
 
+      console.timeEnd('generate:total');
       return new Response(stream, {
         headers: {
           'Content-Type': 'text/plain; charset=utf-8',
@@ -312,6 +334,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 11. Return session
+    console.timeEnd('generate:total');
     return NextResponse.json({
       session_id: inserted.id,
       created_at: inserted.created_at,
