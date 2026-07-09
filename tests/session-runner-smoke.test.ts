@@ -10,7 +10,7 @@ describe('Slice 8 — session runner (tap timer)', () => {
   it('session-runner.tsx limpia setInterval al desmontar (useEffect return)', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     expect(existsSync(path), 'session-runner.tsx debe existir').toBe(true);
     const raw = readFileSync(path, 'utf-8');
@@ -56,7 +56,7 @@ describe('Slice 8 — session runner (tap timer)', () => {
   it('session-runner.tsx es Client Component y NO importa supabase', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     expect(raw, 'debe ser Client Component').toContain("'use client'");
@@ -72,7 +72,7 @@ describe('Slice 8 — session runner (tap timer)', () => {
   it('session page.tsx es Server Component y verifica user_id', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/page.tsx',
+      'app/[locale]/(session)/session/[id]/page.tsx',
     );
     expect(existsSync(path), 'session page.tsx debe existir').toBe(true);
     const raw = readFileSync(path, 'utf-8');
@@ -93,7 +93,7 @@ describe('Slice 8 — session runner (tap timer)', () => {
   it('session-runner.tsx tiene 4 estados (idle, active, rest, done)', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe tener state machine con estados de sesión
@@ -105,7 +105,7 @@ describe('Slice 8 — session runner (tap timer)', () => {
   it('session-runner.tsx aplana warmup+main+cooldown en un array', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe trabajar con las 3 secciones

@@ -7,24 +7,19 @@ const root = resolve(__dirname, '..');
 describe('Slice 3 — registro inmediato de reps reales', () => {
   const runnerPath = resolve(
     root,
-    'app/[locale]/(app)/session/[id]/session-runner.tsx',
+    'app/[locale]/(session)/session/[id]/session-runner.tsx',
   );
   const runner = readFileSync(runnerPath, 'utf-8');
   const actionsPath = resolve(
     root,
-    'app/[locale]/(app)/session/[id]/actions.ts',
+    'app/[locale]/(session)/session/[id]/actions.ts',
   );
   const actions = readFileSync(actionsPath, 'utf-8');
   const logFormPath = resolve(
     root,
-    'app/[locale]/(app)/dashboard/log-form.tsx',
+    'components/session/LogForm.tsx',
   );
   const logForm = readFileSync(logFormPath, 'utf-8');
-  const dashActionsPath = resolve(
-    root,
-    'app/[locale]/(app)/dashboard/actions.ts',
-  );
-  const dashActions = readFileSync(dashActionsPath, 'utf-8');
 
   // ─── Riesgo 1: Race condition — saveSessionTimes debe mergear ───
   it('saveSessionTimes mergea log_data (SELECT antes de UPDATE)', () => {

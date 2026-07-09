@@ -20,7 +20,7 @@ describe('Slice 6 — session log + RPE', () => {
   it('log-form.tsx NO importa createClient — usa Server Action', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/log-form.tsx',
+      'components/session/LogForm.tsx',
     );
     expect(existsSync(path), 'log-form.tsx debe existir').toBe(true);
     const raw = readFileSync(path, 'utf-8');
@@ -38,7 +38,7 @@ describe('Slice 6 — session log + RPE', () => {
   it('log-form.tsx tiene selector de RPE con 10 valores', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/log-form.tsx',
+      'components/session/LogForm.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe tener botones o inputs para seleccionar RPE
@@ -52,7 +52,7 @@ describe('Slice 6 — session log + RPE', () => {
   it('actions.ts exporta saveSessionLog con validacion de auth', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/actions.ts',
+      'components/session/actions.ts',
     );
     expect(existsSync(path), 'actions.ts debe existir').toBe(true);
     const raw = readFileSync(path, 'utf-8');
@@ -64,7 +64,7 @@ describe('Slice 6 — session log + RPE', () => {
   it('actions.ts UPDATE usa user.id en WHERE para defensa en profundidad', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/actions.ts',
+      'components/session/actions.ts',
     );
     const raw = readFileSync(path, 'utf-8');
     // WHERE debe incluir user_id = user.id (además del id = sessionId)

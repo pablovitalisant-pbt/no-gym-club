@@ -3,6 +3,12 @@
     "title": "No Gym Club",
     "description": "The street is my gym. Adaptive training guided by sport science."
   },
+  "nav": {
+    "dashboard": "Dashboard",
+    "exercises": "Exercises",
+    "progress": "Progress",
+    "report": "Report"
+  },
   "landing": {
     "hero": "NO GYM CLUB",
     "tagline": "The street is my gym",

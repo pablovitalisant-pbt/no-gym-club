@@ -10,7 +10,7 @@ describe('actualRestTimes persistence', () => {
   it('session/[id]/actions.ts exporta saveSessionTimes', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/actions.ts',
+      'app/[locale]/(session)/session/[id]/actions.ts',
     );
     expect(existsSync(path), 'actions.ts debe existir').toBe(true);
     const raw = readFileSync(path, 'utf-8');
@@ -22,7 +22,7 @@ describe('actualRestTimes persistence', () => {
   it('actions.ts UPDATE log_data con jsonb_build_object y actualRestTimes', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/actions.ts',
+      'app/[locale]/(session)/session/[id]/actions.ts',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe hacer UPDATE a workout_sessions
@@ -41,7 +41,7 @@ describe('actualRestTimes persistence', () => {
   it('session-runner.tsx trackea restStartTime con Date.now()', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe registrar timestamp al iniciar descanso
@@ -52,7 +52,7 @@ describe('actualRestTimes persistence', () => {
   it('session-runner.tsx acumula actualRestTimes en array', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe tener un array de actualRestTimes o similar
@@ -67,7 +67,7 @@ describe('actualRestTimes persistence', () => {
   it('session-runner.tsx llama saveSessionTimes al completar', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe importar la acción

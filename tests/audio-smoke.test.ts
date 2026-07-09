@@ -21,7 +21,7 @@ describe('Audio notification on rest complete', () => {
   it('session-runner.tsx importa y llama playBeep', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     expect(raw, 'debe importar playBeep').toContain('playBeep');
@@ -31,7 +31,7 @@ describe('Audio notification on rest complete', () => {
   it('session-runner.tsx llama playBeep en auto-advance del timer', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     // Debe haber una llamada a playBeep dentro del setInterval (auto-advance)

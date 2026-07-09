@@ -10,7 +10,7 @@ describe('Exercise log — per-exercise actuals', () => {
   it('log-form.tsx acepta prop session con SessionData', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/dashboard/log-form.tsx',
+      'components/session/LogForm.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     expect(raw, 'debe recibir session prop').toContain('session');
@@ -20,7 +20,7 @@ describe('Exercise log — per-exercise actuals', () => {
   it('session-runner.tsx captura reps reales en estado reps con input', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     expect(raw, 'debe tener estado reps').toContain("'reps'");
@@ -31,7 +31,7 @@ describe('Exercise log — per-exercise actuals', () => {
   it('session/[id]/actions.ts exporta saveExerciseReps', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/actions.ts',
+      'app/[locale]/(session)/session/[id]/actions.ts',
     );
     const raw = readFileSync(path, 'utf-8');
     expect(raw, 'debe ser server action').toContain("'use server'");
@@ -42,7 +42,7 @@ describe('Exercise log — per-exercise actuals', () => {
   it('session/[id]/actions.ts hace SELECT de log_data antes del UPDATE', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/actions.ts',
+      'app/[locale]/(session)/session/[id]/actions.ts',
     );
     const raw = readFileSync(path, 'utf-8');
     const selectIdx = raw.indexOf('.select(');
@@ -61,7 +61,7 @@ describe('Exercise log — per-exercise actuals', () => {
   it('LogForm se renderiza solo en session-runner.tsx, no en dashboard-client', () => {
     const runnerPath = resolve(
       root,
-      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+      'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
     const dashboardPath = resolve(
       root,

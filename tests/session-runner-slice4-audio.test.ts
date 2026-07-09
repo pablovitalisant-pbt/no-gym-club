@@ -7,7 +7,7 @@ const root = resolve(__dirname, '..');
 describe('Slice 4 — toggle de audio on/off', () => {
   const runnerPath = resolve(
     root,
-    'app/[locale]/(app)/session/[id]/session-runner.tsx',
+    'app/[locale]/(session)/session/[id]/session-runner.tsx',
   );
   const runner = readFileSync(runnerPath, 'utf-8');
   const hookPath = resolve(root, 'lib/useAudioPreference.ts');

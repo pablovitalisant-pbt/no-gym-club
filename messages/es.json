@@ -3,6 +3,12 @@
     "title": "No Gym Club",
     "description": "La calle es mi gimnasio. Entrenamiento adaptativo guiado por ciencia del deporte."
   },
+  "nav": {
+    "dashboard": "Dashboard",
+    "exercises": "Ejercicios",
+    "progress": "Progreso",
+    "report": "Reporte"
+  },
   "landing": {
     "hero": "NO GYM CLUB",
     "tagline": "La calle es mi gimnasio",
