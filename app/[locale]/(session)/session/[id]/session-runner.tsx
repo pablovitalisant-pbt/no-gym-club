@@ -148,6 +148,7 @@ export default function SessionRunner({
     } else if (isLast) {
       setState('done');
     } else {
+      setState('active');
       setIndex((i) => i + 1);
     }
   }, [current, isLast, startRest]);
@@ -176,6 +177,7 @@ export default function SessionRunner({
     } else if (isLast) {
       setState('done');
     } else {
+      setState('active');
       setIndex((i) => i + 1);
     }
   }, [current, isLast, repsInput, startRest, sessionId]);
