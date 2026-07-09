@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
-import LogForm from './log-form';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 
 // ─── Types ───
@@ -20,7 +19,6 @@ type ViewState =
   | 'loading'
   | 'streaming'
   | 'success'
-  | 'completed'
   | 'error';
 
 // ─── Helpers ───
@@ -317,14 +315,6 @@ export default function DashboardClient({
                   {t('startSession')}
                 </Button>
               </div>
-
-              {showLog && (
-                <LogForm
-                  sessionId={sessionId}
-                  session={session}
-                  onSaved={() => setViewState('completed')}
-                />
-              )}
             </>
           )}
 
@@ -336,21 +326,6 @@ export default function DashboardClient({
         </div>
       )}
 
-      {/* Completed state */}
-      {viewState === 'completed' && session && (
-        <div className="space-y-6">
-          <SessionCard session={session} locale={locale} />
-
-          <div className="border-t border-border pt-6 mt-6 text-center space-y-4">
-            <p className="text-green-400 text-sm font-medium">
-              {t('saved')}
-            </p>
-            <Button variant="ghost" onClick={handleGenerate}>
-              {t('regenerate')}
-            </Button>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

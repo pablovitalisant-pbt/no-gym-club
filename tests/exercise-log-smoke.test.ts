@@ -57,17 +57,20 @@ describe('Exercise log — per-exercise actuals', () => {
     ).toBe(true);
   });
 
-  // Riesgo 5: dashboard-client pasa session a LogForm
-  it('dashboard-client.tsx pasa session prop a LogForm', () => {
-    const path = resolve(
+  // Riesgo 5: LogForm solo se renderiza en session-runner.tsx (done), no en dashboard-client
+  it('LogForm se renderiza solo en session-runner.tsx, no en dashboard-client', () => {
+    const runnerPath = resolve(
+      root,
+      'app/[locale]/(app)/session/[id]/session-runner.tsx',
+    );
+    const dashboardPath = resolve(
       root,
       'app/[locale]/(app)/dashboard/dashboard-client.tsx',
     );
-    const raw = readFileSync(path, 'utf-8');
-    // El render de LogForm debe incluir session prop
-    expect(raw, 'LogForm debe recibir session').toContain('<LogForm');
-    // Debe pasar session data
-    expect(raw, 'debe pasar session como prop').toContain('session={');
+    const runnerRaw = readFileSync(runnerPath, 'utf-8');
+    const dashboardRaw = readFileSync(dashboardPath, 'utf-8');
+    expect(runnerRaw, 'session-runner debe contener LogForm').toContain('<LogForm');
+    expect(dashboardRaw, 'dashboard-client NO debe contener LogForm').not.toContain('<LogForm');
   });
 
   // Riesgo 6: backward compat — session-log-smoke tests intactos
