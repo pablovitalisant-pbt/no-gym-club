@@ -26,22 +26,20 @@ export default function TopAppBar({ items }: { items: NavItem[] }) {
       <div className="flex items-center gap-6">
         <nav className="hidden md:flex gap-8 items-center">
           {items.map((item) => {
-            const isActive =
+            const isAnchor = item.href.startsWith('#');
+            const isActive = !isAnchor && (
               pathname === item.href ||
-              (item.href !== '/dashboard' && pathname.startsWith(item.href));
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`font-label-bold text-label-sm uppercase pt-1 transition-colors duration-150
-                  ${isActive
-                    ? 'text-primary border-b-2 border-primary'
-                    : 'text-on-surface-variant hover:text-primary'
-                  }
-                `}
-              >
-                {item.label}
-              </Link>
+              (item.href !== '/dashboard' && pathname.startsWith(item.href))
+            );
+            const cls = `font-label-bold text-label-sm uppercase pt-1 transition-colors duration-150 ${
+              isActive
+                ? 'text-primary border-b-2 border-primary'
+                : 'text-on-surface-variant hover:text-primary'
+            }`;
+            return isAnchor ? (
+              <a key={item.href} href={item.href} className={cls}>{item.label}</a>
+            ) : (
+              <Link key={item.href} href={item.href} className={cls}>{item.label}</Link>
             );
           })}
         </nav>
