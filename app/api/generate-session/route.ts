@@ -197,6 +197,16 @@ export async function POST(request: NextRequest) {
             try {
               sessionData = JSON.parse(accumulated);
             } catch {
+              // ponytail: temporary diagnostic logging for invalid-json bug —
+              // remove once root cause confirmed (see BUGS.md)
+              console.error(
+                '[generate-session] invalid-json — raw length:',
+                accumulated.length,
+                '\n--- first 500 chars ---\n',
+                accumulated.slice(0, 500),
+                '\n--- last 500 chars ---\n',
+                accumulated.slice(-500),
+              );
               controller.enqueue(
                 encoder.encode('\nSESSION_ID:error:invalid-json'),
               );
@@ -258,6 +268,16 @@ export async function POST(request: NextRequest) {
     try {
       sessionData = JSON.parse(rawResponse);
     } catch {
+      // ponytail: temporary diagnostic logging for invalid-json bug —
+      // remove once root cause confirmed (see BUGS.md)
+      console.error(
+        '[generate-session] invalid-json (non-streaming) — raw length:',
+        rawResponse.length,
+        '\n--- first 500 chars ---\n',
+        rawResponse.slice(0, 500),
+        '\n--- last 500 chars ---\n',
+        rawResponse.slice(-500),
+      );
       return NextResponse.json(
         { error: 'Failed to parse AI response as JSON' },
         { status: 500 },
