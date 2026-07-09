@@ -63,6 +63,7 @@ describe('Weekly report', () => {
       'trendStable',
       'noData',
       'daysTrained',
+      'vsLastWeek',
     ];
 
     requiredKeys.forEach((key) => {

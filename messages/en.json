@@ -107,7 +107,8 @@
     "trendDown": "↓ RPE decreasing",
     "trendStable": "→ RPE stable",
     "noData": "No data",
-    "daysTrained": "Days trained"
+    "daysTrained": "Days trained",
+    "vsLastWeek": "vs. Last Week"
   },
   "progress": {
     "fallback": "Progress — coming soon",
@@ -126,7 +127,14 @@
     "pullups": "Pull-Ups",
     "squats": "Squats",
     "dips": "Dips",
-    "plank": "Plank"
+    "plank": "Plank",
+    "reassessmentLabel": "Assessment Reminder",
+    "historyImprovedAll": "Improved on all {total} markers",
+    "historyImproved": "Improved on {count}/{total} markers",
+    "historyDeclined": "Declined on {count}/{total} markers",
+    "historyMixed": "Mixed — {up} up, {down} down",
+    "historyInitialBaseline": "Initial Baseline",
+    "historyAssessmentNumber": "Assessment #{number}"
   },
   "session": {
     "fallback": "Session runner — coming soon",

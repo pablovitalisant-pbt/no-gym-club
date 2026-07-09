@@ -1,63 +1,17 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getFlag } from '@/lib/flags';
+import {
+  getWeekStart, getWeeklyDayMarkers, computeConsistencyDelta,
+  countSets, getMuscleGroups,
+} from '@/lib/progress/report-helpers';
+import { HeroHeader, MetricCards, ConsistencyPanel, TrendAnalysis, MuscleDistribution } from './sections';
 
 type SessionRow = {
   rpe: number | null;
   completed_at: string;
   session_data: Record<string, unknown>;
 };
-
-function getWeekStart(daysAgo = 0): Date {
-  const now = new Date();
-  const day = now.getDay();
-  const diff = now.getDate() - day + (day === 0 ? -6 : 1) - daysAgo * 7;
-  const monday = new Date(now.setDate(diff));
-  monday.setHours(0, 0, 0, 0);
-  return monday;
-}
-
-function countSets(sessionData: Record<string, unknown>): number {
-  const main = (sessionData?.main as Array<{ sets?: number }>) || [];
-  return main.reduce((sum, ex) => sum + (ex.sets || 0), 0);
-}
-
-function getMuscleGroups(
-  sessionData: Record<string, unknown>,
-): string[] {
-  const main = (sessionData?.main as Array<{ exercise?: string }>) || [];
-  // ponytail: simple keyword matching — no NLP needed for ~33 exercises
-  const map: Record<string, string> = {
-    push: 'push',
-    press: 'push',
-    dip: 'push',
-    pull: 'pull',
-    row: 'pull',
-    chin: 'pull',
-    squat: 'legs',
-    lunge: 'legs',
-    leg: 'legs',
-    plank: 'core',
-    crunch: 'core',
-    sit: 'core',
-    core: 'core',
-    jack: 'cardio',
-    run: 'cardio',
-    cardio: 'cardio',
-    stretch: 'mobility',
-    mobility: 'mobility',
-  };
-
-  return main
-    .map((ex) => {
-      const name = (ex.exercise || '').toLowerCase();
-      for (const [keyword, group] of Object.entries(map)) {
-        if (name.includes(keyword)) return group;
-      }
-      return 'other';
-    })
-    .filter((g) => g !== 'other');
-}
 
 export default async function WeeklyReportPage({
   params: { locale },
@@ -69,183 +23,108 @@ export default async function WeeklyReportPage({
   if (!getFlag('weekly_report')) {
     return (
       <div className="flex items-center justify-center py-24">
-        <p className="text-lg text-text-muted">{t('fallback')}</p>
+        <p className="font-body-md text-on-surface-variant">{t('fallback')}</p>
       </div>
     );
   }
 
   const supabase = createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
 
   if (!user) {
     return (
       <div className="flex items-center justify-center py-24">
-        <p className="text-text-muted">Unauthorized</p>
+        <p className="font-body-md text-on-surface-variant">Unauthorized</p>
       </div>
     );
   }
 
-  const weekStart = getWeekStart(0).toISOString();
-  const prevWeekStart = getWeekStart(1).toISOString();
-  const prevWeekEnd = getWeekStart(0).toISOString();
+  // ── Query this week & previous week ──
+  const weekStart = getWeekStart(0);
+  const weekEnd = new Date(weekStart); weekEnd.setDate(weekEnd.getDate() + 7);
+  const prevWeekStart = getWeekStart(1);
+  const prevWeekEnd = new Date(prevWeekStart); prevWeekEnd.setDate(prevWeekEnd.getDate() + 7);
 
-  // This week
-  const { data: thisWeek } = await supabase
-    .from('workout_sessions')
-    .select('rpe, completed_at, session_data')
-    .eq('user_id', user.id)
-    .not('completed_at', 'is', null)
-    .gte('completed_at', weekStart)
-    .order('completed_at', { ascending: false });
+  const [thisRes, prevRes] = await Promise.all([
+    supabase.from('workout_sessions').select('rpe, completed_at, session_data')
+      .eq('user_id', user.id).not('completed_at', 'is', null)
+      .gte('completed_at', weekStart.toISOString()).lt('completed_at', weekEnd.toISOString())
+      .order('completed_at', { ascending: false }),
+    supabase.from('workout_sessions').select('rpe, completed_at, session_data')
+      .eq('user_id', user.id).not('completed_at', 'is', null)
+      .gte('completed_at', prevWeekStart.toISOString()).lt('completed_at', prevWeekEnd.toISOString())
+      .order('completed_at', { ascending: false }),
+  ]);
 
-  // Previous week
-  const { data: prevWeek } = await supabase
-    .from('workout_sessions')
-    .select('rpe, completed_at, session_data')
-    .eq('user_id', user.id)
-    .not('completed_at', 'is', null)
-    .gte('completed_at', prevWeekStart)
-    .lt('completed_at', prevWeekEnd)
-    .order('completed_at', { ascending: false });
+  const thisSessions = (thisRes.data || []) as SessionRow[];
+  const prevSessions = (prevRes.data || []) as SessionRow[];
 
-  const thisSessions = (thisWeek || []) as SessionRow[];
-  const prevSessions = (prevWeek || []) as SessionRow[];
-
+  // ── Compute metrics ──
   const sessionsCompleted = thisSessions.length;
-  const rpeValues = thisSessions
-    .filter((s) => s.rpe != null)
-    .map((s) => s.rpe!);
-  const averageRpe =
-    rpeValues.length > 0
-      ? (rpeValues.reduce((a, b) => a + b, 0) / rpeValues.length).toFixed(1)
-      : null;
+  const rpeValues = thisSessions.filter((s) => s.rpe != null).map((s) => s.rpe!);
+  const averageRpe = rpeValues.length > 0 ? rpeValues.reduce((a, b) => a + b, 0) / rpeValues.length : null;
+  const totalSets = thisSessions.reduce((sum, s) => sum + countSets(s.session_data), 0);
 
-  const totalSets = thisSessions.reduce(
-    (sum, s) => sum + countSets(s.session_data),
-    0,
-  );
+  const trainedDays = new Set(thisSessions.map((s) => s.completed_at?.split('T')[0]));
+  const trainedRatio = sessionsCompleted > 0 ? Math.round((trainedDays.size / 7) * 100) : 0;
+
+  const prevTrainedDays = new Set(prevSessions.map((s) => s.completed_at?.split('T')[0]));
+  const consistencyDelta = computeConsistencyDelta(trainedDays.size, prevTrainedDays.size);
 
   // Muscle distribution
   const muscleCounts: Record<string, number> = {};
-  thisSessions.forEach((s) => {
-    getMuscleGroups(s.session_data).forEach((g) => {
-      muscleCounts[g] = (muscleCounts[g] || 0) + 1;
-    });
-  });
+  thisSessions.forEach((s) => getMuscleGroups(s.session_data).forEach((g) => { muscleCounts[g] = (muscleCounts[g] || 0) + 1; }));
+  const muscleEntries = Object.entries(muscleCounts).sort((a, b) => b[1] - a[1]);
+  const totalMuscle = muscleEntries.reduce((sum, [, c]) => sum + c, 0);
 
-  // Days trained
-  const trainedDays = new Set(
-    thisSessions.map((s) => s.completed_at?.split('T')[0]),
-  );
+  // RPE trend
+  const prevRpeValues = prevSessions.filter((s) => s.rpe != null).map((s) => s.rpe!);
+  const prevAvg = prevRpeValues.length > 0 ? prevRpeValues.reduce((a, b) => a + b, 0) / prevRpeValues.length : null;
+  const rpeDiff = averageRpe && prevAvg ? parseFloat((averageRpe - prevAvg).toFixed(1)) : null;
 
-  // RPE trend vs previous week
-  const prevRpeValues = prevSessions
-    .filter((s) => s.rpe != null)
-    .map((s) => s.rpe!);
-  const prevAvg =
-    prevRpeValues.length > 0
-      ? prevRpeValues.reduce((a, b) => a + b, 0) / prevRpeValues.length
-      : null;
+  const dayMarkers = getWeeklyDayMarkers(thisSessions, weekStart, new Date());
 
-  let rpeTrend = '—';
-  if (averageRpe && prevAvg) {
-    const diff = parseFloat(averageRpe) - prevAvg;
-    if (diff > 0.5) rpeTrend = t('trendUp');
-    else if (diff < -0.5) rpeTrend = t('trendDown');
-    else rpeTrend = t('trendStable');
-  }
+  // Metric cards data (pre-translated)
+  const metricItems = [
+    { label: t('sessionsThisWeek'), value: sessionsCompleted },
+    { label: t('averageRpe'), value: averageRpe?.toFixed(1) || '—' },
+    { label: t('totalSets'), value: totalSets },
+    { label: t('daysTrained'), value: `${trainedDays.size}/7` },
+  ];
 
-  const muscleEntries = Object.entries(muscleCounts).sort(
-    (a, b) => b[1] - a[1],
+  const muscleWithPct = muscleEntries.map(
+    ([g, c]) => [g, c, totalMuscle > 0 ? Math.round((c / totalMuscle) * 100) : 0] as [string, number, number],
   );
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-text-primary">{t('title')}</h1>
+    <div className="max-w-2xl mx-auto space-y-lg">
+      <HeroHeader weekStart={weekStart} t={t} locale={locale} />
+      <MetricCards items={metricItems} />
 
-      {/* Metric cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="bg-surface-800 border border-border rounded p-4 text-center">
-          <p className="text-2xl font-bold text-text-primary">
-            {sessionsCompleted}
-          </p>
-          <p className="text-xs text-text-muted mt-1">
-            {t('sessionsThisWeek')}
-          </p>
-        </div>
-        <div className="bg-surface-800 border border-border rounded p-4 text-center">
-          <p className="text-2xl font-bold text-text-primary">
-            {averageRpe || '—'}
-          </p>
-          <p className="text-xs text-text-muted mt-1">{t('averageRpe')}</p>
-        </div>
-        <div className="bg-surface-800 border border-border rounded p-4 text-center">
-          <p className="text-2xl font-bold text-text-primary">{totalSets}</p>
-          <p className="text-xs text-text-muted mt-1">{t('totalSets')}</p>
-        </div>
-        <div className="bg-surface-800 border border-border rounded p-4 text-center">
-          <p className="text-2xl font-bold text-text-primary">
-            {trainedDays.size}/7
-          </p>
-          <p className="text-xs text-text-muted mt-1">{t('daysTrained')}</p>
-        </div>
-      </div>
-
-      {/* Muscle distribution */}
-      {muscleEntries.length > 0 && (
-        <div className="bg-surface-800 border border-border rounded p-4">
-          <p className="text-xs text-text-muted mb-3">
-            {t('muscleDistribution')}
-          </p>
-          <div className="space-y-2">
-            {muscleEntries.map(([group, count]) => (
-              <div key={group} className="flex items-center gap-3">
-                <span className="text-xs text-text-primary w-16 capitalize">
-                  {group}
-                </span>
-                <div className="flex-1 bg-surface-900 rounded h-2">
-                  <div
-                    className="bg-accent h-2 rounded"
-                    style={{
-                      width: `${Math.min(100, (count / Math.max(...muscleEntries.map((e) => e[1]))) * 100)}%`,
-                    }}
-                  />
-                </div>
-                <span className="text-xs text-text-muted w-4">{count}</span>
-              </div>
-            ))}
-          </div>
+      {sessionsCompleted > 0 ? (
+        <>
+          <ConsistencyPanel
+            trainedDays={trainedDays.size}
+            trainedRatio={trainedRatio}
+            consistencyDelta={consistencyDelta}
+            dayMarkers={dayMarkers}
+            t={t}
+          />
+          <TrendAnalysis
+            sessionsCompleted={sessionsCompleted}
+            prevSessionsCount={prevSessions.length}
+            averageRpe={averageRpe}
+            prevAvg={prevAvg}
+            rpeDiff={rpeDiff}
+            t={t}
+          />
+          <MuscleDistribution entries={muscleWithPct} t={t} />
+        </>
+      ) : (
+        <div className="brutalist-border bg-surface-800 p-sm text-center">
+          <p className="font-body-md text-on-surface-variant">{t('noData')}</p>
         </div>
       )}
-
-      {/* Previous week comparison */}
-      <div className="bg-surface-800 border border-border rounded p-4 space-y-2">
-        <p className="text-xs text-text-muted">{t('previousWeek')}</p>
-        {prevSessions.length > 0 ? (
-          <div className="text-sm text-text-primary space-y-1">
-            <p>
-              {prevSessions.length} {t('sessionsThisWeek').toLowerCase()} ·{' '}
-              {prevAvg?.toFixed(1) || '—'} {t('averageRpe').toLowerCase()}
-            </p>
-            <p className="text-xs text-accent">{rpeTrend}</p>
-          </div>
-        ) : (
-          <p className="text-sm text-text-muted">{t('noData')}</p>
-        )}
-      </div>
-
-      {/* Consistency */}
-      <div className="bg-surface-800 border border-border rounded p-4">
-        <p className="text-xs text-text-muted mb-1">{t('consistency')}</p>
-        <p className="text-sm text-text-primary">
-          {sessionsCompleted === 0
-            ? t('noData')
-            : `${trainedDays.size}/7 ${t('daysTrained').toLowerCase()} (${Math.round((trainedDays.size / 7) * 100)}%)`}
-        </p>
-      </div>
     </div>
   );
 }

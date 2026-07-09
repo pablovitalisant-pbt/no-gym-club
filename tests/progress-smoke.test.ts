@@ -73,6 +73,13 @@ describe('Progress — re-assessment', () => {
       'history',
       'noData',
       'daysAgo',
+      'reassessmentLabel',
+      'historyImprovedAll',
+      'historyImproved',
+      'historyDeclined',
+      'historyMixed',
+      'historyInitialBaseline',
+      'historyAssessmentNumber',
     ];
 
     requiredKeys.forEach((key) => {

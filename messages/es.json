@@ -107,7 +107,8 @@
     "trendDown": "↓ RPE bajando",
     "trendStable": "→ RPE estable",
     "noData": "Sin datos",
-    "daysTrained": "Días entrenados"
+    "daysTrained": "Días entrenados",
+    "vsLastWeek": "vs. Semana Pasada"
   },
   "progress": {
     "fallback": "Progreso — próximamente",
@@ -126,7 +127,14 @@
     "pullups": "Dominadas",
     "squats": "Sentadillas",
     "dips": "Fondos",
-    "plank": "Plancha"
+    "plank": "Plancha",
+    "reassessmentLabel": "Recordatorio de Assessment",
+    "historyImprovedAll": "Mejoró en los {total} marcadores",
+    "historyImproved": "Mejoró en {count}/{total} marcadores",
+    "historyDeclined": "Empeoró en {count}/{total} marcadores",
+    "historyMixed": "Mixto — {up} mejoraron, {down} empeoraron",
+    "historyInitialBaseline": "Línea de Base",
+    "historyAssessmentNumber": "Assessment #{number}"
   },
   "session": {
     "fallback": "Motor de sesión — próximamente",
