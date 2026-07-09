@@ -6,6 +6,7 @@ import type { LucideIcon } from 'lucide-react';
 
 type ButtonBaseProps = {
   variant?: 'primary' | 'ghost';
+  iconLeft?: LucideIcon;
   iconRight?: LucideIcon;
 };
 
@@ -29,11 +30,12 @@ const variants: Record<string, string> = {
   ghost: 'border border-border text-text-primary hover:bg-surface-800',
 };
 
-export function Button({ variant = 'primary', iconRight: IconRight, ...props }: ButtonProps) {
+export function Button({ variant = 'primary', iconLeft: IconLeft, iconRight: IconRight, ...props }: ButtonProps) {
   const className = `${base} ${variants[variant]} ${props.className ?? ''}`;
 
   const content = (
     <>
+      {IconLeft && <IconLeft size={20} className="mr-2" />}
       {props.children}
       {IconRight && <IconRight size={20} className="ml-2" />}
     </>
@@ -41,10 +43,10 @@ export function Button({ variant = 'primary', iconRight: IconRight, ...props }: 
 
   if (props.as === 'a') {
     // ponytail: type assertion — TS discriminated union no ve variant en el narrowed type
-    const { variant: _, iconRight: __, children, ...anchorProps } = props as ButtonAsLink & { variant?: string; iconRight?: LucideIcon };
+    const { variant: _, iconLeft: __, iconRight: ___, children, ...anchorProps } = props as ButtonAsLink & { variant?: string; iconLeft?: LucideIcon; iconRight?: LucideIcon };
     return <a className={className} {...anchorProps}>{content}</a>;
   }
 
-  const { variant: _, iconRight: __, children, ...buttonProps } = props as ButtonAsButton & { variant?: string; iconRight?: LucideIcon };
+  const { variant: _, iconLeft: __, iconRight: ___, children, ...buttonProps } = props as ButtonAsButton & { variant?: string; iconLeft?: LucideIcon; iconRight?: LucideIcon };
   return <button className={className} {...buttonProps}>{content}</button>;
 }

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { saveProfile } from './actions';
+import { ArrowRight } from 'lucide-react';
 
 type Step = 'profile' | 'equipment' | 'parq';
 
@@ -82,214 +83,162 @@ export function AssessmentForm() {
     }
   }
 
+  const steps: Step[] = ['profile', 'equipment', 'parq'];
+  const inputCls = 'w-full bg-surface-900 brutalist-border brutalist-input p-4 text-on-surface font-mono-data text-body-md';
+
   return (
     <div className="mx-auto max-w-lg">
       {/* Step indicator */}
-      <div className="mb-8 flex gap-2 text-xs text-text-muted">
-        {(['profile', 'equipment', 'parq'] as Step[]).map((s, i) => (
-          <span
-            key={s}
-            className={s === step ? 'text-accent' : ''}
-          >
-            {i + 1}. {t(`${s}.title`)}
-            {i < 2 && ' → '}
-          </span>
-        ))}
-      </div>
+      <nav className="mb-lg border-b border-outline flex justify-between items-end">
+        {steps.map((s, i) => {
+          const isActive = s === step;
+          return (
+            <div
+              key={s}
+              className={`flex-1 pb-2 ${isActive ? 'border-b-2 border-primary-container' : 'border-b-2 border-outline'} ${i === 0 ? 'text-left' : i === steps.length - 1 ? 'text-right' : 'text-center'}`}
+            >
+              <span className={`font-label-bold text-label-sm uppercase ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}>
+                {i + 1}. {t(`${s}.title`)}
+              </span>
+            </div>
+          );
+        })}
+      </nav>
 
       {/* Step 1: Profile */}
       {step === 'profile' && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-text-primary">
-            {t('profile.title')}
-          </h2>
+        <div className="space-y-lg">
+          <header>
+            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2 uppercase tracking-tight">
+              {t('profile.title')}
+            </h2>
+            <p className="font-body-md text-body-md text-on-surface-variant">
+              {t('profile.hint')}
+            </p>
+          </header>
 
-          <div>
-            <label className="text-sm text-text-muted">{t('profile.age')}</label>
-            <input
-              type="number"
-              min={10}
-              max={100}
-              required
-              value={age}
-              onChange={(e) => setAge(e.target.value)}
-              className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+            <div className="space-y-xs">
+              <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="age">{t('profile.age')}</label>
+              <input id="age" type="number" min={14} max={100} required value={age} onChange={(e) => setAge(e.target.value)} className={inputCls} placeholder="25" />
+            </div>
+            <div className="space-y-xs">
+              <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="weight">{t('profile.weight')}</label>
+              <input id="weight" type="number" min={30} max={250} step="0.1" required value={weight} onChange={(e) => setWeight(e.target.value)} className={inputCls} placeholder="75" />
+            </div>
+            <div className="space-y-xs">
+              <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="height">{t('profile.height')}</label>
+              <input id="height" type="number" min={100} max={250} required value={height} onChange={(e) => setHeight(e.target.value)} className={inputCls} placeholder="180" />
+            </div>
           </div>
 
-          <div>
-            <label className="text-sm text-text-muted">{t('profile.weight')}</label>
-            <input
-              type="number"
-              min={30}
-              max={250}
-              step="0.1"
-              required
-              value={weight}
-              onChange={(e) => setWeight(e.target.value)}
-              className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
-            />
+          <div className="space-y-xs">
+            <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block">{t('profile.experience')}</label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-base">
+              {(['beginner', 'intermediate', 'advanced'] as const).map((ex) => (
+                <label key={ex} className="relative cursor-pointer group">
+                  <input type="radio" name="experience" className="sr-only peer" checked={experience === ex} onChange={() => setExperience(ex)} />
+                  <div className="brutalist-border p-4 bg-surface-800 peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-all group-hover:bg-surface-700">
+                    <span className="font-label-bold text-label-sm uppercase">{t(`profile.${ex}`)}</span>
+                    <p className="text-[10px] opacity-70 mt-1 uppercase">{t(`profile.${ex}Sub`)}</p>
+                  </div>
+                </label>
+              ))}
+            </div>
           </div>
 
-          <div>
-            <label className="text-sm text-text-muted">{t('profile.height')}</label>
-            <input
-              type="number"
-              min={100}
-              max={250}
-              step="0.1"
-              required
-              value={height}
-              onChange={(e) => setHeight(e.target.value)}
-              className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm text-text-muted">{t('profile.experience')}</label>
-            <select
-              value={experience}
-              onChange={(e) => setExperience(e.target.value)}
-              className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
-            >
-              <option value="beginner">{t('profile.beginner')}</option>
-              <option value="intermediate">{t('profile.intermediate')}</option>
-              <option value="advanced">{t('profile.advanced')}</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="text-sm text-text-muted">{t('profile.goal')}</label>
-            <select
-              value={goal}
-              onChange={(e) => setGoal(e.target.value)}
-              className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
-            >
-              <option value="lose_weight">{t('profile.lose_weight')}</option>
-              <option value="build_muscle">{t('profile.build_muscle')}</option>
-              <option value="improve_endurance">{t('profile.improve_endurance')}</option>
-              <option value="master_skills">{t('profile.master_skills')}</option>
-              <option value="general_fitness">{t('profile.general_fitness')}</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="text-sm text-text-muted">{t('profile.days')}</label>
-            <select
-              value={days}
-              onChange={(e) => setDays(e.target.value)}
-              className="mt-1 w-full border border-border bg-surface-900 px-3 py-2 text-sm text-text-primary outline-none focus:border-accent"
-            >
-              {[1, 2, 3, 4, 5, 6, 7].map((d) => (
-                <option key={d} value={d}>{d}</option>
+          <div className="space-y-xs">
+            <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="goal">{t('profile.goal')}</label>
+            <select id="goal" value={goal} onChange={(e) => setGoal(e.target.value)} className={`${inputCls} uppercase tracking-wider`}>
+              {(['lose_weight', 'build_muscle', 'improve_endurance', 'master_skills', 'general_fitness'] as const).map((g) => (
+                <option key={g} value={g}>{t(`profile.${g}`)}</option>
               ))}
             </select>
           </div>
 
-          <div className="flex justify-end">
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => setStep('equipment')}
-              disabled={!age || !weight || !height}
-            >
+          <div className="space-y-xs">
+            <div className="flex justify-between items-center">
+              <label className="font-label-bold text-label-sm uppercase text-on-surface-variant" htmlFor="days">{t('profile.days')}</label>
+              <span className="font-mono-data text-primary text-body-lg">{days}</span>
+            </div>
+            <input id="days" type="range" min={1} max={7} value={days} onChange={(e) => setDays(e.target.value)} className="w-full h-1 bg-surface-800 appearance-none cursor-pointer accent-primary-container" />
+            <div className="flex justify-between text-[10px] uppercase opacity-50 font-label-bold">
+              <span>1</span>
+              <span>7</span>
+            </div>
+          </div>
+
+          <div className="pt-lg">
+            <Button type="button" variant="primary" onClick={() => setStep('equipment')} disabled={!age || !weight || !height} iconRight={ArrowRight} className="w-full uppercase !py-md">
               {t('next')}
             </Button>
           </div>
         </div>
       )}
 
-      {/* Step 2: Equipment */}
+      {/* Step 2: Equipment — Spec del Director Técnico */}
       {step === 'equipment' && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-text-primary">
-            {t('equipment.title')}
-          </h2>
+        <div className="space-y-lg">
+          <header>
+            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2 uppercase tracking-tight">
+              {t('equipment.title')}
+            </h2>
+            <p className="font-body-md text-body-md text-on-surface-variant">{t('equipment.hint')}</p>
+          </header>
 
-          <p className="text-sm text-text-muted">{t('equipment.hint')}</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-base">
+            {EQUIPMENT_OPTIONS.map((eq) => (
+              <label key={eq} className="relative cursor-pointer group">
+                <input type="checkbox" className="sr-only peer" checked={equipment.includes(eq)} onChange={() => toggleEquipment(eq)} />
+                <div className="brutalist-border p-4 bg-surface-800 peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-all group-hover:bg-surface-700">
+                  <span className="font-label-bold text-label-sm uppercase">{t(`equipment.${eq}`)}</span>
+                </div>
+              </label>
+            ))}
+          </div>
 
-          {EQUIPMENT_OPTIONS.map((eq) => (
-            <label
-              key={eq}
-              className="flex items-center gap-3 border border-border p-3 text-sm text-text-primary"
-            >
-              <input
-                type="checkbox"
-                checked={equipment.includes(eq)}
-                onChange={() => toggleEquipment(eq)}
-                className="accent-accent"
-              />
-              {t(`equipment.${eq}`)}
-            </label>
-          ))}
-
-          <div className="flex justify-between">
-            <Button type="button" variant="ghost" onClick={() => setStep('profile')}>
-              {t('back')}
-            </Button>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={() => setStep('parq')}
-              disabled={equipment.length === 0}
-            >
-              {t('next')}
-            </Button>
+          <div className="flex justify-between pt-lg">
+            <Button type="button" variant="ghost" onClick={() => setStep('profile')}>{t('back')}</Button>
+            <Button type="button" variant="primary" onClick={() => setStep('parq')} disabled={equipment.length === 0} iconRight={ArrowRight} className="!py-md">{t('next')}</Button>
           </div>
         </div>
       )}
 
-      {/* Step 3: PAR-Q */}
+      {/* Step 3: PAR-Q — Spec del Director Técnico */}
       {step === 'parq' && (
-        <div className="space-y-4">
-          <h2 className="text-lg font-bold text-text-primary">
-            {t('parq.title')}
-          </h2>
-
-          <p className="text-sm text-text-muted">{t('parq.description')}</p>
+        <div className="space-y-lg">
+          <header>
+            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2 uppercase tracking-tight">
+              {t('parq.title')}
+            </h2>
+            <p className="font-body-md text-body-md text-on-surface-variant">{t('parq.description')}</p>
+          </header>
 
           {PARQ_QUESTIONS.map((q) => (
-            <div key={q} className="border border-border p-3">
-              <p className="text-sm text-text-primary">{t(`parq.${q}`)}</p>
-              <div className="mt-2 flex gap-4">
-                <label className="flex items-center gap-1 text-sm text-text-muted">
-                  <input
-                    type="radio"
-                    name={q}
-                    checked={parq[q] === true}
-                    onChange={() => setParq((prev) => ({ ...prev, [q]: true }))}
-                    className="accent-accent"
-                  />
-                  {t('parq.yes')}
+            <div key={q} className="brutalist-border p-4 bg-surface-800 space-y-sm">
+              <p className="font-body-md text-on-surface">{t(`parq.${q}`)}</p>
+              <div className="grid grid-cols-2 gap-base">
+                <label className="relative cursor-pointer group">
+                  <input type="radio" name={q} className="sr-only peer" checked={parq[q] === true} onChange={() => setParq((prev) => ({ ...prev, [q]: true }))} />
+                  <div className="brutalist-border p-3 text-center peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-all">
+                    <span className="font-label-bold text-label-sm uppercase">{t('parq.yes')}</span>
+                  </div>
                 </label>
-                <label className="flex items-center gap-1 text-sm text-text-muted">
-                  <input
-                    type="radio"
-                    name={q}
-                    checked={parq[q] === false}
-                    onChange={() => setParq((prev) => ({ ...prev, [q]: false }))}
-                    className="accent-accent"
-                  />
-                  {t('parq.no')}
+                <label className="relative cursor-pointer group">
+                  <input type="radio" name={q} className="sr-only peer" checked={parq[q] === false} onChange={() => setParq((prev) => ({ ...prev, [q]: false }))} />
+                  <div className="brutalist-border p-3 text-center peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-all">
+                    <span className="font-label-bold text-label-sm uppercase">{t('parq.no')}</span>
+                  </div>
                 </label>
               </div>
             </div>
           ))}
 
-          {error && (
-            <p className="text-sm text-red-500">{error}</p>
-          )}
+          {error && <p className="text-sm text-error">{error}</p>}
 
-          <div className="flex justify-between">
-            <Button type="button" variant="ghost" onClick={() => setStep('equipment')}>
-              {t('back')}
-            </Button>
-            <Button
-              type="button"
-              variant="primary"
-              onClick={handleSubmit}
-              disabled={loading || PARQ_QUESTIONS.some((q) => parq[q] === undefined)}
-            >
+          <div className="flex justify-between pt-lg">
+            <Button type="button" variant="ghost" onClick={() => setStep('equipment')}>{t('back')}</Button>
+            <Button type="button" variant="primary" onClick={handleSubmit} disabled={loading || PARQ_QUESTIONS.some((q) => parq[q] === undefined)} className="!py-md">
               {loading ? '...' : t('submit')}
             </Button>
           </div>
