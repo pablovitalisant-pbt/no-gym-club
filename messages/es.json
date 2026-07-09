@@ -92,7 +92,8 @@
     "equipment": "Equipamiento",
     "progression": "▲ Progresión",
     "regression": "▼ Regresión",
-    "backToCatalog": "Volver al catálogo"
+    "backToCatalog": "Volver al catálogo",
+    "linkedExercises": "{count} relacionado(s)"
   },
   "weekly": {
     "fallback": "Reporte semanal — próximamente",

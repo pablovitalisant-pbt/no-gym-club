@@ -74,6 +74,7 @@ describe('Exercise catalog', () => {
       'progression',
       'regression',
       'backToCatalog',
+      'linkedExercises',
     ];
 
     requiredKeys.forEach((key) => {

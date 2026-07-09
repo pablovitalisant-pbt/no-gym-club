@@ -1,7 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getFlag } from '@/lib/flags';
-import Link from 'next/link';
+import { Dumbbell } from 'lucide-react';
 import type { Database } from '@/lib/supabase/types';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
@@ -10,9 +10,9 @@ const CATEGORIES = ['push', 'pull', 'core', 'legs', 'cardio', 'mobility', 'skill
 const DIFFICULTIES = ['beginner', 'intermediate', 'advanced'] as const;
 
 const difficultyBadge: Record<string, string> = {
-  beginner: 'bg-green-900 text-green-300 border-green-700',
-  intermediate: 'bg-yellow-900 text-yellow-300 border-yellow-700',
-  advanced: 'bg-red-900 text-red-300 border-red-700',
+  beginner: 'border-green-500/50 bg-green-500/10 text-green-500',
+  intermediate: 'border-yellow-500/50 bg-yellow-500/10 text-yellow-500',
+  advanced: 'border-red-500/50 bg-red-500/10 text-red-500',
 };
 
 export default async function ExercisesPage({
@@ -27,13 +27,12 @@ export default async function ExercisesPage({
   if (!getFlag('exercises_catalog')) {
     return (
       <div className="flex items-center justify-center py-24">
-        <p className="text-lg text-text-muted">{t('fallback')}</p>
+        <p className="font-body-md text-on-surface-variant">{t('fallback')}</p>
       </div>
     );
   }
 
   const supabase = createClient();
-
   let query = supabase
     .from('exercises')
     .select('*')
@@ -50,18 +49,20 @@ export default async function ExercisesPage({
   const { data: exercises } = await query;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-text-primary">{t('title')}</h1>
+    <div className="max-w-[1280px] mx-auto space-y-lg">
+      <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg uppercase border-l-4 border-primary-container pl-4">
+        {t('title')}
+      </h2>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-4">
-        <div className="space-y-1">
-          <p className="text-xs text-text-muted">{t('filterCategory')}</p>
-          <div className="flex flex-wrap gap-1">
+      {/* Filters (Stitch spec: pill buttons with active state) */}
+      <div className="space-y-lg">
+        <div>
+          <span className="font-label-bold text-label-bold uppercase text-on-surface-variant mb-3 block">{t('filterCategory')}</span>
+          <div className="flex flex-wrap gap-2">
             <a
               href={`/${locale}/exercises`}
-              className={`text-xs px-2 py-1 rounded border transition-colors
-                ${!searchParams.category ? 'bg-accent/20 text-accent border-accent/50' : 'bg-surface-800 text-text-muted border-border hover:bg-surface-700'}`}
+              className={`px-4 py-2 font-label-bold text-label-bold uppercase transition-all active:scale-95
+                ${!searchParams.category ? 'bg-primary-container text-on-primary-container' : 'border border-outline-variant text-on-surface hover:border-primary'}`}
             >
               {t('allCategories')}
             </a>
@@ -69,22 +70,21 @@ export default async function ExercisesPage({
               <a
                 key={cat}
                 href={`/${locale}/exercises?category=${cat}`}
-                className={`text-xs px-2 py-1 rounded border transition-colors
-                  ${searchParams.category === cat ? 'bg-accent/20 text-accent border-accent/50' : 'bg-surface-800 text-text-muted border-border hover:bg-surface-700'}`}
+                className={`px-4 py-2 font-label-bold text-label-bold uppercase transition-all active:scale-95
+                  ${searchParams.category === cat ? 'bg-primary-container text-on-primary-container' : 'border border-outline-variant text-on-surface hover:border-primary'}`}
               >
                 {cat}
               </a>
             ))}
           </div>
         </div>
-
-        <div className="space-y-1">
-          <p className="text-xs text-text-muted">{t('filterDifficulty')}</p>
-          <div className="flex flex-wrap gap-1">
+        <div>
+          <span className="font-label-bold text-label-bold uppercase text-on-surface-variant mb-3 block">{t('filterDifficulty')}</span>
+          <div className="flex flex-wrap gap-2">
             <a
               href={`/${locale}/exercises${searchParams.category ? `?category=${searchParams.category}` : ''}`}
-              className={`text-xs px-2 py-1 rounded border transition-colors
-                ${!searchParams.difficulty ? 'bg-accent/20 text-accent border-accent/50' : 'bg-surface-800 text-text-muted border-border hover:bg-surface-700'}`}
+              className={`px-4 py-2 font-label-bold text-label-bold uppercase transition-all active:scale-95
+                ${!searchParams.difficulty ? 'bg-primary-container text-on-primary-container' : 'border border-outline-variant text-on-surface hover:border-primary'}`}
             >
               {t('allDifficulties')}
             </a>
@@ -92,8 +92,8 @@ export default async function ExercisesPage({
               <a
                 key={diff}
                 href={`/${locale}/exercises?${searchParams.category ? `category=${searchParams.category}&` : ''}difficulty=${diff}`}
-                className={`text-xs px-2 py-1 rounded border transition-colors
-                  ${searchParams.difficulty === diff ? 'bg-accent/20 text-accent border-accent/50' : 'bg-surface-800 text-text-muted border-border hover:bg-surface-700'}`}
+                className={`px-4 py-2 font-label-bold text-label-bold uppercase transition-all active:scale-95
+                  ${searchParams.difficulty === diff ? 'bg-primary-container text-on-primary-container' : 'border border-outline-variant text-on-surface hover:border-primary'}`}
               >
                 {diff}
               </a>
@@ -102,46 +102,50 @@ export default async function ExercisesPage({
         </div>
       </div>
 
-      {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {(exercises || []).map((ex: ExerciseRow) => (
-          <a
-            key={ex.id}
-            href={`/${locale}/exercises/${ex.slug}`}
-            className="block bg-surface-800 border border-border rounded p-4 hover:border-accent/50 transition-colors"
-          >
-            <div className="aspect-video bg-surface-900 rounded mb-3 flex items-center justify-center text-text-muted overflow-hidden">
-              {ex.gif_url ? (
-                <img
-                  src={ex.gif_url}
-                  alt={ex.name_en}
-                  className="w-full h-full object-contain"
-                  loading="lazy"
-                />
-              ) : (
-                <span className="text-2xl">💪</span>
-              )}
-            </div>
-            <h3 className="text-sm font-semibold text-text-primary">
-              {locale === 'en' ? ex.name_en : ex.name_es}
-            </h3>
-            <div className="flex items-center gap-2 mt-2">
-              <span className={`text-xs px-2 py-0.5 rounded border ${difficultyBadge[ex.difficulty]}`}>
-                {ex.difficulty}
-              </span>
-              <span className="text-xs text-text-muted">{ex.category}</span>
-            </div>
-            <p className="text-xs text-text-muted mt-1">
-              {(ex.muscle_groups || []).join(', ')}
-            </p>
-          </a>
-        ))}
+      {/* Exercise grid (Stitch spec: 3-col, cards with image overlay + badge) */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter md:gap-md">
+        {(exercises || []).map((ex: ExerciseRow) => {
+          const name = locale === 'en' ? ex.name_en : ex.name_es;
+          return (
+            <a
+              key={ex.id}
+              href={`/${locale}/exercises/${ex.slug}`}
+              className="bg-surface-800 border border-outline-variant hover:border-primary-container transition-all group p-sm flex flex-col justify-between h-full"
+            >
+              <div>
+                <div className="flex justify-between items-start mb-sm">
+                  <span className={`border px-2 py-0.5 font-mono-data text-label-sm uppercase ${difficultyBadge[ex.difficulty]}`}>
+                    {ex.difficulty}
+                  </span>
+                </div>
+                <div className="w-full aspect-video bg-surface-700 mb-sm overflow-hidden relative border border-outline-variant">
+                  {ex.gif_url ? (
+                    <>
+                      <img src={ex.gif_url} alt={name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" loading="lazy" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
+                    </>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-4xl">💪</div>
+                  )}
+                </div>
+                <h3 className="font-headline-md text-headline-md uppercase text-on-surface mb-1">{name}</h3>
+                <p className="font-label-bold text-label-bold text-primary-container uppercase mb-2">{ex.category}</p>
+              </div>
+              <div className="border-t border-outline-variant pt-sm">
+                <div className="flex items-center gap-2">
+                  <Dumbbell className="text-on-surface-variant shrink-0" size={16} />
+                  <p className="font-body-md text-on-surface-variant text-sm">
+                    {(ex.muscle_groups || []).join(', ') || '—'}
+                  </p>
+                </div>
+              </div>
+            </a>
+          );
+        })}
       </div>
 
       {(exercises || []).length === 0 && (
-        <p className="text-text-muted text-center py-16 text-sm">
-          No exercises found.
-        </p>
+        <p className="font-body-md text-on-surface-variant text-center py-16">No exercises found.</p>
       )}
     </div>
   );
