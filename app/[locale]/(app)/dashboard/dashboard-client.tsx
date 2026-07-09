@@ -4,7 +4,8 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
-import type { SessionData, SessionExercise } from '@/lib/types/session';
+import { Play, Brain } from 'lucide-react';
+import type { SessionData } from '@/lib/types/session';
 
 // ─── Types ───
 
@@ -32,10 +33,10 @@ function pickLocale<T extends string>(
   return (obj as Record<string, string> | undefined)?.[key] ?? '';
 }
 
-const SECTION_COLORS: Record<string, string> = {
-  warmup: 'border-l-green-500',
-  main: 'border-l-accent',
-  cooldown: 'border-l-blue-500',
+const SECTION_COLORS: Record<string, { bar: string; text: string }> = {
+  warmup: { bar: 'bg-green-500', text: 'text-green-500' },
+  main: { bar: 'bg-primary-container', text: 'text-primary-container' },
+  cooldown: { bar: 'bg-blue-500', text: 'text-blue-500' },
 };
 
 const SECTION_LABELS: Record<string, string> = {
@@ -82,87 +83,63 @@ function SessionCard({
   const t = useTranslations('dashboard');
 
   return (
-    <div className="space-y-6">
-      {/* Title */}
-      <div>
-        <p className="text-xs uppercase tracking-widest text-text-muted mb-1">
+    <div className="brutalist-border bg-surface-800 p-sm md:p-md">
+      {/* Header */}
+      <div className="mb-md">
+        <p className="font-label-bold text-label-bold uppercase text-primary mb-1">
           {t('sessionTitle')}
         </p>
-        <h2 className="text-xl font-bold text-text-primary">
+        <h2 className="font-headline-md text-headline-md text-on-surface">
           {pickLocale(session as unknown as Record<string, string>, locale, 'title') ||
             session.title_es}
         </h2>
       </div>
 
       {/* Sections */}
-      {(['warmup', 'main', 'cooldown'] as const).map((section) => {
+      {(['warmup', 'main', 'cooldown'] as const).map((section, idx) => {
         const items = session[section];
         if (!items?.length) return null;
-
-        return (
-          <div key={section}>
-            <h3 className="text-sm font-semibold text-text-primary mb-2 flex items-center gap-2">
-              <span
-                className={`w-1 h-4 block rounded ${SECTION_COLORS[section].replace('border-l-', 'bg-')}`}
-              />
-              {t(SECTION_LABELS[section])}
-            </h3>
-            <ul className="space-y-2">
+        const colors = SECTION_COLORS[section];
+        const isLast = idx === 2;
+          return (
+          <div key={section} className={!isLast ? 'mb-md' : ''}>
+            <div className="flex items-center gap-2 mb-sm">
+              <span className={`w-2 h-6 ${colors.bar}`} />
+              <h3 className={`font-label-bold text-label-bold ${colors.text} uppercase tracking-widest`}>
+                {t(SECTION_LABELS[section])}
+              </h3>
+            </div>
+            <div className="grid gap-base">
               {items.map((ex, i) => (
-                <li
-                  key={i}
-                  className={`border-l-2 ${SECTION_COLORS[section]} pl-3 py-2 bg-surface-800`}
-                >
-                  <div className="flex items-baseline justify-between gap-4">
-                    <span className="text-sm font-medium text-text-primary">
-                      {ex.exercise}
-                    </span>
-                    <span className="text-xs text-text-muted shrink-0">
+                <div key={i} className="bg-surface-800 border border-outline p-sm flex justify-between items-center">
+                  <div>
+                    <p className="font-label-bold text-on-surface">{ex.exercise}</p>
+                    <p className="text-label-sm text-on-surface-variant">
                       {ex.sets != null && ex.reps
-                        ? `${ex.sets}×${ex.reps}`
+                        ? `${ex.sets} × ${ex.reps}`
                         : ex.duration_seconds != null
                           ? `${ex.duration_seconds}s`
                           : ''}
-                      {ex.rpe != null && ` · RPE ${ex.rpe}`}
-                      {ex.rest_seconds != null && ` · ${ex.rest_seconds}s`}
-                    </span>
-                  </div>
-                  {ex.notes_es && (
-                    <p className="text-xs text-text-muted mt-1">
-                      {locale === 'en' && ex.notes_en ? ex.notes_en : ex.notes_es}
                     </p>
-                  )}
-                </li>
+                  </div>
+                  <div className="text-right">
+                    {ex.rpe != null && (
+                      <p className={`font-mono-data ${section === 'main' ? 'text-primary' : 'text-on-surface'}`}>
+                        RPE: {ex.rpe}
+                      </p>
+                    )}
+                    {ex.rest_seconds != null && (
+                      <p className="text-label-sm text-on-surface-variant">
+                        {ex.rest_seconds}s
+                      </p>
+                    )}
+                  </div>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         );
       })}
-
-      {/* Rationale */}
-      <div className="border-t border-border pt-4">
-        <p className="text-xs uppercase tracking-widest text-text-muted mb-1">
-          {t('rationale')}
-        </p>
-        <p className="text-sm text-text-muted leading-relaxed">
-          {locale === 'en' ? session.rationale_en : session.rationale_es}
-        </p>
-      </div>
-
-      {/* Science refs */}
-      {session.science_refs?.length > 0 && (
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="text-xs text-text-muted">{t('scienceRefs')}:</span>
-          {session.science_refs.map((ref) => (
-            <span
-              key={ref}
-              className="text-xs px-2 py-0.5 bg-surface-800 border border-border rounded"
-            >
-              {ref}
-            </span>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
@@ -171,7 +148,7 @@ function SessionCard({
 
 export default function DashboardClient({
   locale,
-  showLog,
+  showLog: _showLog,
 }: {
   locale: string;
   showLog: boolean;
@@ -259,33 +236,43 @@ export default function DashboardClient({
   }
 
   return (
-    <div className="max-w-2xl">
+    <div>
+      {/* Idle header */}
+      {viewState === 'idle' && (
+        <header className="mb-lg">
+          <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-xs">
+            {t('idleHint')}
+          </h2>
+          <div className="hud-line w-full opacity-30"></div>
+        </header>
+      )}
+
       {/* Idle state */}
       {viewState === 'idle' && (
-        <div className="text-center py-16 space-y-4">
-          <p className="text-text-muted text-sm">{t('idleHint')}</p>
+        <div className="text-center py-24 space-y-4">
+          <p className="text-on-surface-variant font-body-md">{t('idleHint')}</p>
           <Button onClick={handleGenerate}>{t('generate')}</Button>
         </div>
       )}
 
       {/* Loading state */}
       {viewState === 'loading' && (
-        <div className="text-center py-16 space-y-4">
+        <div className="text-center py-24 space-y-4">
           <div className="flex justify-center">
             <Spinner />
           </div>
-          <p className="text-text-muted text-sm">{t('generating')}</p>
+          <p className="text-on-surface-variant font-body-md">{t('generating')}</p>
         </div>
       )}
 
       {/* Streaming state */}
       {viewState === 'streaming' && (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 text-sm text-text-muted">
+          <div className="flex items-center gap-2 text-sm text-on-surface-variant">
             <Spinner />
             <span>{t('streaming')}</span>
           </div>
-          <pre className="bg-surface-800 border border-border rounded p-4 text-xs text-text-primary font-mono whitespace-pre-wrap max-h-96 overflow-y-auto">
+          <pre className="bg-surface-800 brutalist-border p-4 text-xs text-on-surface font-mono whitespace-pre-wrap max-h-96 overflow-y-auto">
             {streamText}
           </pre>
         </div>
@@ -293,8 +280,8 @@ export default function DashboardClient({
 
       {/* Error state */}
       {viewState === 'error' && (
-        <div className="text-center py-16 space-y-4">
-          <p className="text-red-400 text-sm">{errorMsg}</p>
+        <div className="text-center py-24 space-y-4">
+          <p className="text-error font-body-md">{errorMsg}</p>
           <Button variant="ghost" onClick={handleGenerate}>
             {t('retry')}
           </Button>
@@ -303,29 +290,64 @@ export default function DashboardClient({
 
       {/* Success state */}
       {viewState === 'success' && session && (
-        <div className="space-y-6">
-          <SessionCard session={session} locale={locale} />
+        <>
+          {/* Bento Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+            {/* Main Session Card (8 Cols) */}
+            <section className="lg:col-span-8 flex flex-col gap-sm">
+              <SessionCard session={session} locale={locale} />
+            </section>
 
-          {sessionId && (
-            <>
-              <div className="text-center pt-4">
-                <Button
-                  onClick={() => router.push(`/session/${sessionId}`)}
-                >
-                  {t('startSession')}
-                </Button>
+            {/* Sidebar (4 Cols) */}
+            <aside className="lg:col-span-4 flex flex-col gap-sm">
+              {/* AI Reasoning Card */}
+              <div className="brutalist-border bg-surface-800 p-sm md:p-md border-l-2 border-l-primary-container">
+                <div className="flex items-center gap-2 mb-sm">
+                  <Brain className="text-primary" size={20} />
+                  <h3 className="font-label-bold text-label-bold uppercase text-on-surface">
+                    {t('rationale')}
+                  </h3>
+                </div>
+                <p className="text-body-md text-on-surface-variant leading-relaxed mb-md">
+                  {locale === 'en' ? session.rationale_en : session.rationale_es}
+                </p>
+                {session.science_refs?.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {session.science_refs.map((ref) => (
+                      <span
+                        key={ref}
+                        className="bg-surface-800 px-3 py-1 font-label-bold text-label-sm uppercase border border-outline text-on-surface-variant"
+                      >
+                        {ref}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
-            </>
-          )}
-
-          <div className="text-center pt-4 border-t border-border">
-            <Button variant="ghost" onClick={handleGenerate}>
-              {t('regenerate')}
-            </Button>
+            </aside>
           </div>
-        </div>
-      )}
 
+          {/* Action Buttons */}
+          {sessionId && (
+            <div className="mt-lg flex flex-col md:flex-row gap-gutter">
+              <Button
+                onClick={() => router.push(`/session/${sessionId}`)}
+                iconRight={Play}
+                className="flex-1 uppercase !py-5 !text-body-lg"
+              >
+                {t('startSession')}
+              </Button>
+              <Button
+                variant="ghost"
+                onClick={handleGenerate}
+                className="md:w-1/3 uppercase !py-5"
+              >
+                {t('regenerate')}
+              </Button>
+            </div>
+          )}
+        </>
+      )}
     </div>
   );
 }
