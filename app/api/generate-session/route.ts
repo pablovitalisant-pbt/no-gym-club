@@ -204,7 +204,7 @@ export async function POST(request: NextRequest) {
           try {
             for await (const token of streamChatCompletion(messages, {
               temperature: 0.7,
-              maxTokens: 2048,
+              maxTokens: 8192,
               jsonMode: true,
             })) {
               accumulated += token;
@@ -282,7 +282,7 @@ export async function POST(request: NextRequest) {
     // ─── Non-streaming mode (original) ───
     const rawResponse = await generateChatCompletion(messages, {
       temperature: 0.7,
-      maxTokens: 2048,
+      maxTokens: 8192,
       jsonMode: true,
     });
 

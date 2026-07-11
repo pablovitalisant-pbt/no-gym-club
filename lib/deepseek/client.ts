@@ -24,6 +24,13 @@ export async function generateChatCompletion(
     response_format: options?.jsonMode ? { type: 'json_object' } : undefined,
   });
 
+  const finishReason = response.choices[0]?.finish_reason;
+  if (finishReason === 'length') {
+    throw new Error(
+      'DeepSeek output truncated: max_tokens reached before completion',
+    );
+  }
+
   const content = response.choices[0]?.message?.content;
   if (!content) throw new Error('DeepSeek returned empty response');
   return content;
@@ -44,8 +51,23 @@ export async function* streamChatCompletion(
     stream: true,
   });
 
+  let reasoningAccumulated = '';
+
   for await (const chunk of stream) {
     const content = chunk.choices[0]?.delta?.content;
     if (content) yield content;
+
+    const reasoning = (chunk.choices[0]?.delta as Record<string, unknown>)?.reasoning_content as string | undefined;
+    if (reasoning) reasoningAccumulated += reasoning;
+
+    const finishReason = chunk.choices[0]?.finish_reason;
+    if (finishReason) {
+      if (finishReason === 'length') {
+        console.error(
+          '[deepseek-client] truncated — finish_reason: length. reasoning_content length:',
+          reasoningAccumulated.length,
+        );
+      }
+    }
   }
 }
