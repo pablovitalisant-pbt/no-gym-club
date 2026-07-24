@@ -38,7 +38,8 @@ describe('Slice Reps por serie — state + UI + i18n', () => {
   it('session-runner.tsx usa repsInputs (plural) y Array() para construir inputs', () => {
     expect(runner).toContain('repsInputs');
     // Array() se usa en setRepsInputs dentro de handleDone, no en useState
-    expect(runner).toContain('setRepsInputs(Array(ex.sets).fill(ex.reps))');
+    // El pre-llenado ahora pasa por totalSets (bilateral-aware)
+    expect(runner).toContain('setRepsInputs(Array(totalSets).fill(ex.reps))');
     // La forma singular ya no debe usarse como estado
     expect(runner).toContain("'reps'");
   });

@@ -38,7 +38,8 @@ You generate training sessions anchored in sport science. Rules:
 - Warmup: 3-5 mobility/dynamic exercises. Assign rest_seconds to warmup exercises too, calibrated to age and experience (beginners 30-60s, intermediate 15-30s, advanced 0-15s). Cooldown: 2-3 static stretches.
 - "science_refs" lists the sport science categories that support this session design.
 - If the user's goal is general_fitness, balance push/pull/legs/core. If hypertrophy, bias volume. If endurance, bias circuit-style. If master_skills, include skill practice blocks.
-- ADAPTATION: if training history is provided, use trends to adjust. RPE trending up ≥2 points over last 3 sessions → reduce volume 15-25% (accumulated fatigue). RPE trending down → increase volume progressively. Fewer than 2 sessions this week → prioritize full-body, moderate intensity. Rotate muscle groups away from last 2 sessions.`;
+- ADAPTATION: if training history is provided, use trends to adjust. RPE trending up ≥2 points over last 3 sessions → reduce volume 15-25% (accumulated fatigue). RPE trending down → increase volume progressively. Fewer than 2 sessions this week → prioritize full-body, moderate intensity. Rotate muscle groups away from last 2 sessions.
+- BILATERAL EXERCISES: exercises that work one limb at a time (arm circles, leg swings, unilateral arm/leg work) MUST have "bilateral": true. For bilateral exercises, duration_seconds and sets represent the value PER SIDE, not total. Example: 30s arm circles bilateral = 30s side 1 + 30s side 2 = 60s real work. 3 sets bilateral = 3 sets per side (6 total). Non-bilateral exercises omit this field or set it to false.`;
 
 function formatCorpusContext(docs: CorpusDoc[]): string {
   if (!docs.length) return '';
@@ -112,9 +113,9 @@ ${historyText}${corpusText}
 {
   "title_es": "...",
   "title_en": "...",
-  "warmup": [{ "exercise": "...", "duration_seconds": 60, "rest_seconds": 30, "notes_es": "...", "notes_en": "..." }],
-  "main": [{ "exercise": "...", "sets": 3, "reps": "8-12", "rpe": 7, "rest_seconds": 90, "notes_es": "...", "notes_en": "..." }],
-  "cooldown": [{ "exercise": "...", "duration_seconds": 30, "notes_es": "...", "notes_en": "..." }],
+  "warmup": [{ "exercise": "...", "duration_seconds": 60, "rest_seconds": 30, "bilateral": false, "notes_es": "...", "notes_en": "..." }],
+  "main": [{ "exercise": "...", "sets": 3, "reps": "8-12", "rpe": 7, "rest_seconds": 90, "bilateral": false, "notes_es": "...", "notes_en": "..." }],
+  "cooldown": [{ "exercise": "...", "duration_seconds": 30, "bilateral": false, "notes_es": "...", "notes_en": "..." }],
   "rationale_es": "...",
   "rationale_en": "...",
   "science_refs": ["category_1", "category_2"]

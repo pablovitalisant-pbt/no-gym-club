@@ -7,6 +7,7 @@ export interface SessionExercise {
   rest_seconds?: number;
   notes_es?: string;
   notes_en?: string;
+  bilateral?: boolean;
 }
 
 export interface SessionData {

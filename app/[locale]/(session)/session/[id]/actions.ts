@@ -14,6 +14,7 @@ export interface RepEntry {
   prescribedSets: number;
   prescribedReps: string;
   actualReps: string[];
+  bilateral?: boolean;
 }
 
 async function mergeLogData(

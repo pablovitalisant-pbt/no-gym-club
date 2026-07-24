@@ -67,9 +67,12 @@ export default function SessionRunner({
   const repsSubmittedRef = useRef(false);
   const restEndsAtRef = useRef<number | null>(null);
   const timingEndsAtRef = useRef<number | null>(null);
+  const sideRef = useRef<1 | 2 | null>(null);
+  const [side, setSide] = useState<1 | 2 | null>(null);
   const [audioEnabled, toggleAudio] = useAudioPreference();
   const audioRef = useRef(audioEnabled);
   audioRef.current = audioEnabled;
+  sideRef.current = side;
 
   // Restore snapshot on mount (page refresh / back navigation)
   useEffect(() => {
@@ -80,6 +83,10 @@ export default function SessionRunner({
     restInfoRef.current = snapshot.restInfo;
     setState(snapshot.state as RunnerState);
     setIndex(snapshot.index);
+    if (snapshot.currentSide != null) {
+      sideRef.current = snapshot.currentSide as 1 | 2;
+      setSide(sideRef.current);
+    }
     if (snapshot.state === 'rest' && snapshot.restEndsAt != null) {
       restEndsAtRef.current = snapshot.restEndsAt;
       const remaining = Math.max(0, Math.round((snapshot.restEndsAt - Date.now()) / 1000));
@@ -111,6 +118,7 @@ export default function SessionRunner({
         }
       }
     } else if (snapshot.state === 'timing' && snapshot.timingEndsAt != null) {
+      const restoreEx = allExercises[snapshot.index];
       timingEndsAtRef.current = snapshot.timingEndsAt;
       const remaining = Math.max(0, Math.round((snapshot.timingEndsAt - Date.now()) / 1000));
       if (remaining > 0) {
@@ -123,24 +131,75 @@ export default function SessionRunner({
           if (rem <= 0 && timerRef.current) {
             clearInterval(timerRef.current);
             timerRef.current = null;
+            if (restoreEx?.bilateral && snapshot.currentSide === 1) {
+              // Switch to side 2 with new timer
+              if (audioRef.current) playBeep();
+              timingEndsAtRef.current = Date.now() + (restoreEx.duration_seconds ?? 0) * 1000;
+              sideRef.current = 2;
+              setSide(2);
+              setTimingSeconds(restoreEx.duration_seconds ?? 0);
+              timerRef.current = setInterval(() => {
+                const rem2 = timingEndsAtRef.current
+                  ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
+                  : 0;
+                setTimingSeconds(rem2);
+                if (rem2 <= 0 && timerRef.current) {
+                  clearInterval(timerRef.current);
+                  timerRef.current = null;
+                  timingEndsAtRef.current = null;
+                  if (audioRef.current) playBeep();
+                  if (snapshot.index >= allExercises.length - 1) setState('done');
+                  else { setState('active'); setIndex((i) => i + 1); }
+                }
+              }, 1000);
+              saveSnapshot({
+                sessionId, state: 'timing', currentSide: 2, index: snapshot.index,
+                restEndsAt: restEndsAtRef.current, timingEndsAt: timingEndsAtRef.current,
+                restInfo: restInfoRef.current, restTimes: restTimesRef.current,
+                exerciseLog: exerciseLogRef.current, updatedAt: Date.now(),
+              });
+              return;
+            }
             timingEndsAtRef.current = null;
             if (audioRef.current) playBeep();
-            // Advance exercise — timed exercises don't go through reps
             if (snapshot.index >= allExercises.length - 1) setState('done');
-            else {
-              setState('active');
-              setIndex((i) => i + 1);
-            }
+            else { setState('active'); setIndex((i) => i + 1); }
           }
         }, 1000);
       } else {
         timingEndsAtRef.current = null;
         setTimingSeconds(0);
-        if (audioRef.current) playBeep();
-        if (snapshot.index >= allExercises.length - 1) setState('done');
-        else {
-          setState('active');
-          setIndex((i) => i + 1);
+        if (restoreEx?.bilateral && snapshot.currentSide === 1) {
+          // Side 1 expired while away — switch to side 2 immediately
+          if (audioRef.current) playBeep();
+          timingEndsAtRef.current = Date.now() + (restoreEx.duration_seconds ?? 0) * 1000;
+          sideRef.current = 2;
+          setSide(2);
+          setTimingSeconds(restoreEx.duration_seconds ?? 0);
+          timerRef.current = setInterval(() => {
+            const rem2 = timingEndsAtRef.current
+              ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
+              : 0;
+            setTimingSeconds(rem2);
+            if (rem2 <= 0 && timerRef.current) {
+              clearInterval(timerRef.current);
+              timerRef.current = null;
+              timingEndsAtRef.current = null;
+              if (audioRef.current) playBeep();
+              if (snapshot.index >= allExercises.length - 1) setState('done');
+              else { setState('active'); setIndex((i) => i + 1); }
+            }
+          }, 1000);
+          saveSnapshot({
+            sessionId, state: 'timing', currentSide: 2, index: snapshot.index,
+            restEndsAt: restEndsAtRef.current, timingEndsAt: timingEndsAtRef.current,
+            restInfo: restInfoRef.current, restTimes: restTimesRef.current,
+            exerciseLog: exerciseLogRef.current, updatedAt: Date.now(),
+          });
+        } else {
+          if (audioRef.current) playBeep();
+          if (snapshot.index >= allExercises.length - 1) setState('done');
+          else { setState('active'); setIndex((i) => i + 1); }
         }
       }
     }
@@ -234,9 +293,11 @@ export default function SessionRunner({
     }
     const ex = current;
     // Intercept sets/reps exercises: ask for actual reps before advancing
+    setSide(null);
     if (ex && ex.sets != null && ex.reps) {
       repsSubmittedRef.current = false;
-      setRepsInputs(Array(ex.sets).fill(ex.reps));
+      const totalSets = current?.bilateral ? (ex.sets ?? 0) * 2 : (ex.sets ?? 0);
+      setRepsInputs(Array(totalSets).fill(ex.reps));
       setState('reps');
       return;
     }
@@ -274,6 +335,7 @@ export default function SessionRunner({
       prescribedSets: ex.sets || 0,
       prescribedReps: ex.reps || '',
       actualReps: repsInputs,
+      bilateral: ex.bilateral ?? false,
     };
     exerciseLogRef.current.push(entry);
     // Optimistic save: fire and forget — manda ref completo, no delta
@@ -319,6 +381,7 @@ export default function SessionRunner({
       timerRef.current = null;
       restEndsAtRef.current = null;
     }
+    setSide(null);
     recordActualRest();
     setRestSeconds(0);
     if (isLast) {
@@ -342,6 +405,9 @@ export default function SessionRunner({
 
   const handleStartTimer = useCallback(() => {
     if (!current?.duration_seconds) return;
+    const newSide: 1 | null = current.bilateral ? 1 : null;
+    sideRef.current = newSide;
+    setSide(newSide);
     const endsAt = Date.now() + current.duration_seconds * 1000;
     timingEndsAtRef.current = endsAt;
     setTimingSeconds(current.duration_seconds);
@@ -354,6 +420,40 @@ export default function SessionRunner({
       if (remaining <= 0) {
         if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = null;
+        if (current?.bilateral && sideRef.current === 1) {
+          // Side 1 done — switch to side 2 with new timer
+          if (audioRef.current) playBeep();
+          timingEndsAtRef.current = Date.now() + (current.duration_seconds ?? 0) * 1000;
+          sideRef.current = 2;
+          setSide(2);
+          setTimingSeconds(current.duration_seconds ?? 0);
+          timerRef.current = setInterval(() => {
+            const rem = timingEndsAtRef.current
+              ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
+              : 0;
+            setTimingSeconds(rem);
+            if (rem <= 0 && timerRef.current) {
+              clearInterval(timerRef.current);
+              timerRef.current = null;
+              timingEndsAtRef.current = null;
+              if (audioRef.current) playBeep();
+              handleDone();
+            }
+          }, 1000);
+          saveSnapshot({
+            sessionId,
+            state: 'timing',
+            currentSide: 2,
+            index,
+            restEndsAt: restEndsAtRef.current,
+            timingEndsAt: timingEndsAtRef.current,
+            restInfo: restInfoRef.current,
+            restTimes: restTimesRef.current,
+            exerciseLog: exerciseLogRef.current,
+            updatedAt: Date.now(),
+          });
+          return;
+        }
         timingEndsAtRef.current = null;
         if (audioRef.current) playBeep();
         handleDone();
@@ -362,6 +462,7 @@ export default function SessionRunner({
     saveSnapshot({
       sessionId,
       state: 'timing',
+      currentSide: newSide,
       index,
       restEndsAt: restEndsAtRef.current,
       timingEndsAt: endsAt,
@@ -475,6 +576,12 @@ export default function SessionRunner({
             {t('timer')}
           </p>
 
+          {side != null && (
+            <p className="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider mb-1">
+              {t('side', { n: side })}
+            </p>
+          )}
+
           <p className="font-display-lg text-[100px] leading-none text-primary countdown-glow tabular-nums">
             {timingSeconds}
           </p>
@@ -511,7 +618,7 @@ export default function SessionRunner({
             {Array.from({ length: current.sets ?? 0 }, (_, i) => (
               <div key={i} className="flex flex-col items-center gap-1">
                 <label className="font-label-sm text-label-sm text-on-surface-variant">
-                  {t('setLabel', { n: i + 1 })}
+                  {current.bilateral ? `${t('side', { n: 1 })} — ${t('setLabel', { n: i + 1 })}` : t('setLabel', { n: i + 1 })}
                 </label>
                 <input
                   type="text"
@@ -525,6 +632,25 @@ export default function SessionRunner({
                 />
               </div>
             ))}
+            {current.bilateral && Array.from({ length: current.sets ?? 0 }, (_, i) => {
+              const idx = (current.sets ?? 0) + i;
+              return (
+                <div key={idx} className="flex flex-col items-center gap-1">
+                  <label className="font-label-sm text-label-sm text-on-surface-variant">
+                    {t('side', { n: 2 })} — {t('setLabel', { n: i + 1 })}
+                  </label>
+                  <input
+                    type="text"
+                    value={repsInputs[idx] ?? ''}
+                    onChange={(e) =>
+                      setRepsInputs((prev) => prev.map((v, j) => (j === idx ? e.target.value : v)))
+                    }
+                    className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_#e8570a] outline-none transition-all"
+                    placeholder={current.reps}
+                  />
+                </div>
+              );
+            })}
           </div>
 
           <Button onClick={handleConfirmReps} iconRight={Check} className="w-full max-w-xs !py-4 uppercase">

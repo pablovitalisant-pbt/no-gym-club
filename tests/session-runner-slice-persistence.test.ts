@@ -62,7 +62,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
 
   it('saveSnapshot en avance de handleConfirmReps (ejercicio sin rest_seconds)', () => {
     const confirmRepsIdx = runner.indexOf('const handleConfirmReps');
-    const block = runner.slice(confirmRepsIdx, confirmRepsIdx + 2000);
+    const block = runner.slice(confirmRepsIdx, confirmRepsIdx + 2500);
     const elseIdx = block.lastIndexOf('else {');
     const elseBlock = block.slice(elseIdx, elseIdx + 300);
     expect(elseBlock).toContain('saveSnapshot');

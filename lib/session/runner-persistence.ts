@@ -5,6 +5,7 @@ export interface RunnerSnapshot {
   sessionId: string;
   state: string;
   index: number;
+  currentSide?: number | null;
   restEndsAt: number | null;
   timingEndsAt: number | null;
   restInfo: {
