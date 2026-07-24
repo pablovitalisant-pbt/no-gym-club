@@ -1,7 +1,6 @@
 'use client';
 
 import { Link, usePathname } from '@/i18n/navigation';
-import { Bell } from 'lucide-react';
 
 interface NavItem {
   href: string;
@@ -18,30 +17,25 @@ export default function TopAppBar({ items }: { items: NavItem[] }) {
       </h1>
 
       {/* Desktop Navigation */}
-      <div className="flex items-center gap-6">
-        <nav className="hidden md:flex gap-8 items-center">
-          {items.map((item) => {
-            const isAnchor = item.href.startsWith('#');
-            const isActive = !isAnchor && (
-              pathname === item.href ||
-              (item.href !== '/dashboard' && pathname.startsWith(item.href))
-            );
-            const cls = `font-label-bold text-label-sm uppercase pt-1 transition-colors duration-150 ${
-              isActive
-                ? 'text-primary border-b-2 border-primary'
-                : 'text-on-surface-variant hover:text-primary'
-            }`;
-            return isAnchor ? (
-              <a key={item.href} href={item.href} className={cls}>{item.label}</a>
-            ) : (
-              <Link key={item.href} href={item.href} className={cls}>{item.label}</Link>
-            );
-          })}
-        </nav>
-        <button className="hover:bg-surface-800 p-2 transition-colors duration-150 rounded" aria-label="Notifications">
-          <Bell className="text-primary" size={24} />
-        </button>
-      </div>
+      <nav className="hidden md:flex gap-8 items-center">
+        {items.map((item) => {
+          const isAnchor = item.href.startsWith('#');
+          const isActive = !isAnchor && (
+            pathname === item.href ||
+            (item.href !== '/dashboard' && pathname.startsWith(item.href))
+          );
+          const cls = `font-label-bold text-label-sm uppercase pt-1 transition-colors duration-150 ${
+            isActive
+              ? 'text-primary border-b-2 border-primary'
+              : 'text-on-surface-variant hover:text-primary'
+          }`;
+          return isAnchor ? (
+            <a key={item.href} href={item.href} className={cls}>{item.label}</a>
+          ) : (
+            <Link key={item.href} href={item.href} className={cls}>{item.label}</Link>
+          );
+        })}
+      </nav>
     </header>
   );
 }
