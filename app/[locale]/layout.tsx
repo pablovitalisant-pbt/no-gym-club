@@ -1,3 +1,4 @@
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
@@ -6,7 +7,7 @@ import '@/app/globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
-export const metadata = {
+export const metadata: Metadata = {
   manifest: '/manifest.webmanifest',
   appleWebApp: {
     capable: true,
@@ -18,7 +19,7 @@ export const metadata = {
   },
 };
 
-export const viewport = {
+export const viewport: Viewport = {
   themeColor: '#0a0a0a',
   viewportFit: 'cover',
 };
