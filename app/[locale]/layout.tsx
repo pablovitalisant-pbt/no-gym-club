@@ -6,6 +6,23 @@ import '@/app/globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 
+export const metadata = {
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'No Gym Club',
+  },
+  icons: {
+    apple: '/icons/apple-touch-icon.png',
+  },
+};
+
+export const viewport = {
+  themeColor: '#0a0a0a',
+  viewportFit: 'cover',
+};
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
