@@ -55,3 +55,9 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Causa raíz**: no existía `manifest.json`/`manifest.ts`, ni meta tags de `viewport`/`appleWebApp`, ni íconos, en ningún punto del repo. El sitio funcionaba como página web normal, nunca como PWA instalable.
 - **Solución**: `app/manifest.ts` (name, icons 192/512/512-maskable, `display: standalone`, colores de marca), íconos generados desde `Logo_512.png`, exports `metadata`/`viewport` en `app/[locale]/layout.tsx`.
 - **Zona de riesgo**: sin Service Worker — decisión de alcance explícita, no hay soporte offline ni `beforeinstallprompt`. El ícono `maskable` no tiene padding de zona segura; si se ve recortado en Android es un ajuste de imagen, no de código.
+
+## Bug #7: Script de importación de catálogo no trae ejercicios nuevos
+- **Fecha**: 2026-07-24
+- **Clasificación**: C = Integración externa (oss.exercisedb.dev)
+- **Causa raíz**: el nextCursor que devuelve la API de ExerciseDB no avanza entre páginas — página 1 y página 2 devuelven idéntico resultado (verificado con llamada manual, cursor `17lJ1kr` repetido). El script itera 60 veces sobre la misma página de ~25 ejercicios, todos ya existentes en el catálogo, resultando en 0 inserciones.
+- **Estado**: sin resolver — pendiente investigar si la API necesita otro mecanismo de paginación (offset numérico en vez de cursor) o si es un bug del lado de ExerciseDB. No bloquea nada porque no corrompió datos (catálogo se mantiene en 43 filas íntegras). Se retoma cuando trabajemos la expansión de catálogo + sourcing de imágenes, después de los 6 slices.

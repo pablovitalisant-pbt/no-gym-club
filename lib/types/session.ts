@@ -8,6 +8,7 @@ export interface SessionExercise {
   notes_es?: string;
   notes_en?: string;
   bilateral?: boolean;
+  gif_url?: string | null;
 }
 
 export interface SessionData {

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
-import { Volume2, VolumeX, Check } from 'lucide-react';
+import { Volume2, VolumeX, Check, Dumbbell } from 'lucide-react';
 import LogForm from '@/components/session/LogForm';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
@@ -55,6 +55,7 @@ export default function SessionRunner({
   const [restSeconds, setRestSeconds] = useState(0);
   const [timingSeconds, setTimingSeconds] = useState(0);
   const [repsInputs, setRepsInputs] = useState<string[]>([]);
+  const [imageError, setImageError] = useState(false);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const restStartRef = useRef<number>(0);
   const restInfoRef = useRef<{
@@ -73,6 +74,11 @@ export default function SessionRunner({
   const audioRef = useRef(audioEnabled);
   audioRef.current = audioEnabled;
   sideRef.current = side;
+
+  // Reset image error on exercise change
+  useEffect(() => {
+    setImageError(false);
+  }, [index]);
 
   // Restore snapshot on mount (page refresh / back navigation)
   useEffect(() => {
@@ -527,6 +533,23 @@ export default function SessionRunner({
           <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase mb-1">
             {current.exercise}
           </h2>
+
+          {/* Exercise image / placeholder */}
+          <div className="flex justify-center mb-md">
+            {current.gif_url && !imageError ? (
+              <img
+                src={current.gif_url}
+                alt={current.exercise}
+                className="w-48 h-48 object-contain rounded-lg"
+                onError={() => setImageError(true)}
+              />
+            ) : (
+              <div className="flex flex-col items-center justify-center w-48 h-48 bg-surface-800 rounded-lg">
+                <Dumbbell size={48} className="text-on-surface-variant mb-2" />
+                <p className="font-label-sm text-label-sm text-on-surface-variant">{t('noImage')}</p>
+              </div>
+            )}
+          </div>
 
           {/* Prescription */}
           {current.sets != null && current.reps && (

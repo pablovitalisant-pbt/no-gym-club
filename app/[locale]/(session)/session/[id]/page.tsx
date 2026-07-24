@@ -1,8 +1,9 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getFlag } from '@/lib/flags';
+import { resolveExerciseGif } from '@/lib/exercises/resolve-media';
 import SessionRunner from './session-runner';
-import type { SessionData } from '@/lib/types/session';
+import type { SessionData, SessionExercise } from '@/lib/types/session';
 
 export default async function SessionPage({
   params: { id },
@@ -50,10 +51,30 @@ export default async function SessionPage({
     );
   }
 
+  // Enrich exercises with GIFs from catalog
+  const { data: catalog } = await supabase
+    .from('exercises')
+    .select('name_es, gif_url')
+    .not('gif_url', 'is', null);
+
+  const sessionData = session.session_data as unknown as SessionData;
+
+  function enrich(exercises: SessionExercise[]): SessionExercise[] {
+    return exercises.map((ex) => ({
+      ...ex,
+      gif_url: catalog ? resolveExerciseGif(ex.exercise, catalog) : null,
+    }));
+  }
+
   return (
     <SessionRunner
       sessionId={session.id}
-      session={session.session_data as unknown as SessionData}
+      session={{
+        ...sessionData,
+        warmup: enrich(sessionData.warmup),
+        main: enrich(sessionData.main),
+        cooldown: enrich(sessionData.cooldown),
+      }}
     />
   );
 }
