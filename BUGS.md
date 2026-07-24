@@ -60,4 +60,7 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Fecha**: 2026-07-24
 - **Clasificación**: C = Integración externa (oss.exercisedb.dev)
 - **Causa raíz**: el nextCursor que devuelve la API de ExerciseDB no avanza entre páginas — página 1 y página 2 devuelven idéntico resultado (verificado con llamada manual, cursor `17lJ1kr` repetido). El script itera 60 veces sobre la misma página de ~25 ejercicios, todos ya existentes en el catálogo, resultando en 0 inserciones.
-- **Estado**: sin resolver — pendiente investigar si la API necesita otro mecanismo de paginación (offset numérico en vez de cursor) o si es un bug del lado de ExerciseDB. No bloquea nada porque no corrompió datos (catálogo se mantiene en 43 filas íntegras). Se retoma cuando trabajemos la expansión de catálogo + sourcing de imágenes, después de los 6 slices.
+- **Estado**: resuelto 2026-07-24.
+- **Solución**: se migró de la API paginada `oss.exercisedb.dev` (cursor roto) al dataset estático `https://github.com/hasaneyldrm/exercises-dataset` — 1,324 ejercicios en un solo archivo JSON, licencia MIT. Nuevo script `scripts/import-exercises-dataset.ts` que lee el JSON completo en un fetch, filtra equipment = "body weight" (325 ejercicios), dedup por `name_en` contra la DB actual, e inserta los nuevos.
+- **Nota de traducción**: el dataset no tiene `name_es` — solo `name` en inglés. Las filas nuevas usan `name_es = name_en`, mismo comportamiento que las 11 filas sin traducir del catálogo actual. Las instrucciones sí están traducidas al español en `instruction_steps.es` (array de pasos), que se inserta en `instructions_es`.
+- **Nota de imágenes**: las filas nuevas no tienen `gif_url` ni `image_url` — quedan en `null` hasta el futuro sourcing de imágenes.
