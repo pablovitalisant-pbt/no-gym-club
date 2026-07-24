@@ -9,11 +9,11 @@ export function normalizeExerciseName(name: string): string {
 
 export function resolveExerciseGif(
   exerciseName: string,
-  catalog: { name_es: string; gif_url: string | null }[],
+  catalog: { name_en: string; gif_url: string | null }[],
 ): string | null {
   const key = normalizeExerciseName(exerciseName);
   for (const entry of catalog) {
-    if (entry.gif_url && normalizeExerciseName(entry.name_es) === key) {
+    if (entry.gif_url && normalizeExerciseName(entry.name_en) === key) {
       return entry.gif_url;
     }
   }

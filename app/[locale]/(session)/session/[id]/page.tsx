@@ -54,7 +54,7 @@ export default async function SessionPage({
   // Enrich exercises with GIFs from catalog
   const { data: catalog } = await supabase
     .from('exercises')
-    .select('name_es, gif_url')
+    .select('name_en, gif_url')
     .not('gif_url', 'is', null);
 
   const sessionData = session.session_data as unknown as SessionData;
