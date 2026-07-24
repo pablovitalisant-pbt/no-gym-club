@@ -31,7 +31,7 @@ const SYSTEM_PROMPT = `You are a street workout coach for No Gym Club. Your phil
 You generate training sessions anchored in sport science. Rules:
 - Output ONLY valid JSON. No markdown, no commentary outside the JSON.
 - Every text field must have both "_es" (Spanish) and "_en" (English) variants.
-- The "exercise" field must be in English (e.g. "Bodyweight Squat", not "Sentadilla con peso corporal"). Only "exercise" is in English — notes_en/notes_es and other fields still follow the _es/_en split.
+- The "exercise" field must match the exact name from the AVAILABLE EXERCISES list below (case-sensitive, character-by-character). Do not translate, paraphrase, or modify the exercise name. Each exercise you prescribe must be taken from that list. If no AVAILABLE EXERCISES are listed, generate exercise names in English (e.g. "Bodyweight Squat", not "Sentadilla con peso corporal").
 - Use ONLY the equipment the user has available (bodyweight, bar, ground, wall, dumbbell).
 - Respect the user's experience level. Beginners get regressions, advanced get progressions.
 - RPE targets must be realistic (6-8 for working sets, 8-9 for top sets).
@@ -97,6 +97,7 @@ export function buildSessionPrompt(
   profile: ProfileRow,
   corpusDocs: CorpusDoc[],
   sessionHistory?: SessionHistory,
+  availableExercises?: { name_en: string; category: string; muscle_groups: string[] }[],
 ): SessionPrompt {
   const profileText = formatProfile(profile);
   const corpusText = formatCorpusContext(corpusDocs);
@@ -104,11 +105,17 @@ export function buildSessionPrompt(
     ? formatSessionHistory(sessionHistory)
     : '';
 
+  const exercisesText = availableExercises && availableExercises.length > 0
+    ? `\n\n## AVAILABLE EXERCISES (select from this list — do not invent names outside it)\n${
+        availableExercises.map((ex) => `- ${ex.name_en} [${ex.category}] (${ex.muscle_groups.join(', ')})`).join('\n')
+      }`
+    : '';
+
   const user = `Generate today's training session for this athlete:
 
 ## Athlete Profile
 ${profileText}
-${historyText}${corpusText}
+${historyText}${corpusText}${exercisesText}
 
 ## Output Format
 {

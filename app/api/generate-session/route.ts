@@ -173,11 +173,32 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    // 8. Build prompt
+    // 8. Search exercises by embedding (reuses same embedding from step 7)
+    const { data: exercisesResult, error: exercisesError } = await supabase.rpc(
+      'search_exercises',
+      {
+        query_embedding: embedding,
+        match_count: 60,
+        filter_equipment: profile.available_equipment,
+      },
+    );
+
+    const availableExercises = !exercisesError
+      ? (exercisesResult || []).map(
+          (r: { name_en: string; category: string; muscle_groups: string[] }) => ({
+            name_en: r.name_en,
+            category: r.category,
+            muscle_groups: r.muscle_groups,
+          }),
+        )
+      : [];
+
+    // 9. Build prompt
     const { system, user: userPrompt } = buildSessionPrompt(
       profile,
       corpusDocs,
       sessionHistory,
+      availableExercises,
     );
 
     const messages: Array<{
