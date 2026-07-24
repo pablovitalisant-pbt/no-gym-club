@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { Volume2, VolumeX, Check, Dumbbell } from 'lucide-react';
 import LogForm from '@/components/session/LogForm';
+import CircularTimer from '@/components/session/CircularTimer';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
@@ -605,9 +606,12 @@ export default function SessionRunner({
             </p>
           )}
 
-          <p className="font-display-lg text-[100px] leading-none text-primary countdown-glow tabular-nums">
-            {timingSeconds}
-          </p>
+          <div className="relative flex items-center justify-center">
+            <CircularTimer remaining={timingSeconds} total={current?.duration_seconds ?? 0} size={240} />
+            <p className="absolute font-display-lg text-[100px] leading-none text-primary countdown-glow tabular-nums">
+              {timingSeconds}
+            </p>
+          </div>
 
           <p className="font-headline-md text-headline-md text-on-surface mt-md">
             {current?.exercise}
@@ -689,9 +693,12 @@ export default function SessionRunner({
             {t('rest')}
           </span>
 
-          <p className={`font-display-lg text-[100px] leading-none countdown-glow font-extrabold tracking-tighter tabular-nums transition-all ${restSeconds <= 3 ? 'text-green-500 scale-110' : 'text-primary-container'}`}>
-            {restDisplay}
-          </p>
+          <div className="relative flex items-center justify-center">
+            <CircularTimer remaining={restSeconds} total={restInfoRef.current.prescribedRest} size={240} />
+            <p className={`absolute font-display-lg text-[100px] leading-none countdown-glow font-extrabold tracking-tighter tabular-nums transition-all ${restSeconds <= 3 ? 'text-green-500 scale-110' : 'text-primary-container'}`}>
+              {restDisplay}
+            </p>
+          </div>
 
           {/* Next exercise preview */}
           {nextEx && (
