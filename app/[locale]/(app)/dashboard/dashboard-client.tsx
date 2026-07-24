@@ -15,8 +15,15 @@ interface GenerateResponse {
   error?: string;
 }
 
+interface InitialSession {
+  id: string;
+  session_data: SessionData;
+  completed_at: string | null;
+}
+
 type ViewState =
   | 'idle'
+  | 'has-session'
   | 'loading'
   | 'streaming'
   | 'success'
@@ -149,13 +156,16 @@ function SessionCard({
 export default function DashboardClient({
   locale,
   showLog: _showLog,
+  initialSession,
 }: {
   locale: string;
   showLog: boolean;
+  initialSession?: InitialSession | null;
 }) {
   const t = useTranslations('dashboard');
   const router = useRouter();
-  const [viewState, setViewState] = useState<ViewState>('idle');
+  const initialView: ViewState = initialSession && !initialSession.completed_at ? 'has-session' : 'idle';
+  const [viewState, setViewState] = useState<ViewState>(initialView);
   const [session, setSession] = useState<SessionData | null>(null);
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -252,6 +262,31 @@ export default function DashboardClient({
         <div className="text-center py-24 space-y-4">
           <p className="text-on-surface-variant font-body-md">{t('idleHint')}</p>
           <Button onClick={handleGenerate}>{t('generate')}</Button>
+        </div>
+      )}
+
+      {/* Has existing session */}
+      {viewState === 'has-session' && initialSession && (
+        <div className="text-center py-24 space-y-4">
+          <header className="mb-lg">
+            <h2 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-xs">
+              {t('sessionTitle')}
+            </h2>
+            <div className="hud-line w-full opacity-30"></div>
+          </header>
+          <SessionCard session={initialSession.session_data} locale={locale} />
+          <div className="flex flex-col md:flex-row gap-gutter justify-center pt-md">
+            <Button
+              onClick={() => router.push(`/session/${initialSession.id}`)}
+              iconRight={Play}
+              className="flex-1 max-w-xs uppercase !py-5"
+            >
+              {t('startSession')}
+            </Button>
+            <Button variant="ghost" onClick={handleGenerate} className="max-w-xs uppercase !py-5">
+              {t('regenerate')}
+            </Button>
+          </div>
         </div>
       )}
 
