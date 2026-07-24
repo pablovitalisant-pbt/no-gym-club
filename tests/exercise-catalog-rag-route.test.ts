@@ -22,17 +22,16 @@ describe('generate-session route — exercise RAG', () => {
     expect(route).toContain('available_equipment');
   });
 
-  // ─── 9: Manejo de error/resultado vacío sin abortar ───
+  // ─── 9: Manejo de error/resultado vacío sin abortar (dos pools) ───
   it('error en search_exercises no aborta la generación (fallback a [])', () => {
-    // Debe manejar error con !exercisesError (falsy check local)
-    expect(route).toContain('exercisesError');
+    // Debe manejar error con mobilityError || mainError (falsy check local)
+    expect(route).toContain('mobilityError || mainError');
     // Debe tener fallback a [] en el ternario de availableExercises
     expect(route).toContain('!exercisesError');
-    expect(route).toContain('? (exercisesResult');
     expect(route).toContain(': []');
-    // No debe haber un return NextResponse.json después de la llamada
-    const searchIdx = route.indexOf("'search_exercises'");
-    const afterCall = route.slice(searchIdx, searchIdx + 1000);
-    expect(afterCall).not.toContain('NextResponse.json');
+    // No debe haber un return NextResponse.json después de ninguna llamada
+    const firstCall = route.indexOf("'search_exercises'");
+    const afterFirst = route.slice(firstCall, firstCall + 1000);
+    expect(afterFirst).not.toContain('NextResponse.json');
   });
 });

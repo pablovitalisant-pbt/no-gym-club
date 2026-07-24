@@ -173,18 +173,37 @@ export async function POST(request: NextRequest) {
       }),
     );
 
-    // 8. Search exercises by embedding (reuses same embedding from step 7)
-    const { data: exercisesResult, error: exercisesError } = await supabase.rpc(
+    // 8. Search exercises by embedding (two pools: mobility + main)
+    // Both reuse the same embedding from step 7 — no extra NVIDIA call
+
+    const { data: mobilityResult, error: mobilityError } = await supabase.rpc(
       'search_exercises',
       {
         query_embedding: embedding,
-        match_count: 60,
+        match_count: 15,
         filter_equipment: profile.available_equipment,
+        filter_category: 'mobility',
       },
     );
 
+    const { data: mainResult, error: mainError } = await supabase.rpc(
+      'search_exercises',
+      {
+        query_embedding: embedding,
+        match_count: 45,
+        filter_equipment: profile.available_equipment,
+        filter_category: null,
+      },
+    );
+
+    const exercisesError = mobilityError || mainError;
+    const combined = [
+      ...(mobilityResult || []),
+      ...(mainResult || []).filter((r: { category: string }) => r.category !== 'mobility'),
+    ];
+
     const availableExercises = !exercisesError
-      ? (exercisesResult || []).map(
+      ? (combined || []).map(
           (r: { name_en: string; category: string; muscle_groups: string[] }) => ({
             name_en: r.name_en,
             category: r.category,
