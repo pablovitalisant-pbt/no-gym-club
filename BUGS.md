@@ -24,6 +24,25 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Verificado**: build y `tsc --noEmit` corridos independientemente por Director Técnico. Generación en producción confirmada exitosa: sin `finish_reason: length`, sin `invalid-json`, sesión guardada. Tiempo de generación subió de ~20-22s a 40s (razonamiento completo dentro del nuevo presupuesto, esperado).
 - **Zona de riesgo**: si el prompt crece más (más historial, más corpus RAG), 8192 podría volver a ser insuficiente. El log de `reasoning_content.length` ante un truncamiento futuro da el dato real para recalibrar en vez de adivinar.
 
+## Bug #5: Estado del runner de sesión perdido al cambiar de app, recargar o navegar atrás
+- **Fecha**: 2026-07-24
+- **Clasificación**: G = Regresión / Flujo de UI
+- **Síntoma**: Al cambiar de app (background), recargar la página o presionar atrás desde el runner, la sesión se reiniciaba al estado `idle` — el progreso (ejercicio actual, reps registradas, descansos cursados, contador de timer) se perdía por completo.
+- **Causa raíz**: Todo el estado del runner (`state`, `index`, `restSeconds`, `timingSeconds`, `exerciseLogRef`, `restTimesRef`) vivía exclusivamente en memoria de React (useState + useRef). No había ningún mecanismo de persistencia. Los cronómetros usaban contadores relativos (`setRestSeconds(prev => prev - 1)`) que se congelan al pausarse el intervalo en background — al volver, el contador continuaba desde donde se pausó, no desde el tiempo real transcurrido.
+- **Sub-bugs descubiertos durante verificación independiente** (ninguno reportado por el reporte inicial de Claude Code):
+  - **5a**: `restEndsAtRef`/`timingEndsAtRef` nunca se reseteaban a `null` tras consumirse. Si un rest precedía a un timing, el snapshot guardado durante timing tenía un `restEndsAt` viejo, y la restauración (que decidía por `!= null` del timestamp) entraba en la rama de rest en vez de timing.
+  - **5b**: Faltaban `saveSnapshot` en las ramas de avance simple de `handleDone`, `handleSkipRest` y `handleConfirmReps` (ejercicios sin rest_seconds ni duration_seconds).
+  - **5c**: Import de `beforeEach` faltante en test (detectado por `tsc --noEmit`, no por vitest que usa globals).
+- **Solución**:
+  - Nueva función `lib/session/runner-persistence.ts`: `saveSnapshot`, `loadSnapshot`, `clearSnapshot` con key `ngc-runner:<sessionId>` y umbral de expiración de 6h.
+  - Cronómetros pasados a timestamps absolutos (`restEndsAt`, `timingEndsAt`) con cálculo derivado de segundos restantes.
+  - `useEffect` de restauración al montar con catch-up de timers vencidos en background.
+  - `saveSnapshot` en los 6 puntos estructurales de la máquina de estados (startRest, handleStartTimer, handleConfirmReps, handleDone advance, handleSkipRest advance, confirmReps advance).
+  - Guards de restauración por `snapshot.state` en vez de solo `!= null`.
+  - Reseteo de refs a `null` en los 6 puntos de consumo (expiración rest/timing, skipRest, catch-up).
+  - `clearSnapshot` al llegar a `state === 'done'` junto al flush a DB.
+- **Zona de riesgo**: localStorage es por navegador/dispositivo. Cambiar de navegador o borrar datos del sitio pierde el snapshot. Lo ya confirmado en DB (reps y rest times) no se pierde — solo el "dónde iba". Si se necesita compartir estado entre dispositivos en el futuro, migrar a un servicio remoto (ej. Supabase realtime).
+
 ## Bug #3: Generación de sesión falla con "invalid-json"
 - **Fecha**: 2026-07-09 (diagnóstico corregido 2026-07-09)
 - **Clasificación**: P = Plataforma (Vercel + Next.js Route Handler runtime behavior)
