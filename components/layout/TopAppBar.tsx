@@ -1,7 +1,7 @@
 'use client';
 
 import { Link, usePathname } from '@/i18n/navigation';
-import { Menu, Bell } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
 interface NavItem {
   href: string;
@@ -13,14 +13,9 @@ export default function TopAppBar({ items }: { items: NavItem[] }) {
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 bg-background border-b border-outline flex justify-between items-center px-margin-mobile md:px-margin-desktop h-16">
-      <div className="flex items-center gap-4">
-        <button className="hover:bg-surface-800 p-2 transition-colors duration-150 rounded" aria-label="Menu">
-          <Menu className="text-primary" size={24} />
-        </button>
-        <h1 className="font-display-lg text-headline-md text-primary-container tracking-tighter uppercase">
-          NO GYM CLUB
-        </h1>
-      </div>
+      <h1 className="font-display-lg text-headline-md text-primary-container tracking-tighter uppercase">
+        NO GYM CLUB
+      </h1>
 
       {/* Desktop Navigation */}
       <div className="flex items-center gap-6">
