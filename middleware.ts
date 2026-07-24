@@ -11,8 +11,27 @@ const intlMiddleware = createIntlMiddleware({
 });
 
 export default async function middleware(request: NextRequest) {
+  // 1. Logging diagnóstico Bug #8: qué cookies tiene el request al entrar
+  const allCookies = request.cookies.getAll();
+  const sbCookies = allCookies.filter((c) => c.name.startsWith('sb-'));
+  const ua = request.headers.get('user-agent') || '';
+  const isPwa = ua.includes('WebView') || ua.includes('wv') || request.headers.get('sec-fetch-mode') === 'navigate';
+
+  if (sbCookies.length === 0) {
+    console.log(`[BUG8] NO sb- cookies on entry | ua: ${ua.slice(0, 60)} | path: ${request.nextUrl.pathname}`);
+  } else {
+    console.log(`[BUG8] ${sbCookies.length} sb- cookies: [${sbCookies.map(c => c.name).join(', ')}] | ua: ${ua.slice(0, 60)}`);
+  }
+
   // 1. Refrescar sesion de Supabase — mantiene cookies de auth vivas
   const supabaseResponse = await updateSession(request);
+
+  // 1b. Logging post-updateSession
+  const postCookies = supabaseResponse.cookies.getAll();
+  const postSb = postCookies.filter((c) => c.name.startsWith('sb-'));
+  if (postSb.length === 0) {
+    console.log(`[BUG8] NO sb- cookies AFTER updateSession | path: ${request.nextUrl.pathname}`);
+  }
 
   // 2. Auth guard: redirigir rutas protegidas si no hay sesion
   const { pathname } = request.nextUrl;
@@ -50,6 +69,8 @@ export default async function middleware(request: NextRequest) {
     const { data } = await supabase.auth.getUser();
 
     if (!data.user) {
+      const cookiesAtFail = request.cookies.getAll().filter((c) => c.name.startsWith('sb-') || c.name.startsWith('supabase-'));
+      console.log(`[BUG8] AUTH GUARD FAIL — no user | ${cookiesAtFail.length} auth cookies: [${cookiesAtFail.map(c => c.name).join(', ')}] | path: ${request.nextUrl.pathname} | ua: ${(request.headers.get('user-agent') || '').slice(0, 60)}`);
       return NextResponse.redirect(
         new URL(`/${locale}/login`, request.url),
       );
