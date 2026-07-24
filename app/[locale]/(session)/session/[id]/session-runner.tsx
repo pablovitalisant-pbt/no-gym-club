@@ -607,8 +607,8 @@ export default function SessionRunner({
           )}
 
           <div className="relative flex items-center justify-center">
-            <CircularTimer remaining={timingSeconds} total={current?.duration_seconds ?? 0} size={240} />
-            <p className="absolute font-display-lg text-[100px] leading-none text-primary countdown-glow tabular-nums">
+            <CircularTimer remaining={timingSeconds} total={current?.duration_seconds ?? 0} size={340} />
+            <p className="absolute font-display-lg text-[100px] leading-none text-primary countdown-glow tabular-nums translate-y-8">
               {timingSeconds}
             </p>
           </div>
@@ -694,8 +694,8 @@ export default function SessionRunner({
           </span>
 
           <div className="relative flex items-center justify-center">
-            <CircularTimer remaining={restSeconds} total={restInfoRef.current.prescribedRest} size={240} />
-            <p className={`absolute font-display-lg text-[100px] leading-none countdown-glow font-extrabold tracking-tighter tabular-nums transition-all ${restSeconds <= 3 ? 'text-green-500 scale-110' : 'text-primary-container'}`}>
+            <CircularTimer remaining={restSeconds} total={restInfoRef.current.prescribedRest} size={340} />
+            <p className={`absolute font-display-lg text-[100px] leading-none countdown-glow font-extrabold tracking-tighter tabular-nums transition-all translate-y-8 ${restSeconds <= 3 ? 'text-green-500 scale-110' : 'text-primary-container'}`}>
               {restDisplay}
             </p>
           </div>
