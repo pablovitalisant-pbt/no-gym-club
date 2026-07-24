@@ -10,6 +10,11 @@ import type { SessionData, SessionExercise } from '@/lib/types/session';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
 import { useAudioPreference } from '@/lib/useAudioPreference';
+import {
+  saveSnapshot,
+  loadSnapshot,
+  clearSnapshot,
+} from '@/lib/session/runner-persistence';
 
 type RunnerState = 'idle' | 'active' | 'timing' | 'reps' | 'rest' | 'done';
 type Section = 'warmup' | 'main' | 'cooldown';
@@ -60,9 +65,87 @@ export default function SessionRunner({
   const restTimesRef = useRef<RestTimeEntry[]>([]);
   const exerciseLogRef = useRef<RepEntry[]>([]);
   const repsSubmittedRef = useRef(false);
+  const restEndsAtRef = useRef<number | null>(null);
+  const timingEndsAtRef = useRef<number | null>(null);
   const [audioEnabled, toggleAudio] = useAudioPreference();
   const audioRef = useRef(audioEnabled);
   audioRef.current = audioEnabled;
+
+  // Restore snapshot on mount (page refresh / back navigation)
+  useEffect(() => {
+    const snapshot = loadSnapshot(sessionId);
+    if (!snapshot) return;
+    restTimesRef.current = snapshot.restTimes;
+    exerciseLogRef.current = snapshot.exerciseLog;
+    restInfoRef.current = snapshot.restInfo;
+    setState(snapshot.state as RunnerState);
+    setIndex(snapshot.index);
+    if (snapshot.state === 'rest' && snapshot.restEndsAt != null) {
+      restEndsAtRef.current = snapshot.restEndsAt;
+      const remaining = Math.max(0, Math.round((snapshot.restEndsAt - Date.now()) / 1000));
+      if (remaining > 0) {
+        setRestSeconds(remaining);
+        timerRef.current = setInterval(() => {
+          const rem = restEndsAtRef.current
+            ? Math.max(0, Math.round((restEndsAtRef.current - Date.now()) / 1000))
+            : 0;
+          setRestSeconds(rem);
+          if (rem <= 0 && timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+            restEndsAtRef.current = null;
+            recordActualRest();
+            if (audioRef.current) playBeep();
+            setState('active');
+            setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
+          }
+        }, 1000);
+      } else {
+        restEndsAtRef.current = null;
+        setRestSeconds(0);
+        if (audioRef.current) playBeep();
+        if (snapshot.index >= allExercises.length - 1) setState('done');
+        else {
+          setState('active');
+          setIndex((i) => i + 1);
+        }
+      }
+    } else if (snapshot.state === 'timing' && snapshot.timingEndsAt != null) {
+      timingEndsAtRef.current = snapshot.timingEndsAt;
+      const remaining = Math.max(0, Math.round((snapshot.timingEndsAt - Date.now()) / 1000));
+      if (remaining > 0) {
+        setTimingSeconds(remaining);
+        timerRef.current = setInterval(() => {
+          const rem = timingEndsAtRef.current
+            ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
+            : 0;
+          setTimingSeconds(rem);
+          if (rem <= 0 && timerRef.current) {
+            clearInterval(timerRef.current);
+            timerRef.current = null;
+            timingEndsAtRef.current = null;
+            if (audioRef.current) playBeep();
+            // Advance exercise — timed exercises don't go through reps
+            if (snapshot.index >= allExercises.length - 1) setState('done');
+            else {
+              setState('active');
+              setIndex((i) => i + 1);
+            }
+          }
+        }, 1000);
+      } else {
+        timingEndsAtRef.current = null;
+        setTimingSeconds(0);
+        if (audioRef.current) playBeep();
+        if (snapshot.index >= allExercises.length - 1) setState('done');
+        else {
+          setState('active');
+          setIndex((i) => i + 1);
+        }
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Cleanup timer on unmount
   useEffect(() => {
@@ -82,6 +165,7 @@ export default function SessionRunner({
         restTimesRef.current,
         exerciseLogRef.current,
       );
+      clearSnapshot(sessionId);
     }
   }, [state, sessionId]);
 
@@ -108,25 +192,39 @@ export default function SessionRunner({
         exercise: exName,
         prescribedRest: seconds,
       };
+      const endsAt = Date.now() + seconds * 1000;
+      restEndsAtRef.current = endsAt;
       setRestSeconds(seconds);
       setState('rest');
       timerRef.current = setInterval(() => {
-        setRestSeconds((prev) => {
-          if (prev <= 1) {
-            if (timerRef.current) clearInterval(timerRef.current);
-            timerRef.current = null;
-            recordActualRest();
-            if (audioRef.current) playBeep();
-            // Auto-advance to next exercise
-            setState('active');
-            setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
-            return 0;
-          }
-          return prev - 1;
-        });
+        const remaining = restEndsAtRef.current
+          ? Math.max(0, Math.round((restEndsAtRef.current - Date.now()) / 1000))
+          : 0;
+        setRestSeconds(remaining);
+        if (remaining <= 0) {
+          if (timerRef.current) clearInterval(timerRef.current);
+          timerRef.current = null;
+          restEndsAtRef.current = null;
+          recordActualRest();
+          if (audioRef.current) playBeep();
+          // Auto-advance to next exercise
+          setState('active');
+          setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
+        }
       }, 1000);
+      saveSnapshot({
+        sessionId,
+        state: 'rest',
+        index,
+        restEndsAt: endsAt,
+        timingEndsAt: timingEndsAtRef.current,
+        restInfo: restInfoRef.current,
+        restTimes: restTimesRef.current,
+        exerciseLog: exerciseLogRef.current,
+        updatedAt: Date.now(),
+      });
     },
-    [allExercises.length, recordActualRest],
+    [allExercises.length, index, recordActualRest, sessionId],
   );
 
   const handleDone = useCallback(() => {
@@ -148,10 +246,21 @@ export default function SessionRunner({
     } else if (isLast) {
       setState('done');
     } else {
+      saveSnapshot({
+        sessionId,
+        state: 'active',
+        index: index + 1,
+        restEndsAt: null,
+        timingEndsAt: null,
+        restInfo: restInfoRef.current,
+        restTimes: restTimesRef.current,
+        exerciseLog: exerciseLogRef.current,
+        updatedAt: Date.now(),
+      });
       setState('active');
       setIndex((i) => i + 1);
     }
-  }, [current, isLast, startRest]);
+  }, [current, index, isLast, sessionId, startRest]);
 
   const handleConfirmReps = useCallback(() => {
     if (repsSubmittedRef.current) return;
@@ -171,49 +280,97 @@ export default function SessionRunner({
     // (mergeLogData reemplaza exerciseLog entero; si mandáramos [entry]
     //  solo, se perderían las entradas anteriores en DB)
     saveExerciseReps(sessionId, exerciseLogRef.current).catch(() => {});
+    saveSnapshot({
+      sessionId,
+      state: 'reps',
+      index,
+      restEndsAt: restEndsAtRef.current,
+      timingEndsAt: timingEndsAtRef.current,
+      restInfo: restInfoRef.current,
+      restTimes: restTimesRef.current,
+      exerciseLog: exerciseLogRef.current,
+      updatedAt: Date.now(),
+    });
 
     if (ex.rest_seconds && ex.rest_seconds > 0) {
       startRest(ex.rest_seconds, index, ex.exercise);
     } else if (isLast) {
       setState('done');
     } else {
+      saveSnapshot({
+        sessionId,
+        state: 'active',
+        index: index + 1,
+        restEndsAt: null,
+        timingEndsAt: null,
+        restInfo: restInfoRef.current,
+        restTimes: restTimesRef.current,
+        exerciseLog: exerciseLogRef.current,
+        updatedAt: Date.now(),
+      });
       setState('active');
       setIndex((i) => i + 1);
     }
-  }, [current, isLast, repsInput, startRest, sessionId]);
+  }, [current, index, isLast, repsInput, startRest, sessionId]);
 
   const handleSkipRest = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
+      restEndsAtRef.current = null;
     }
     recordActualRest();
     setRestSeconds(0);
     if (isLast) {
       setState('done');
     } else {
+      saveSnapshot({
+        sessionId,
+        state: 'active',
+        index: index + 1,
+        restEndsAt: null,
+        timingEndsAt: null,
+        restInfo: restInfoRef.current,
+        restTimes: restTimesRef.current,
+        exerciseLog: exerciseLogRef.current,
+        updatedAt: Date.now(),
+      });
       setState('active');
       setIndex((i) => i + 1);
     }
-  }, [isLast, recordActualRest]);
+  }, [index, isLast, recordActualRest, sessionId]);
 
   const handleStartTimer = useCallback(() => {
     if (!current?.duration_seconds) return;
+    const endsAt = Date.now() + current.duration_seconds * 1000;
+    timingEndsAtRef.current = endsAt;
     setTimingSeconds(current.duration_seconds);
     setState('timing');
     timerRef.current = setInterval(() => {
-      setTimingSeconds((prev) => {
-        if (prev <= 1) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          timerRef.current = null;
-          if (audioRef.current) playBeep();
-          handleDone();
-          return 0;
-        }
-        return prev - 1;
-      });
+      const remaining = timingEndsAtRef.current
+        ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
+        : 0;
+      setTimingSeconds(remaining);
+      if (remaining <= 0) {
+        if (timerRef.current) clearInterval(timerRef.current);
+        timerRef.current = null;
+        timingEndsAtRef.current = null;
+        if (audioRef.current) playBeep();
+        handleDone();
+      }
     }, 1000);
-  }, [current, handleDone]);
+    saveSnapshot({
+      sessionId,
+      state: 'timing',
+      index,
+      restEndsAt: restEndsAtRef.current,
+      timingEndsAt: endsAt,
+      restInfo: restInfoRef.current,
+      restTimes: restTimesRef.current,
+      exerciseLog: exerciseLogRef.current,
+      updatedAt: Date.now(),
+    });
+  }, [current, handleDone, index, sessionId]);
 
   const nextEx = allExercises[index + 1];
   const restMins = Math.floor(restSeconds / 60);
