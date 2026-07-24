@@ -6,6 +6,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: 'No Gym Club',
     description: 'La calle es mi gimnasio — calistenia adaptativa con IA',
     start_url: '/es',
+    id: '/es',
+    scope: '/',
     display: 'standalone',
     background_color: '#0a0a0a',
     theme_color: '#0a0a0a',
