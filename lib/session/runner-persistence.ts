@@ -22,7 +22,7 @@ export interface RunnerSnapshot {
     exercise: string;
     prescribedSets: number;
     prescribedReps: string;
-    actualReps: string;
+    actualReps: string[];
   }>;
   updatedAt: number;
 }

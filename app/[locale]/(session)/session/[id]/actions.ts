@@ -13,7 +13,7 @@ export interface RepEntry {
   exercise: string;
   prescribedSets: number;
   prescribedReps: string;
-  actualReps: string;
+  actualReps: string[];
 }
 
 async function mergeLogData(

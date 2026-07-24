@@ -152,6 +152,7 @@
     "unmute": "Enable alarm",
     "skipRest": "Skip rest",
     "nextExercise": "Next",
+    "setLabel": "Set {n}",
     "restComplete": "Let's go!",
     "complete": "Session complete!",
     "completeMessage": "Go back to the dashboard to log your RPE.",

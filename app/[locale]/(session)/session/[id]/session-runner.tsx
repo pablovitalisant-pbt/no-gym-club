@@ -54,7 +54,7 @@ export default function SessionRunner({
   const [index, setIndex] = useState(0);
   const [restSeconds, setRestSeconds] = useState(0);
   const [timingSeconds, setTimingSeconds] = useState(0);
-  const [repsInput, setRepsInput] = useState('');
+  const [repsInputs, setRepsInputs] = useState<string[]>([]);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const restStartRef = useRef<number>(0);
   const restInfoRef = useRef<{
@@ -236,7 +236,7 @@ export default function SessionRunner({
     // Intercept sets/reps exercises: ask for actual reps before advancing
     if (ex && ex.sets != null && ex.reps) {
       repsSubmittedRef.current = false;
-      setRepsInput(ex.reps);
+      setRepsInputs(Array(ex.sets).fill(ex.reps));
       setState('reps');
       return;
     }
@@ -273,7 +273,7 @@ export default function SessionRunner({
       exercise: ex.exercise,
       prescribedSets: ex.sets || 0,
       prescribedReps: ex.reps || '',
-      actualReps: repsInput,
+      actualReps: repsInputs,
     };
     exerciseLogRef.current.push(entry);
     // Optimistic save: fire and forget — manda ref completo, no delta
@@ -311,7 +311,7 @@ export default function SessionRunner({
       setState('active');
       setIndex((i) => i + 1);
     }
-  }, [current, index, isLast, repsInput, startRest, sessionId]);
+  }, [current, index, isLast, repsInputs, startRest, sessionId]);
 
   const handleSkipRest = useCallback(() => {
     if (timerRef.current) {
@@ -507,18 +507,24 @@ export default function SessionRunner({
             {current.rpe != null && ` · RPE ${current.rpe}`}
           </p>
 
-          <div className="flex flex-col items-center gap-2">
-            <label className="font-label-sm text-label-sm text-on-surface-variant">
-              {t('actualRepsLabel')}
-            </label>
-            <input
-              type="text"
-              value={repsInput}
-              onChange={(e) => setRepsInput(e.target.value)}
-              className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_#e8570a] outline-none transition-all"
-              placeholder={current.reps}
-              autoFocus
-            />
+          <div className="flex flex-col items-center gap-4">
+            {Array.from({ length: current.sets ?? 0 }, (_, i) => (
+              <div key={i} className="flex flex-col items-center gap-1">
+                <label className="font-label-sm text-label-sm text-on-surface-variant">
+                  {t('setLabel', { n: i + 1 })}
+                </label>
+                <input
+                  type="text"
+                  value={repsInputs[i] ?? ''}
+                  onChange={(e) =>
+                    setRepsInputs((prev) => prev.map((v, j) => (j === i ? e.target.value : v)))
+                  }
+                  className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_#e8570a] outline-none transition-all"
+                  placeholder={current.reps}
+                  autoFocus={i === 0}
+                />
+              </div>
+            ))}
           </div>
 
           <Button onClick={handleConfirmReps} iconRight={Check} className="w-full max-w-xs !py-4 uppercase">
