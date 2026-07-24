@@ -1,6 +1,8 @@
 import { getTranslations } from 'next-intl/server';
+import { redirect } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { getFlag } from '@/lib/flags';
+import { createClient } from '@/lib/supabase/server';
 import { Dumbbell } from 'lucide-react';
 import TopAppBar from '@/components/layout/TopAppBar';
 
@@ -9,6 +11,14 @@ export default async function Page({
 }: {
   params: { locale: string };
 }) {
+  // Si hay sesión activa, redirigir al dashboard — evita mostrar landing/login
+  // a usuarios ya autenticados (crítico para PWA donde start_url = /es)
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (user) {
+    redirect(`/${locale}/dashboard`);
+  }
+
   const t = await getTranslations({ locale, namespace: 'landing' });
   const tAuth = await getTranslations({ locale, namespace: 'auth' });
   const showLanding = getFlag('landing_page');
