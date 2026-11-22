@@ -95,21 +95,21 @@ export function TestWizard({ hasBar }: { hasBar: boolean }) {
 
       {error && <p className="text-sm text-error">{error}</p>}
 
-      <div className="flex flex-wrap justify-between gap-3 pt-md">
-        {step !== 'pushup' ? (
-          <Button type="button" variant="ghost" onClick={back}>{t('back')}</Button>
-        ) : <span />}
+      <div className="space-y-3 pt-md">
         <div className="flex gap-3">
-          <Button type="button" variant="ghost" onClick={cannot}>{t('cannot')}</Button>
+          {step !== 'pushup' && (
+            <Button type="button" variant="secondary" onClick={back} className="w-1/3">{t('back')}</Button>
+          )}
           {step !== 'walk' && (
-            <Button type="button" variant="primary" onClick={advance}>{t('next')}</Button>
+            <Button type="button" variant="primary" onClick={advance} className={step !== 'pushup' ? 'w-2/3' : 'w-full'}>{t('next')}</Button>
           )}
           {step === 'walk' && (
-            <Button type="button" variant="primary" onClick={submit} disabled={loading}>
+            <Button type="button" variant="primary" onClick={submit} disabled={loading} className="w-2/3">
               {loading ? '...' : t('submit')}
             </Button>
           )}
         </div>
+        <Button type="button" variant="ghost" onClick={cannot} className="w-full">{t('cannot')}</Button>
       </div>
     </div>
   );

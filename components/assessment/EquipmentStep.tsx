@@ -35,9 +35,9 @@ export function EquipmentStep({ equipment, onToggle, onBack, onNext }: Props) {
         ))}
       </div>
 
-      <div className="flex justify-between pt-lg">
-        <Button type="button" variant="ghost" onClick={onBack}>{t('back')}</Button>
-        <Button type="button" variant="primary" onClick={onNext} disabled={equipment.length === 0} iconRight={ArrowRight} className="!py-md">{t('next')}</Button>
+      <div className="flex gap-3 pt-lg">
+        <Button type="button" variant="secondary" onClick={onBack} className="w-1/3">{t('back')}</Button>
+        <Button type="button" variant="primary" onClick={onNext} disabled={equipment.length === 0} iconRight={ArrowRight} className="w-2/3">{t('next')}</Button>
       </div>
     </div>
   );

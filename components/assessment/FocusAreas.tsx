@@ -23,7 +23,7 @@ export function FocusAreas({ value, onChange, notes, onNotesChange }: Props) {
       <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block">
         {t('profile.focusTitle')}
       </label>
-      <p className="text-[10px] uppercase opacity-50 font-label-bold">{t('profile.focusHint')}</p>
+      <p className="font-body-md text-on-surface-variant">{t('profile.focusHint')}</p>
       <div className="flex flex-wrap gap-base pt-xs">
         {FOCUS_AREAS.map((area) => {
           const selected = value.includes(area);

@@ -5,7 +5,7 @@ import {
 import type { LucideIcon } from 'lucide-react';
 
 type ButtonBaseProps = {
-  variant?: 'primary' | 'ghost';
+  variant?: 'primary' | 'secondary' | 'ghost';
   iconLeft?: LucideIcon;
   iconRight?: LucideIcon;
 };
@@ -23,10 +23,12 @@ type ButtonAsLink = ButtonBaseProps &
 
 export type ButtonProps = ButtonAsButton | ButtonAsLink;
 
-const base = 'inline-flex items-center justify-center px-6 py-3 text-sm font-semibold rounded-none transition-colors focus:outline-none focus:ring-2 focus:ring-accent';
+// min-h-[56px]: target táctil accesible en móvil (slice v2-14)
+const base = 'inline-flex items-center justify-center px-6 py-3 min-h-[56px] text-base font-semibold rounded-none transition-colors focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed';
 
 const variants: Record<string, string> = {
-  primary: 'bg-accent text-white hover:bg-accent/90',
+  primary: 'bg-accent text-surface-900 hover:bg-accent/90',
+  secondary: 'border-2 border-text-primary text-text-primary hover:bg-surface-800',
   ghost: 'border border-border text-text-primary hover:bg-surface-800',
 };
 

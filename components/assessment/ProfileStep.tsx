@@ -79,7 +79,7 @@ export function ProfileStep(p: Props) {
               <input type="radio" name="experience" className="sr-only peer" checked={p.experience === ex} onChange={() => p.setExperience(ex)} />
               <div className={cardCls}>
                 <span className="font-label-bold text-label-sm uppercase">{t(`profile.${ex}`)}</span>
-                <p className="text-[10px] opacity-70 mt-1 uppercase">{t(`profile.${ex}Sub`)}</p>
+                <p className="text-label-sm opacity-80 mt-1 normal-case">{t(`profile.${ex}Sub`)}</p>
               </div>
             </label>
           ))}
@@ -94,7 +94,7 @@ export function ProfileStep(p: Props) {
               <input type="radio" name="training_history" className="sr-only peer" checked={p.trainingHistory === history} onChange={() => p.setTrainingHistory(history)} />
               <div className={cardCls}>
                 <span className="font-label-bold text-label-sm uppercase">{t(`profile.${history}`)}</span>
-                <p className="text-[10px] opacity-70 mt-1 uppercase">{t(`profile.${history}Sub`)}</p>
+                <p className="text-label-sm opacity-80 mt-1 normal-case">{t(`profile.${history}Sub`)}</p>
               </div>
             </label>
           ))}
@@ -103,7 +103,7 @@ export function ProfileStep(p: Props) {
 
       <div className="space-y-xs">
         <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="goal">{t('profile.goal')}</label>
-        <select id="goal" value={p.goal} onChange={(e) => p.setGoal(e.target.value)} className={`${inputCls} uppercase tracking-wider`}>
+        <select id="goal" value={p.goal} onChange={(e) => p.setGoal(e.target.value)} className={inputCls}>
           {(['lose_weight', 'build_muscle', 'improve_endurance', 'master_skills', 'general_fitness'] as const).map((g) => (
             <option key={g} value={g}>{t(`profile.${g}`)}</option>
           ))}
@@ -117,20 +117,28 @@ export function ProfileStep(p: Props) {
         onNotesChange={p.setFocusNotes}
       />
 
-      <div className="space-y-xs">
-        <div className="flex justify-between items-center">
-          <label className="font-label-bold text-label-sm uppercase text-on-surface-variant" htmlFor="days">{t('profile.days')}</label>
-          <span className="font-mono-data text-primary text-body-lg">{p.days}</span>
-        </div>
-        <input id="days" type="range" min={1} max={7} value={p.days} onChange={(e) => p.setDays(e.target.value)} className="w-full h-1 bg-surface-800 appearance-none cursor-pointer accent-primary-container" />
-        <div className="flex justify-between text-[10px] uppercase opacity-50 font-label-bold">
-          <span>1</span>
-          <span>7</span>
+      <div className="space-y-sm">
+        <label className="font-body-md text-body-md text-on-surface block" id="days-label">{t('profile.days')}</label>
+        <div role="group" aria-labelledby="days-label" className="grid grid-cols-7">
+          {[1, 2, 3, 4, 5, 6, 7].map((d) => {
+            const selected = p.days === String(d);
+            return (
+              <button
+                key={d}
+                type="button"
+                aria-pressed={selected}
+                onClick={() => p.setDays(String(d))}
+                className={`min-h-12 min-w-12 font-label-bold text-label-bold border-2 transition-colors ${selected ? 'bg-accent text-surface-900 border-accent' : 'border-text-primary text-text-primary hover:bg-surface-800'}`}
+              >
+                {d}
+              </button>
+            );
+          })}
         </div>
       </div>
 
       <div className="pt-lg">
-        <Button type="button" variant="primary" onClick={p.onNext} disabled={!canContinue} iconRight={ArrowRight} className="w-full uppercase !py-md">
+        <Button type="button" variant="primary" onClick={p.onNext} disabled={!canContinue} iconRight={ArrowRight} className="w-full">
           {t('next')}
         </Button>
       </div>

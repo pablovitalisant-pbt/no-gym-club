@@ -18,5 +18,5 @@ export default async function AssessmentPage({
     );
   }
 
-  return <AssessmentForm />;
+  return <AssessmentForm stepIndicator={getFlag('assessment_step_indicator')} />;
 }

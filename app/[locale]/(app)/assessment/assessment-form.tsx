@@ -18,7 +18,7 @@ import type {
 
 type Step = 'profile' | 'equipment' | 'health' | 'cardio' | 'parq';
 
-export function AssessmentForm() {
+export function AssessmentForm({ stepIndicator = true }: { stepIndicator?: boolean }) {
   const t = useTranslations('assessment');
   const router = useRouter();
 
@@ -102,22 +102,37 @@ export function AssessmentForm() {
 
   return (
     <div className="mx-auto max-w-lg">
-      {/* Step indicator */}
-      <nav className="mb-lg border-b border-outline flex justify-between items-end">
-        {steps.map((s, i) => {
-          const isActive = s === step;
-          return (
-            <div
-              key={s}
-              className={`flex-1 pb-2 ${isActive ? 'border-b-2 border-primary-container' : 'border-b-2 border-outline'} ${i === 0 ? 'text-left' : i === steps.length - 1 ? 'text-right' : 'text-center'}`}
-            >
-              <span className={`font-label-bold text-label-sm uppercase ${isActive ? 'text-primary' : 'text-on-surface-variant'}`}>
+      {/* Step indicator: Paso N de 5 + nombre + barra segmentada */}
+      {stepIndicator ? (
+        <nav className="mb-lg space-y-sm">
+          <div className="flex items-baseline justify-between gap-3">
+            <span className="font-label-bold text-label-bold text-primary">
+              {t('stepOf', { current: steps.indexOf(step) + 1, total: steps.length })}
+            </span>
+            <span className="font-body-md text-body-md text-on-surface text-right">
+              {t(`${step}.title`)}
+            </span>
+          </div>
+          <div className="flex gap-1" aria-hidden="true">
+            {steps.map((s, i) => (
+              <div
+                key={s}
+                className={`h-2 flex-1 ${i <= steps.indexOf(step) ? 'bg-accent' : 'bg-outline'}`}
+              />
+            ))}
+          </div>
+        </nav>
+      ) : (
+        <nav className="mb-lg border-b border-outline flex justify-between items-end">
+          {steps.map((s, i) => (
+            <div key={s} className={`flex-1 pb-2 ${s === step ? 'border-b-2 border-primary-container' : 'border-b-2 border-outline'}`}>
+              <span className="font-label-bold text-label-sm text-on-surface-variant">
                 {i + 1}. {t(`${s}.title`)}
               </span>
             </div>
-          );
-        })}
-      </nav>
+          ))}
+        </nav>
+      )}
 
       {step === 'profile' && (
         <ProfileStep

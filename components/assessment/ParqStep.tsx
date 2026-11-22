@@ -47,9 +47,9 @@ export function ParqStep({ parq, setParq, error, loading, onBack, onSubmit }: Pr
 
       {error && <p className="text-sm text-error">{error}</p>}
 
-      <div className="flex justify-between pt-lg">
-        <Button type="button" variant="ghost" onClick={onBack}>{t('back')}</Button>
-        <Button type="button" variant="primary" onClick={onSubmit} disabled={loading || PARQ_QUESTIONS.some((q) => parq[q] === undefined)} className="!py-md">
+      <div className="flex gap-3 pt-lg">
+        <Button type="button" variant="secondary" onClick={onBack} className="w-1/3">{t('back')}</Button>
+        <Button type="button" variant="primary" onClick={onSubmit} disabled={loading || PARQ_QUESTIONS.some((q) => parq[q] === undefined)} className="w-2/3">
           {loading ? '...' : t('submit')}
         </Button>
       </div>

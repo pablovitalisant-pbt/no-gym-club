@@ -122,6 +122,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'plan_session_runner',
       'phase_generation_evidence_adjustment',
       'continuous_session_mode',
+      'assessment_step_indicator',
     ]);
   });
 

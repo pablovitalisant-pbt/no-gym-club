@@ -234,6 +234,7 @@
     "next": "Next",
     "back": "Back",
     "submit": "Save",
+    "stepOf": "Step {current} of {total}",
     "profile": {
       "title": "Your profile",
       "hint": "We need these parameters to calibrate your initial intensity and training volume.",
@@ -253,7 +254,7 @@
       "improve_endurance": "Improve endurance",
       "master_skills": "Master skills",
       "general_fitness": "General fitness",
-      "days": "Available days per week",
+      "days": "Choose how many days a week you can train",
       "history": "Training history",
       "never": "Never trained",
       "neverSub": "Starting from scratch",

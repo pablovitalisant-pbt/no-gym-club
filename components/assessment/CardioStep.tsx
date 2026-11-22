@@ -31,15 +31,15 @@ export function CardioStep({ value, onChange, onBack, onNext }: Props) {
             <input type="radio" name="cardio" className="sr-only peer" checked={value === option} onChange={() => onChange(option)} />
             <div className="brutalist-border p-4 bg-surface-800 peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-all group-hover:bg-surface-700">
               <span className="font-label-bold text-label-sm uppercase">{t(`cardio.${option}`)}</span>
-              <p className="text-[10px] opacity-70 mt-1 uppercase">{t(`cardio.${option}Desc`)}</p>
+              <p className="text-label-sm opacity-80 mt-1 normal-case">{t(`cardio.${option}Desc`)}</p>
             </div>
           </label>
         ))}
       </div>
 
-      <div className="flex justify-between pt-lg">
-        <Button type="button" variant="ghost" onClick={onBack}>{t('back')}</Button>
-        <Button type="button" variant="primary" onClick={onNext} iconRight={ArrowRight} className="!py-md">{t('next')}</Button>
+      <div className="flex gap-3 pt-lg">
+        <Button type="button" variant="secondary" onClick={onBack} className="w-1/3">{t('back')}</Button>
+        <Button type="button" variant="primary" onClick={onNext} iconRight={ArrowRight} className="w-2/3">{t('next')}</Button>
       </div>
     </div>
   );
