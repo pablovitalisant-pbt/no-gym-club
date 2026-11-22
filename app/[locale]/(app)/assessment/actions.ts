@@ -2,6 +2,12 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { type Database } from '@/lib/supabase/types';
+import { validateProfileV2 } from '@/lib/assessment/validate';
+import type {
+  CardioPreference,
+  HealthLimitation,
+  TrainingHistory,
+} from '@/lib/assessment/validate';
 
 type ProfileInsert = Database['public']['Tables']['profiles']['Insert'];
 
@@ -14,6 +20,12 @@ interface ProfileData {
   available_days_per_week: number;
   available_equipment: string[];
   par_q_cleared: boolean;
+  // v2 (opcionales: el form actual no los manda)
+  training_history?: TrainingHistory | null;
+  health_limitations?: HealthLimitation[];
+  limitations_notes?: string | null;
+  cardio_preference?: CardioPreference | null;
+  timezone?: string | null;
 }
 
 export async function saveProfile(data: ProfileData) {
@@ -33,6 +45,18 @@ export async function saveProfile(data: ProfileData) {
     return { success: false, error: 'Missing required fields' };
   }
 
+  const v2 = validateProfileV2(data);
+  if (!v2.ok) {
+    return { success: false, error: v2.error };
+  }
+
+  const hasV2 =
+    data.training_history !== undefined ||
+    data.health_limitations !== undefined ||
+    data.limitations_notes !== undefined ||
+    data.cardio_preference !== undefined ||
+    data.timezone !== undefined;
+
   const profile: ProfileInsert = {
     id: user.id,
     age: data.age,
@@ -44,6 +68,8 @@ export async function saveProfile(data: ProfileData) {
     available_equipment: data.available_equipment,
     par_q_cleared: data.par_q_cleared,
     par_q_answered_at: new Date().toISOString(),
+    // no pisar datos v2 existentes cuando el form legado no los manda
+    ...(hasV2 ? v2.value : {}),
   };
 
   const { error: insertError } = await supabase

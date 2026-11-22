@@ -20,6 +20,11 @@ const profileMock = {
   par_q_cleared: true,
   par_q_answered_at: null,
   assessment_completed: false,
+  training_history: null,
+  health_limitations: [],
+  limitations_notes: null,
+  cardio_preference: 'none' as const,
+  timezone: null,
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 };

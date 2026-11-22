@@ -26,6 +26,11 @@ create table profiles (
   par_q_cleared boolean default false,
   par_q_answered_at timestamptz,
   assessment_completed boolean default false,
+  training_history text check (training_history in ('never','past','active')),
+  health_limitations text[] default '{}' check (health_limitations <@ array['knees','lower_back','shoulders','wrists','hips','other']::text[]),
+  limitations_notes text,
+  cardio_preference text default 'none' check (cardio_preference in ('none','light','moderate','intense')),
+  timezone text,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -57,6 +62,12 @@ create table assessment_results (
   max_squats integer check (max_squats >= 0),
   max_dips integer check (max_dips >= 0),
   plank_seconds integer check (plank_seconds >= 0),
+  pushup_variant text check (pushup_variant in ('floor','knee','incline','wall','none')),
+  pushup_variant_reps integer check (pushup_variant_reps >= 0),
+  dead_hang_seconds integer check (dead_hang_seconds >= 0),
+  knee_plank_seconds integer check (knee_plank_seconds >= 0),
+  sit_to_stand_30s integer check (sit_to_stand_30s >= 0),
+  walk_minutes integer check (walk_minutes >= 0),
   notes text, assessed_at timestamptz default now()
 );
 
