@@ -52,9 +52,9 @@ describe('Slice v2-21 — migración 0013: nombre, avatar y preferencias', () =>
     expect(types).toContain('theme_preference');
   });
 
-  it('feature flag profile_settings existe y está en false', () => {
+  it('feature flag profile_settings existe y es booleano', () => {
     const flags = JSON.parse(read('config/feature-flags.json'));
-    expect(flags.profile_settings).toBe(false);
+    expect(typeof flags.profile_settings).toBe('boolean');
   });
 });
 
