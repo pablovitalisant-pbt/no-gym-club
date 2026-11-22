@@ -120,7 +120,29 @@
       "statusRest": "descanso",
       "statusPending": "pendiente",
       "phaseHeader": "FASE {n} · {name}",
-      "phaseFallback": "FASE {n}"
+      "phaseFallback": "FASE {n}",
+      "todayTitle": "Entrenamiento de hoy",
+      "todayRestTitle": "Hoy descansas",
+      "startTraining": "Empezar entrenamiento",
+      "goToCurrentDay": "Ir al día actual",
+      "markRestDone": "Marcar descanso como hecho",
+      "completeWithoutLog": "Marcar como hecho sin registrar",
+      "estimatedMinutes": "~{minutes} min",
+      "exerciseCount": "{count} ejercicios",
+      "sectionSummary": "{count} ejercicios · ~{minutes} min",
+      "dayTypes": {
+        "push": "Empuje",
+        "pull": "Tracción",
+        "legs": "Piernas",
+        "upper": "Tren superior",
+        "lower": "Tren inferior",
+        "full": "Cuerpo completo",
+        "skill": "Habilidad",
+        "cardio": "Cardio",
+        "metabolic": "Metabólico",
+        "mobility": "Movilidad",
+        "rest": "Descanso"
+      }
     }
   },
   "catalog": {

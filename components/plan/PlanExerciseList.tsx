@@ -1,9 +1,11 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import type { SessionExercise, SessionData } from '@/lib/types/session';
-
-const SECTIONS = ['warmup', 'main', 'finisher', 'cardio', 'cooldown'] as const;
+import { Dumbbell } from 'lucide-react';
+import { resolveExerciseMedia } from '@/lib/exercises/resolve-media';
+import { lookupMedia, type MediaIndex } from '@/lib/exercises/media-index';
+import { sectionExercises, sectionMinutes, SESSION_SECTIONS } from '@/lib/plan/session-summary';
+import type { SessionData, SessionExercise } from '@/lib/types/session';
 
 function exerciseAmount(ex: SessionExercise): string {
   if (ex.sets != null && ex.reps) return `${ex.sets} × ${ex.reps}`;
@@ -13,38 +15,80 @@ function exerciseAmount(ex: SessionExercise): string {
   return '';
 }
 
-export default function PlanExerciseList({ session }: { session: SessionData }) {
+function ExerciseItem({
+  ex,
+  locale,
+  mediaIndex,
+}: {
+  ex: SessionExercise;
+  locale: string;
+  mediaIndex: MediaIndex;
+}) {
+  const entry = lookupMedia(ex.exercise, mediaIndex);
+  const media = resolveExerciseMedia({
+    gif_url: entry?.gif_url ?? null,
+    image_url: entry?.image_url ?? null,
+  });
+  const body = (
+    <>
+      <span className="w-12 h-12 shrink-0 bg-surface-900 border border-outline flex items-center justify-center overflow-hidden">
+        {media.src ? (
+          <img src={media.src} alt="" className="w-full h-full object-cover" />
+        ) : (
+          <Dumbbell size={20} className="text-on-surface-variant" />
+        )}
+      </span>
+      <span className="min-w-0">
+        <span className="block font-label-bold text-on-surface">{ex.exercise}</span>
+        <span className="block text-label-sm text-on-surface-variant">{exerciseAmount(ex)}</span>
+      </span>
+    </>
+  );
+
+  const className =
+    'bg-surface-800 border border-outline p-sm flex items-center gap-sm hover:border-primary transition-colors';
+  return entry ? (
+    <a href={`/${locale}/exercises/${entry.slug}`} className={className}>
+      {body}
+    </a>
+  ) : (
+    <div className={className}>{body}</div>
+  );
+}
+
+export default function PlanExerciseList({
+  session,
+  locale,
+  mediaIndex = {},
+}: {
+  session: SessionData;
+  locale: string;
+  mediaIndex?: MediaIndex;
+}) {
   const t = useTranslations('dashboard.plan');
 
   return (
-    <div className="space-y-md">
-      {SECTIONS.map((section) => {
-        const items = session[section];
-        if (!items?.length) return null;
+    <div className="space-y-sm">
+      {SESSION_SECTIONS.map((section) => {
+        const items = sectionExercises(session, section);
+        if (!items.length) return null;
+        const minutes = sectionMinutes(session, section);
         return (
-          <section key={section}>
-            <h3 className="font-label-bold text-label-bold uppercase tracking-widest text-primary mb-sm">
-              {t(section)}
-            </h3>
-            <div className="grid gap-base">
+          <details key={section} className="brutalist-border bg-surface-800">
+            <summary className="cursor-pointer list-none p-sm flex items-center justify-between gap-sm min-h-[56px]">
+              <span className="font-label-bold text-label-bold uppercase tracking-widest text-primary">
+                {t(section)}
+              </span>
+              <span className="text-label-sm text-on-surface-variant">
+                {t('sectionSummary', { count: items.length, minutes })}
+              </span>
+            </summary>
+            <div className="grid gap-base p-sm pt-0">
               {items.map((ex, i) => (
-                <div
-                  key={i}
-                  className="bg-surface-800 border border-outline p-sm flex justify-between items-center"
-                >
-                  <div>
-                    <p className="font-label-bold text-on-surface">{ex.exercise}</p>
-                    <p className="text-label-sm text-on-surface-variant">{exerciseAmount(ex)}</p>
-                  </div>
-                  {ex.rest_seconds != null && (
-                    <p className="text-label-sm text-on-surface-variant">
-                      {t('restSeconds', { seconds: ex.rest_seconds })}
-                    </p>
-                  )}
-                </div>
+                <ExerciseItem key={i} ex={ex} locale={locale} mediaIndex={mediaIndex} />
               ))}
             </div>
-          </section>
+          </details>
         );
       })}
     </div>

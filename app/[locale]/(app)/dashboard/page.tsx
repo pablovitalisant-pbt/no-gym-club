@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import DashboardClient from './dashboard-client';
 import PlanDashboard, { type PlanRow } from '@/components/plan/PlanDashboard';
 import { parseDayParam } from '@/lib/plan/calendar';
+import { buildMediaIndex, type MediaIndex } from '@/lib/exercises/media-index';
 import type { PlanData } from '@/lib/types/plan';
 import type { SessionData } from '@/lib/types/session';
 
@@ -34,6 +35,7 @@ export default async function DashboardPage({
   const { data: { user } } = await supabase.auth.getUser();
 
   let planRow: PlanRow | null = null;
+  let mediaIndex: MediaIndex = {};
   let hasAssessment = false;
   let parqCleared = false;
 
@@ -51,6 +53,13 @@ export default async function DashboardPage({
         current_day_index: plan.current_day_index,
         completed_day_indexes: plan.completed_day_indexes ?? [],
       };
+      if (getFlag('plan_today_card')) {
+        const { data: catalog } = await supabase
+          .from('exercises')
+          .select('slug, name_en, gif_url, image_url')
+          .eq('is_active', true);
+        mediaIndex = buildMediaIndex(catalog ?? []);
+      }
     }
     const { data: assessment } = await supabase
       .from('assessment_results')
@@ -103,6 +112,8 @@ export default async function DashboardPage({
           assessmentHref={parqCleared ? '/assessment/test' : '/assessment'}
           initialDay={parseDayParam(searchParams?.day)}
           startEnabled={getFlag('plan_session_runner')}
+          todayCardEnabled={getFlag('plan_today_card')}
+          mediaIndex={mediaIndex}
         />
       ) : showAI ? (
         <DashboardClient locale={locale} showLog={showLog} initialSession={initialSession} />

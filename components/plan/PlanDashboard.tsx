@@ -8,18 +8,13 @@ import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { planDayView } from '@/lib/plan/day-view';
 import { needsNextPhase, TOTAL_DAYS } from '@/lib/plan/plan';
-import type { PlanData } from '@/lib/types/plan';
+import type { PlanRow } from '@/lib/types/plan';
+export type { PlanRow };
+import type { MediaIndex } from '@/lib/exercises/media-index';
 import DayView from './DayView';
 import PlanCalendar from './PlanCalendar';
 import CreatePlanCard from './CreatePlanCard';
 import { completePlanDay, setCurrentPlanDay, startPlanSession } from '@/app/[locale]/(app)/dashboard/plan-actions';
-
-export interface PlanRow {
-  id: string;
-  plan_data: PlanData;
-  current_day_index: number;
-  completed_day_indexes: number[];
-}
 
 export default function PlanDashboard({
   locale,
@@ -27,14 +22,15 @@ export default function PlanDashboard({
   hasAssessment,
   assessmentHref = '/assessment',
   initialDay,
-  startEnabled = false,
+  startEnabled = false, todayCardEnabled = false, mediaIndex = {},
 }: {
   locale: string;
   plan: PlanRow | null;
   hasAssessment: boolean;
-  assessmentHref?: string;
-  initialDay?: number | null;
+  assessmentHref?: string; initialDay?: number | null;
   startEnabled?: boolean;
+  todayCardEnabled?: boolean;
+  mediaIndex?: MediaIndex;
 }) {
   const t = useTranslations('dashboard.plan');
   const router = useRouter();
@@ -118,6 +114,10 @@ export default function PlanDashboard({
         idx={viewIdx}
         currentDayIndex={current}
         completedDayIndexes={completed}
+        locale={locale}
+        mediaIndex={mediaIndex}
+        todayCard={todayCardEnabled}
+        onGoToCurrent={() => setViewIdx(current)}
         onPrev={() => setViewIdx((i) => Math.max(0, i - 1))}
         onNext={() => setViewIdx((i) => Math.min(TOTAL_DAYS - 1, i + 1))}
         onComplete={handleComplete} onSetCurrent={handleSetCurrent}

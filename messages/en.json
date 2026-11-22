@@ -120,7 +120,29 @@
       "statusRest": "rest",
       "statusPending": "pending",
       "phaseHeader": "PHASE {n} · {name}",
-      "phaseFallback": "PHASE {n}"
+      "phaseFallback": "PHASE {n}",
+      "todayTitle": "Today's workout",
+      "todayRestTitle": "Rest today",
+      "startTraining": "Start workout",
+      "goToCurrentDay": "Go to current day",
+      "markRestDone": "Mark rest as done",
+      "completeWithoutLog": "Mark as done without logging",
+      "estimatedMinutes": "~{minutes} min",
+      "exerciseCount": "{count} exercises",
+      "sectionSummary": "{count} exercises · ~{minutes} min",
+      "dayTypes": {
+        "push": "Push",
+        "pull": "Pull",
+        "legs": "Legs",
+        "upper": "Upper body",
+        "lower": "Lower body",
+        "full": "Full body",
+        "skill": "Skill",
+        "cardio": "Cardio",
+        "metabolic": "Metabolic",
+        "mobility": "Mobility",
+        "rest": "Rest"
+      }
     }
   },
   "catalog": {

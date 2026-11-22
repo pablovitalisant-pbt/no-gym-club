@@ -40,3 +40,11 @@ export interface PlanData {
   /** Se agregan a medida que se generan (1 a 3). */
   phases: PlanPhase[];
 }
+
+/** Fila de training_plans tal como la consume el dashboard. */
+export interface PlanRow {
+  id: string;
+  plan_data: PlanData;
+  current_day_index: number;
+  completed_day_indexes: number[];
+}

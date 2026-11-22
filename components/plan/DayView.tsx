@@ -5,17 +5,23 @@ import { ChevronLeft, ChevronRight, Check, Moon, Play } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { TOTAL_DAYS } from '@/lib/plan/plan';
 import type { PlanDayView } from '@/lib/plan/day-view';
+import type { MediaIndex } from '@/lib/exercises/media-index';
 import PlanExerciseList from './PlanExerciseList';
+import TodayCard from './TodayCard';
 
 export default function DayView({
   view,
   idx,
   currentDayIndex,
   completedDayIndexes,
+  locale,
+  mediaIndex = {},
+  todayCard = false,
   onPrev,
   onNext,
   onComplete,
   onSetCurrent,
+  onGoToCurrent,
   onStart,
   completing,
 }: {
@@ -23,10 +29,14 @@ export default function DayView({
   idx: number;
   currentDayIndex: number;
   completedDayIndexes: number[];
+  locale: string;
+  mediaIndex?: MediaIndex;
+  todayCard?: boolean;
   onPrev: () => void;
   onNext: () => void;
   onComplete: () => void;
   onSetCurrent: () => void;
+  onGoToCurrent: () => void;
   onStart?: () => void;
   completing: boolean;
 }) {
@@ -54,7 +64,7 @@ export default function DayView({
           {view.phaseName && <p className="text-label-sm text-text-muted">{view.phaseName}</p>}
           {view.day && (
             <span className="inline-block mt-1 px-3 py-1 bg-surface-800 border border-outline font-label-bold text-label-sm uppercase text-on-surface-variant">
-              {view.day.type}
+              {t(`dayTypes.${view.day.type}`)}
             </span>
           )}
         </div>
@@ -75,7 +85,20 @@ export default function DayView({
         </div>
       )}
 
-      {view.day && view.isRest && (
+      {view.day && todayCard && (
+        <TodayCard
+          view={view}
+          isCurrent={isCurrent}
+          isCompleted={isCompleted}
+          startEnabled={Boolean(onStart)}
+          completing={completing}
+          onStart={onStart}
+          onGoToCurrent={onGoToCurrent}
+          onComplete={onComplete}
+        />
+      )}
+
+      {view.day && !todayCard && view.isRest && (
         <div className="brutalist-border bg-surface-800 p-md text-center space-y-sm">
           <Moon className="mx-auto text-primary" size={28} />
           <h2 className="font-headline-md text-headline-md text-on-surface">{t('restDay')}</h2>
@@ -83,7 +106,7 @@ export default function DayView({
         </div>
       )}
 
-      {session && <PlanExerciseList session={session} />}
+      {session && <PlanExerciseList session={session} locale={locale} mediaIndex={mediaIndex} />}
 
       <div className="flex flex-wrap items-center gap-sm pt-sm">
         {isCurrent ? (
@@ -98,14 +121,14 @@ export default function DayView({
           )
         )}
 
-        {view.day && (
-          <Button onClick={onComplete} disabled={completing || isCompleted} className="uppercase">
-            {isCompleted ? t('completedDay') : completing ? t('completing') : t('completeDay')}
+        {view.day && (!todayCard || !view.isRest) && (
+          <Button variant="ghost" onClick={onComplete} disabled={completing || isCompleted} className="uppercase">
+            {isCompleted ? t('completedDay') : completing ? t('completing') : t('completeWithoutLog')}
             {isCompleted && <Check size={18} className="ml-2" />}
           </Button>
         )}
 
-        {session && (
+        {session && !todayCard && (
           onStart ? (
             <Button onClick={onStart} disabled={completing} iconRight={Play} className="uppercase">
               {t('startSessionComingSoon')}
@@ -115,9 +138,6 @@ export default function DayView({
               {t('startSessionComingSoon')}
             </Button>
           )
-        )}
-        {session && !onStart && (
-          <span className="text-label-sm text-on-surface-variant">{t('comingSoon')}</span>
         )}
       </div>
     </div>

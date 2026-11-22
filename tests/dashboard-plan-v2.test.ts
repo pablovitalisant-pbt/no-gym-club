@@ -55,7 +55,9 @@ describe('Slice v2-06a — dashboard con plan v2', () => {
 
   it('DayView renderiza secciones, rest, fase no generada y "Proximamente"', () => {
     const src =
-      read(resolve(planDir, 'DayView.tsx')) + read(resolve(planDir, 'PlanExerciseList.tsx'));
+      read(resolve(planDir, 'DayView.tsx')) +
+      read(resolve(planDir, 'PlanExerciseList.tsx')) +
+      read(resolve(root, 'lib/plan/session-summary.ts'));
     for (const key of ['warmup', 'main', 'finisher', 'cardio', 'cooldown']) {
       expect(src).toContain(key);
     }
