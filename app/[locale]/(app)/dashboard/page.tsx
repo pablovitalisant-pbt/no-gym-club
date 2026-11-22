@@ -93,6 +93,7 @@ export default async function DashboardPage({
           plan={planRow}
           hasAssessment={hasAssessment}
           initialDay={parseDayParam(searchParams?.day)}
+          startEnabled={getFlag('plan_session_runner')}
         />
       ) : showAI ? (
         <DashboardClient locale={locale} showLog={showLog} initialSession={initialSession} />

@@ -15,6 +15,7 @@ export default function DayView({
   onNext,
   onComplete,
   onSetCurrent,
+  onStart,
   completing,
 }: {
   view: PlanDayView;
@@ -25,6 +26,7 @@ export default function DayView({
   onNext: () => void;
   onComplete: () => void;
   onSetCurrent: () => void;
+  onStart?: () => void;
   completing: boolean;
 }) {
   const t = useTranslations('dashboard.plan');
@@ -103,11 +105,17 @@ export default function DayView({
         )}
 
         {session && (
-          <Button variant="ghost" disabled iconRight={Play} className="uppercase opacity-50">
-            {t('startSessionComingSoon')}
-          </Button>
+          onStart ? (
+            <Button onClick={onStart} disabled={completing} iconRight={Play} className="uppercase">
+              {t('startSessionComingSoon')}
+            </Button>
+          ) : (
+            <Button variant="ghost" disabled iconRight={Play} className="uppercase opacity-50">
+              {t('startSessionComingSoon')}
+            </Button>
+          )
         )}
-        {session && (
+        {session && !onStart && (
           <span className="text-label-sm text-on-surface-variant">{t('comingSoon')}</span>
         )}
       </div>

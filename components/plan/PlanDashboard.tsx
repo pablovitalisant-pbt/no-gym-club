@@ -11,7 +11,7 @@ import type { PlanData } from '@/lib/types/plan';
 import DayView from './DayView';
 import PlanCalendar from './PlanCalendar';
 import CreatePlanCard from './CreatePlanCard';
-import { completePlanDay, setCurrentPlanDay } from '@/app/[locale]/(app)/dashboard/plan-actions';
+import { completePlanDay, setCurrentPlanDay, startPlanSession } from '@/app/[locale]/(app)/dashboard/plan-actions';
 
 export interface PlanRow {
   id: string;
@@ -25,11 +25,13 @@ export default function PlanDashboard({
   plan,
   hasAssessment,
   initialDay,
+  startEnabled = false,
 }: {
   locale: string;
   plan: PlanRow | null;
   hasAssessment: boolean;
   initialDay?: number | null;
+  startEnabled?: boolean;
 }) {
   const t = useTranslations('dashboard.plan');
   const router = useRouter();
@@ -72,6 +74,18 @@ export default function PlanDashboard({
     router.refresh();
   }
 
+  async function handleStart() {
+    setBusy(true);
+    setError(false);
+    const res = await startPlanSession(planId, viewIdx);
+    setBusy(false);
+    if (!res.success) {
+      setError(true);
+      return;
+    }
+    router.push(`/session/${res.sessionId}`);
+  }
+
   async function handleComplete() {
     setBusy(true);
     setError(false);
@@ -106,6 +120,7 @@ export default function PlanDashboard({
         onNext={() => setViewIdx((i) => Math.min(83, i + 1))}
         onComplete={handleComplete}
         onSetCurrent={handleSetCurrent}
+        onStart={startEnabled ? handleStart : undefined}
         completing={busy}
       />
       {error && <p className="text-error font-body-md mt-sm">{t('actionError')}</p>}

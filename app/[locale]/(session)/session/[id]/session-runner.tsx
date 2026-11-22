@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { Volume2, VolumeX, Check, Dumbbell } from 'lucide-react';
 import LogForm from '@/components/session/LogForm';
 import CircularTimer from '@/components/session/CircularTimer';
-import type { SessionData, SessionExercise } from '@/lib/types/session';
+import type { SessionData } from '@/lib/types/session';
+import { flattenSession, type SessionSection } from '@/lib/session/flatten';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
 import { useAudioPreference } from '@/lib/useAudioPreference';
@@ -18,23 +19,12 @@ import {
 } from '@/lib/session/runner-persistence';
 
 type RunnerState = 'idle' | 'active' | 'timing' | 'reps' | 'rest' | 'done';
-type Section = 'warmup' | 'main' | 'cooldown';
 
-interface FlatExercise extends SessionExercise {
-  section: Section;
-}
-
-function flattenSession(session: SessionData): FlatExercise[] {
-  return [
-    ...session.warmup.map((e) => ({ ...e, section: 'warmup' as Section })),
-    ...session.main.map((e) => ({ ...e, section: 'main' as Section })),
-    ...session.cooldown.map((e) => ({ ...e, section: 'cooldown' as Section })),
-  ];
-}
-
-const SECTION_BADGES: Record<Section, string> = {
+const SECTION_BADGES: Record<SessionSection, string> = {
   warmup: 'bg-green-500/20 text-green-500 border-green-500/40',
   main: 'bg-primary-container text-on-primary-container',
+  finisher: 'bg-orange-500/20 text-orange-500 border-orange-500/40',
+  cardio: 'bg-purple-500/20 text-purple-500 border-purple-500/40',
   cooldown: 'bg-blue-500/20 text-blue-500 border-blue-500/40',
 };
 

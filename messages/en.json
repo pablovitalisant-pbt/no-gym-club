@@ -206,6 +206,8 @@
     "rest": "Rest",
     "warmup": "Warmup",
     "main": "Main",
+    "finisher": "Finisher",
+    "cardio": "Cardio",
     "cooldown": "Cooldown"
   },
   "assessment": {

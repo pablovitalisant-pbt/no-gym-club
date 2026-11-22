@@ -73,6 +73,8 @@ export default async function SessionPage({
         ...sessionData,
         warmup: enrich(sessionData.warmup),
         main: enrich(sessionData.main),
+        finisher: sessionData.finisher ? enrich(sessionData.finisher) : undefined,
+        cardio: sessionData.cardio ? enrich(sessionData.cardio) : undefined,
         cooldown: enrich(sessionData.cooldown),
       }}
     />

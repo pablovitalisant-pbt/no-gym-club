@@ -206,6 +206,8 @@
     "rest": "Descanso",
     "warmup": "Calentamiento",
     "main": "Parte principal",
+    "finisher": "Finisher",
+    "cardio": "Cardio",
     "cooldown": "Vuelta a la calma"
   },
   "assessment": {

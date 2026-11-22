@@ -1,6 +1,7 @@
 'use server';
 
 import { createClient } from '@/lib/supabase/server';
+import { completePlanDay } from '@/app/[locale]/(app)/dashboard/plan-actions';
 
 export async function saveSessionLog(
   sessionId: string,
@@ -26,6 +27,13 @@ export async function saveSessionLog(
     return { success: false, error: 'RPE must be an integer between 1 and 10' };
   }
 
+  const { data: row } = await supabase
+    .from('workout_sessions')
+    .select('plan_id, plan_day_index')
+    .eq('id', sessionId)
+    .eq('user_id', user.id)
+    .maybeSingle();
+
   const { error: updateError } = await supabase
     .from('workout_sessions')
     .update({
@@ -38,6 +46,11 @@ export async function saveSessionLog(
 
   if (updateError) {
     return { success: false, error: updateError.message };
+  }
+
+  // Sesión de plan v2: marcar el día completado (mismo efecto que "Completar día").
+  if (row?.plan_id && row.plan_day_index != null) {
+    await completePlanDay(row.plan_id as string, row.plan_day_index as number);
   }
 
   return { success: true };
