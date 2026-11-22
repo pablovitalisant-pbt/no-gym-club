@@ -3,13 +3,16 @@ import { getFlag } from '@/lib/flags';
 import { createClient } from '@/lib/supabase/server';
 import DashboardClient from './dashboard-client';
 import PlanDashboard, { type PlanRow } from '@/components/plan/PlanDashboard';
+import { parseDayParam } from '@/lib/plan/calendar';
 import type { PlanData } from '@/lib/types/plan';
 import type { SessionData } from '@/lib/types/session';
 
 export default async function DashboardPage({
   params: { locale },
+  searchParams,
 }: {
   params: { locale: string };
+  searchParams?: { day?: string };
 }) {
   const t = await getTranslations({ locale, namespace: 'dashboard' });
   const showDashboard = getFlag('dashboard');
@@ -85,7 +88,12 @@ export default async function DashboardPage({
       </h1>
 
       {showPlanV2 ? (
-        <PlanDashboard locale={locale} plan={planRow} hasAssessment={hasAssessment} />
+        <PlanDashboard
+          locale={locale}
+          plan={planRow}
+          hasAssessment={hasAssessment}
+          initialDay={parseDayParam(searchParams?.day)}
+        />
       ) : showAI ? (
         <DashboardClient locale={locale} showLog={showLog} initialSession={initialSession} />
       ) : (

@@ -108,7 +108,17 @@
       "main": "Main",
       "finisher": "Finisher",
       "cardio": "Cardio",
-      "cooldown": "Cooldown"
+      "cooldown": "Cooldown",
+      "programTitle": "Your program",
+      "calendar": "Calendar",
+      "closeCalendar": "Close calendar",
+      "calendarAria": "Week {week}, day {day}, {status}",
+      "statusDone": "completed",
+      "statusCurrent": "current",
+      "statusRest": "rest",
+      "statusPending": "pending",
+      "phaseHeader": "PHASE {n} · {name}",
+      "phaseFallback": "PHASE {n}"
     }
   },
   "catalog": {

@@ -108,7 +108,17 @@
       "main": "Parte principal",
       "finisher": "Finisher",
       "cardio": "Cardio",
-      "cooldown": "Vuelta a la calma"
+      "cooldown": "Vuelta a la calma",
+      "programTitle": "Tu programa",
+      "calendar": "Calendario",
+      "closeCalendar": "Cerrar calendario",
+      "calendarAria": "Semana {week}, día {day}, {status}",
+      "statusDone": "completado",
+      "statusCurrent": "actual",
+      "statusRest": "descanso",
+      "statusPending": "pendiente",
+      "phaseHeader": "FASE {n} · {name}",
+      "phaseFallback": "FASE {n}"
     }
   },
   "catalog": {
