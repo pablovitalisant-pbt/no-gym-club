@@ -19,5 +19,6 @@
   "plan_generating_messages": true,
   "theme_switcher": true,
   "profile_settings": true,
-  "community": true
+  "community": true,
+  "community_chat": false
 }

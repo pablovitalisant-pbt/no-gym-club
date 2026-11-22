@@ -6,6 +6,7 @@ export const COMMUNITY_MIN_AGE = 18;
 export const BIO_MAX = 280;
 export const COMUNA_MAX = 60;
 export const REPORT_MAX = 500;
+export const MESSAGE_MAX = 1000;
 export const COORD_STEP = 0.02;
 export const RADIUS_OPTIONS = [2, 5, 10, 25] as const;
 
@@ -44,6 +45,17 @@ export function normalizeReportReason(raw: unknown): TextResult {
   const value = typeof raw === 'string' ? raw.trim() : '';
   if (value.length > REPORT_MAX) return { ok: false, error: 'reason_too_long' };
   return { ok: true, value: value || null };
+}
+
+type MessageResult =
+  | { ok: true; value: string }
+  | { ok: false; error: 'message_empty' | 'message_too_long' };
+
+export function normalizeMessageBody(raw: unknown): MessageResult {
+  const value = typeof raw === 'string' ? raw.trim() : '';
+  if (!value) return { ok: false, error: 'message_empty' };
+  if (value.length > MESSAGE_MAX) return { ok: false, error: 'message_too_long' };
+  return { ok: true, value };
 }
 
 export function normalizeCoordinates(

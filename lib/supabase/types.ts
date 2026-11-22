@@ -345,6 +345,58 @@ export interface Database {
           personal_best?: Json | null;
         };
       };
+      community_connections: {
+        Row: {
+          id: string;
+          requester_id: string;
+          addressee_id: string;
+          status: 'pending' | 'accepted' | 'declined' | 'cancelled';
+          created_at: string;
+          responded_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          requester_id: string;
+          addressee_id: string;
+          status?: 'pending' | 'accepted' | 'declined' | 'cancelled';
+          created_at?: string;
+          responded_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          requester_id?: string;
+          addressee_id?: string;
+          status?: 'pending' | 'accepted' | 'declined' | 'cancelled';
+          created_at?: string;
+          responded_at?: string | null;
+        };
+      };
+      community_messages: {
+        Row: {
+          id: string;
+          connection_id: string;
+          sender_id: string;
+          body: string;
+          created_at: string;
+          read_at: string | null;
+        };
+        Insert: {
+          id?: string;
+          connection_id: string;
+          sender_id: string;
+          body: string;
+          created_at?: string;
+          read_at?: string | null;
+        };
+        Update: {
+          id?: string;
+          connection_id?: string;
+          sender_id?: string;
+          body?: string;
+          created_at?: string;
+          read_at?: string | null;
+        };
+      };
     };
     Enums: {
       experience_level: 'beginner' | 'intermediate' | 'advanced';

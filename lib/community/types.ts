@@ -20,3 +20,37 @@ export interface CommunityPerson {
   bio: string | null;
   distance_km: number | null;
 }
+
+// v2-23a: conexiones y chat.
+export type ConnectionStatus = 'pending' | 'accepted' | 'declined' | 'cancelled';
+
+export interface CommunityConnection {
+  id: string;
+  requester_id: string;
+  addressee_id: string;
+  status: ConnectionStatus;
+  created_at: string;
+  responded_at: string | null;
+}
+
+export interface CommunityMessage {
+  id: string;
+  connection_id: string;
+  sender_id: string;
+  body: string;
+  created_at: string;
+  read_at: string | null;
+}
+
+export interface ConnectionSummary {
+  connection: CommunityConnection;
+  otherUserId: string;
+  lastMessage: CommunityMessage | null;
+  unreadCount: number;
+}
+
+export interface ConnectionsOverview {
+  received: ConnectionSummary[];
+  sent: ConnectionSummary[];
+  accepted: ConnectionSummary[];
+}

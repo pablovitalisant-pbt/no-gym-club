@@ -244,3 +244,16 @@ $$;
 -- grant select, insert, delete on table community_blocks to authenticated;
 -- grant insert on table community_reports to authenticated;
 -- revoke all on table community_profiles, community_blocks, community_reports from anon;
+
+-- Comunidad etapa 2 (aplicado en supabase/migrations/0015_community_chat.sql)
+-- create table community_connections (...);
+-- create table community_messages (...);
+-- create function request_connection(target uuid);
+-- create function respond_connection(connection_id uuid, accept boolean);
+-- create function cancel_connection(connection_id uuid);
+-- create function mark_messages_read(connection_id uuid);
+-- create policy "community messages select" on community_messages ...;
+-- alter publication supabase_realtime add table community_messages;
+-- grant select on table community_connections to authenticated;
+-- grant select, insert on table community_messages to authenticated;
+-- revoke all on table community_connections, community_messages from anon;
