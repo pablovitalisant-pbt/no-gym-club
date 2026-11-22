@@ -36,12 +36,12 @@ export default function CircularTimer({
     >
       <defs>
         <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop offset="0%" stopColor="#4ade80" />
-          <stop offset="50%" stopColor="#e8570a" />
-          <stop offset="100%" stopColor="#ff4444" />
+          <stop offset="0%" stopColor="rgb(var(--c-success))" />
+          <stop offset="50%" stopColor="rgb(var(--c-primary))" />
+          <stop offset="100%" stopColor="rgb(var(--c-error))" />
         </linearGradient>
         <filter id={filterId}>
-          <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="#e8570a" floodOpacity="0.25" />
+          <feDropShadow dx="0" dy="0" stdDeviation="8" floodColor="rgb(var(--c-primary))" floodOpacity="0.25" />
         </filter>
       </defs>
 

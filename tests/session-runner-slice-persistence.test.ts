@@ -105,7 +105,6 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'),
     );
     expect(flags.session_runner).toBe(true);
-    // No se agregaron keys nuevas
     const keys = Object.keys(flags);
     expect(keys).toEqual([
       'landing_page',
@@ -126,6 +125,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'plan_today_card',
       'redo_program_plan',
       'plan_generating_messages',
+      'theme_switcher',
     ]);
   });
 

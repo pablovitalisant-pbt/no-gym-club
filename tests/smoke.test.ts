@@ -39,7 +39,7 @@ describe('Slice 1a — scaffold smoke', () => {
     const cfg = mod.default ?? mod;
 
     const colors = cfg.theme?.extend?.colors;
-    expect(colors?.accent).toBe('#e8570a');
-    expect(colors?.surface?.['900']).toBe('#0a0a0a');
+    expect(colors?.accent).toBe('rgb(var(--c-accent) / <alpha-value>)');
+    expect(colors?.surface?.['900']).toBe('rgb(var(--c-surface-900) / <alpha-value>)');
   });
 });

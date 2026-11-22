@@ -700,7 +700,7 @@ export default function SessionRunner({
                   onChange={(e) =>
                     setRepsInputs((prev) => prev.map((v, j) => (j === i ? e.target.value : v)))
                   }
-                  className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_#e8570a] outline-none transition-all"
+                  className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_rgb(var(--c-accent))] outline-none transition-all"
                   placeholder={current.reps}
                   autoFocus={i === 0}
                 />
@@ -719,7 +719,7 @@ export default function SessionRunner({
                     onChange={(e) =>
                       setRepsInputs((prev) => prev.map((v, j) => (j === idx ? e.target.value : v)))
                     }
-                    className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_#e8570a] outline-none transition-all"
+                    className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_rgb(var(--c-accent))] outline-none transition-all"
                     placeholder={current.reps}
                   />
                 </div>

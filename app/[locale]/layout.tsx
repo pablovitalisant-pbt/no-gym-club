@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { locales, type Locale } from '@/i18n/config';
+import { THEME_INIT_SCRIPT } from '@/lib/theme';
 import '@/app/globals.css';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
@@ -20,7 +21,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#0a0a0a',
+  themeColor: [
+    { media: '(prefers-color-scheme: dark)', color: '#0a0a0a' },
+    { media: '(prefers-color-scheme: light)', color: '#f7f7f5' },
+  ],
   viewportFit: 'cover',
 };
 
@@ -38,7 +42,10 @@ export default async function RootLayout({
   const messages = await getMessages();
 
   return (
-    <html lang={params.locale} className={inter.variable}>
+    <html lang={params.locale} className={inter.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+      </head>
       <body className="min-h-screen">
         <NextIntlClientProvider messages={messages}>
           {children}

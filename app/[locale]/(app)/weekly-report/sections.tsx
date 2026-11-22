@@ -87,7 +87,7 @@ export function ConsistencyPanel({
             </div>
           )}
         </div>
-        <div className="w-full h-4 bg-[#2a2a2a]">
+        <div className="w-full h-4 bg-outline">
           <div className="bg-primary-container h-full" style={{ width: `${trainedRatio}%` }} />
         </div>
         <div className="flex justify-between font-label-sm text-on-surface-variant">
@@ -185,7 +185,7 @@ export function MuscleDistribution({
               <span className="text-on-surface">{MUSCLE_LABELS[group] || group}</span>
               <span className="text-primary-container">{pct}%</span>
             </div>
-            <div className="h-2 bg-[#2a2a2a]">
+            <div className="h-2 bg-outline">
               <div className="bg-primary-container h-full" style={{ width: `${pct}%` }} />
             </div>
           </div>

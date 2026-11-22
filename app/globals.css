@@ -5,8 +5,59 @@
 @tailwind utilities;
 
 @layer base {
-  html {
+  :root,
+  :root[data-theme="dark"] {
     color-scheme: dark;
+    --c-accent: 232 87 10;
+    --c-border: 42 42 42;
+    --c-text-primary: 245 245 245;
+    --c-text-muted: 136 136 136;
+    --c-surface: 17 17 17;
+    --c-surface-900: 10 10 10;
+    --c-surface-800: 17 17 17;
+    --c-surface-700: 26 26 26;
+    --c-background: 10 10 10;
+    --c-on-background: 245 245 245;
+    --c-on-surface: 245 245 245;
+    --c-on-surface-variant: 136 136 136;
+    --c-primary: 232 87 10;
+    --c-on-primary: 255 255 255;
+    --c-primary-container: 255 138 60;
+    --c-on-primary-container: 26 5 0;
+    --c-outline: 42 42 42;
+    --c-outline-variant: 51 51 51;
+    --c-error: 255 68 68;
+    --c-error-container: 147 0 10;
+    --c-on-error: 255 255 255;
+    --c-on-error-container: 255 218 214;
+    --c-success: 74 222 128;
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --c-accent: 194 65 12;
+    --c-border: 212 212 208;
+    --c-text-primary: 17 17 17;
+    --c-text-muted: 85 85 85;
+    --c-surface: 255 255 255;
+    --c-surface-900: 239 239 236;
+    --c-surface-800: 255 255 255;
+    --c-surface-700: 239 239 236;
+    --c-background: 247 247 245;
+    --c-on-background: 17 17 17;
+    --c-on-surface: 17 17 17;
+    --c-on-surface-variant: 85 85 85;
+    --c-primary: 194 65 12;
+    --c-on-primary: 255 255 255;
+    --c-primary-container: 194 65 12;
+    --c-on-primary-container: 26 5 0;
+    --c-outline: 212 212 208;
+    --c-outline-variant: 226 226 222;
+    --c-error: 185 28 28;
+    --c-error-container: 254 226 226;
+    --c-on-error: 255 255 255;
+    --c-on-error-container: 127 29 29;
+    --c-success: 22 163 74;
   }
 
   body {
@@ -20,36 +71,36 @@
     width: 4px;
   }
   ::-webkit-scrollbar-track {
-    background: #111111;
+    background: rgb(var(--c-surface-800));
   }
   ::-webkit-scrollbar-thumb {
-    background: #333333;
+    background: rgb(var(--c-outline-variant));
   }
 }
 
 @layer utilities {
   .brutalist-border {
-    border: 1px solid #2a2a2a;
+    border: 1px solid rgb(var(--c-border));
   }
 
   .brutalist-input:focus {
-    border-color: #e8570a;
+    border-color: rgb(var(--c-accent));
     outline: none;
   }
 
   .text-outline {
-    -webkit-text-stroke: 1px #2a2a2a;
+    -webkit-text-stroke: 1px rgb(var(--c-border));
     color: transparent;
   }
 
   .vignette {
-    background: radial-gradient(circle, transparent 20%, #0a0a0a 100%);
+    background: radial-gradient(circle, transparent 20%, rgb(var(--c-background)) 100%);
   }
 
   .scanline {
     width: 100%;
     height: 2px;
-    background: rgba(232, 87, 10, 0.1);
+    background: rgb(var(--c-accent) / 0.1);
     position: absolute;
     z-index: 10;
     top: 0;
@@ -58,11 +109,11 @@
 
   .hud-line {
     height: 1px;
-    background: linear-gradient(90deg, #e8570a 0%, transparent 100%);
+    background: linear-gradient(90deg, rgb(var(--c-accent)) 0%, transparent 100%);
   }
 
   .countdown-glow {
-    text-shadow: 0 0 40px rgba(232, 87, 10, 0.2);
+    text-shadow: 0 0 40px rgb(var(--c-accent) / 0.2);
   }
 }
 

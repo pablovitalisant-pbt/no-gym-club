@@ -16,5 +16,6 @@
   "assessment_step_indicator": true,
   "plan_today_card": true,
   "redo_program_plan": true,
-  "plan_generating_messages": true
+  "plan_generating_messages": true,
+  "theme_switcher": false
 }
