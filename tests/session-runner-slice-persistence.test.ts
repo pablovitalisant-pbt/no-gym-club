@@ -144,8 +144,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
     // Mismas keys que antes del slice: sin cambios
     expect(es.session).not.toHaveProperty('persistence');
     expect(en.session).not.toHaveProperty('persistence');
-    expect(es.session).not.toHaveProperty('resume');
-    expect(en.session).not.toHaveProperty('resume');
+    // v2-09b agrega keys del modo de corrido (incluida "resume"); sigue simétrico
     expect(esKeys).toEqual(enKeys);
   });
 });

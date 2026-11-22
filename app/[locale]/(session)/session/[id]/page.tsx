@@ -69,6 +69,7 @@ export default async function SessionPage({
   return (
     <SessionRunner
       sessionId={session.id}
+      continuousEnabled={getFlag('continuous_session_mode')}
       session={{
         ...sessionData,
         warmup: enrich(sessionData.warmup),

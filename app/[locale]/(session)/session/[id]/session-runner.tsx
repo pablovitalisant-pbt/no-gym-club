@@ -7,8 +7,11 @@ import { Button } from '@/components/ui/Button';
 import { Volume2, VolumeX, Check, Dumbbell } from 'lucide-react';
 import LogForm from '@/components/session/LogForm';
 import CircularTimer from '@/components/session/CircularTimer';
+import ContinuousPlayer from '@/components/session/ContinuousPlayer';
+import ContinuousSummary from '@/components/session/ContinuousSummary';
 import type { SessionData } from '@/lib/types/session';
 import { flattenSession, type SessionSection } from '@/lib/session/flatten';
+import { startOptions } from '@/lib/session/continuous-view';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
 import { useAudioPreference } from '@/lib/useAudioPreference';
@@ -18,7 +21,15 @@ import {
   clearSnapshot,
 } from '@/lib/session/runner-persistence';
 
-type RunnerState = 'idle' | 'active' | 'timing' | 'reps' | 'rest' | 'done';
+type RunnerState =
+  | 'idle'
+  | 'active'
+  | 'timing'
+  | 'reps'
+  | 'rest'
+  | 'continuous'
+  | 'summary'
+  | 'done';
 
 const SECTION_BADGES: Record<SessionSection, string> = {
   warmup: 'bg-green-500/20 text-green-500 border-green-500/40',
@@ -33,9 +44,11 @@ const SECTION_BADGES: Record<SessionSection, string> = {
 export default function SessionRunner({
   sessionId,
   session,
+  continuousEnabled = false,
 }: {
   sessionId: string;
   session: SessionData;
+  continuousEnabled?: boolean;
 }) {
   const t = useTranslations('session');
   const router = useRouter();
@@ -501,10 +514,41 @@ export default function SessionRunner({
             {allExercises.length} {t('exercise')}s · {t('warmup')} ({session.warmup.length}) ·{' '}
             {t('main')} ({session.main.length}) · {t('cooldown')} ({session.cooldown.length})
           </p>
-          <Button onClick={() => setState('active')} className="w-full max-w-xs !py-4 !text-body-md uppercase">
-            {t('start')}
-          </Button>
+          {startOptions(continuousEnabled).map((option) => (
+            <Button
+              key={option}
+              onClick={() => setState(option === 'continuous' ? 'continuous' : 'active')}
+              className="w-full max-w-xs !py-4 !text-body-md uppercase"
+            >
+              {t(
+                option === 'continuous'
+                  ? 'continuousStart'
+                  : continuousEnabled
+                    ? 'stepByStep'
+                    : 'start',
+              )}
+            </Button>
+          ))}
         </div>
+      )}
+
+      {/* Continuous: modo de corrido */}
+      {state === 'continuous' && (
+        <ContinuousPlayer
+          sessionId={sessionId}
+          exercises={allExercises}
+          audioEnabled={audioEnabled}
+          onComplete={() => setState('summary')}
+        />
+      )}
+
+      {/* Continuous summary: reps opcionales antes del RPE */}
+      {state === 'summary' && (
+        <ContinuousSummary
+          sessionId={sessionId}
+          exercises={allExercises}
+          onDone={() => setState('done')}
+        />
       )}
 
       {/* Active: Current exercise */}
