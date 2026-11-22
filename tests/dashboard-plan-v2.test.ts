@@ -65,10 +65,11 @@ describe('Slice v2-06a — dashboard con plan v2', () => {
     expect(read(resolve(planDir, 'PlanDashboard.tsx'))).toContain('planDayView');
   });
 
-  it('CreatePlanCard llama /api/generate-phase con phase_index 0, anti doble envio y refresca', () => {
+  it('CreatePlanCard llama /api/generate-phase con el phase_index recibido, anti doble envio y refresca', () => {
     const src = read(resolve(planDir, 'CreatePlanCard.tsx'));
     expect(src).toContain('/api/generate-phase');
-    expect(src).toContain('phase_index: 0');
+    expect(src).toContain('phase_index: phaseIndex');
+    expect(src).toContain('phaseIndex = 0');
     expect(src).toContain('useRef');
     expect(src).toContain('router.refresh');
     expect(src).toContain("t('createHint')");

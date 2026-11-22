@@ -94,6 +94,8 @@
       "startSessionComingSoon": "Empezar sesión",
       "comingSoon": "Próximamente",
       "createTitle": "Tu programa de 12 semanas",
+      "nextPhaseTitle": "Terminaste la fase {n}. Generemos la fase {next} con tus resultados.",
+      "nextPhaseBody": "Usamos tus registros de la fase anterior para ajustar la dificultad y el volumen.",
       "createBody": "Un plan progresivo de calistenia adaptado a tu perfil y tu evaluación.",
       "createCta": "Crear mi programa",
       "creating": "Generando tu programa...",

@@ -4,6 +4,8 @@ import { streamChatCompletion } from '@/lib/deepseek/client';
 import { getEmbedding } from '@/lib/nvidia/client';
 import { deriveStartLevel, type StartLevel } from '@/lib/assessment/level';
 import { validatePhase } from '@/lib/plan/validate-phase';
+import { summarizePhaseLog, type PhaseLogSession } from '@/lib/plan/phase-log';
+import { getFlag } from '@/lib/flags';
 import {
   buildPhasePrompt,
   type CorpusDoc,
@@ -149,6 +151,31 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const previousPhase = phaseSlot > 0 ? planData.phases[phaseSlot - 1] : undefined;
+    if (phaseSlot > 0 && !previousPhase) {
+      return NextResponse.json(
+        { error: `Phase ${phaseSlot - 1} must exist before phase ${phaseSlot}` },
+        { status: 409 },
+      );
+    }
+
+    let previousPhaseLog: string | undefined;
+    if (previousPhase && getFlag('phase_generation_evidence_adjustment')) {
+      const start = (phaseSlot - 1) * 28;
+      const { data: logSessions } = await supabase
+        .from('workout_sessions')
+        .select('plan_day_index, log_data, rpe, completed_at')
+        .eq('user_id', user.id)
+        .eq('plan_id', planId)
+        .not('completed_at', 'is', null)
+        .gte('plan_day_index', start)
+        .lte('plan_day_index', start + 27);
+      previousPhaseLog = summarizePhaseLog(
+        previousPhase,
+        (logSessions ?? []) as PhaseLogSession[],
+      );
+    }
+
     // RAG: corpus (6 docs; segunda query para niveles no entrenados)
     const queryText = [
       `4-week training phase for a ${startLevel} athlete`,
@@ -269,6 +296,8 @@ export async function POST(request: NextRequest) {
       assessment: assessment as PhaseAssessment | null,
       startLevel,
       phaseIndex: phaseSlot,
+      previousPhase,
+      previousPhaseLog,
       corpusDocs,
       availableExercises: mergedExercises,
     });

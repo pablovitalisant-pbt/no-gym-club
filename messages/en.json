@@ -94,6 +94,8 @@
       "startSessionComingSoon": "Start session",
       "comingSoon": "Coming soon",
       "createTitle": "Your 12-week program",
+      "nextPhaseTitle": "You finished phase {n}. Let's build phase {next} from your results.",
+      "nextPhaseBody": "We use your logs from the previous phase to adjust difficulty and volume.",
       "createBody": "A progressive calisthenics plan adapted to your profile and assessment.",
       "createCta": "Create my program",
       "creating": "Generating your program...",

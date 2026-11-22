@@ -6,7 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { Sparkles } from 'lucide-react';
 
-export default function CreatePlanCard({ locale }: { locale: string }) {
+export default function CreatePlanCard({ locale, phaseIndex = 0 }: { locale: string; phaseIndex?: number }) {
   const t = useTranslations('dashboard.plan');
   const router = useRouter();
   const sending = useRef(false);
@@ -22,7 +22,7 @@ export default function CreatePlanCard({ locale }: { locale: string }) {
       const res = await fetch('/api/generate-phase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phase_index: 0, locale }),
+        body: JSON.stringify({ phase_index: phaseIndex, locale }),
       });
       if (!res.ok) {
         setError(true);
@@ -40,8 +40,14 @@ export default function CreatePlanCard({ locale }: { locale: string }) {
   return (
     <div className="brutalist-border bg-surface-800 p-md text-center space-y-sm">
       <Sparkles className="mx-auto text-primary" size={28} />
-      <h2 className="font-headline-md text-headline-md text-on-surface">{t('createTitle')}</h2>
-      <p className="text-on-surface-variant font-body-md">{t('createBody')}</p>
+      <h2 className="font-headline-md text-headline-md text-on-surface">
+        {phaseIndex > 0
+          ? t('nextPhaseTitle', { n: phaseIndex, next: phaseIndex + 1 })
+          : t('createTitle')}
+      </h2>
+      <p className="text-on-surface-variant font-body-md">
+        {phaseIndex > 0 ? t('nextPhaseBody') : t('createBody')}
+      </p>
       {loading ? (
         <div className="space-y-2">
           <p className="font-label-bold text-primary">{t('creating')}</p>

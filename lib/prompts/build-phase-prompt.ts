@@ -193,7 +193,7 @@ export function buildPhasePrompt(input: PhasePromptInput): PhasePrompt {
     ? `\n\n## Previous Phase (progress from it)\n${JSON.stringify(input.previousPhase)}`
     : '';
   const previousLog = input.previousPhaseLog
-    ? `\n\n## Previous Phase Training Log\n${input.previousPhaseLog}`
+    ? `\n\n## Previous Phase Training Log\n${input.previousPhaseLog}\n\n## Progression Rules\n- If the athlete reached the top of the prescribed rep range in most sets, progress to the next harder variant.\n- Otherwise, keep the same variant and increase volume (sets or reps).\n- If adherence is below 50%, repeat the same difficulty.`
     : '';
 
   const user = `Generate phase ${phaseIndex + 1} of 3 (phase index: ${phaseIndex}) for this athlete:

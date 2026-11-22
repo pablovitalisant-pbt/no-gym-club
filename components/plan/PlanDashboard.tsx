@@ -7,6 +7,7 @@ import { CalendarDays } from 'lucide-react';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { planDayView } from '@/lib/plan/day-view';
+import { needsNextPhase } from '@/lib/plan/plan';
 import type { PlanData } from '@/lib/types/plan';
 import DayView from './DayView';
 import PlanCalendar from './PlanCalendar';
@@ -60,6 +61,7 @@ export default function PlanDashboard({
 
   const planId = plan.id;
   const view = planDayView(plan.plan_data, viewIdx, locale);
+  const nextPhase = needsNextPhase(plan.plan_data, { current_day_index: current, completed_day_indexes: completed });
 
   async function handleSetCurrent() {
     setBusy(true);
@@ -118,11 +120,12 @@ export default function PlanDashboard({
         completedDayIndexes={completed}
         onPrev={() => setViewIdx((i) => Math.max(0, i - 1))}
         onNext={() => setViewIdx((i) => Math.min(83, i + 1))}
-        onComplete={handleComplete}
-        onSetCurrent={handleSetCurrent}
-        onStart={startEnabled ? handleStart : undefined}
-        completing={busy}
+        onComplete={handleComplete} onSetCurrent={handleSetCurrent}
+        onStart={startEnabled ? handleStart : undefined} completing={busy}
       />
+      {nextPhase && (
+        <div className="mt-md"><CreatePlanCard locale={locale} phaseIndex={plan.plan_data.phases.length} /></div>
+      )}
       {error && <p className="text-error font-body-md mt-sm">{t('actionError')}</p>}
       <p className="text-label-sm text-on-surface-variant mt-md">
         {t('completedCount', { done: completed.length, total: 84 })}
