@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { Dumbbell } from 'lucide-react';
 import { resolveExerciseMedia } from '@/lib/exercises/resolve-media';
+import { displayExerciseName } from '@/lib/exercises/display-name';
 import type { Database } from '@/lib/supabase/types';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
@@ -35,7 +36,7 @@ export default async function ExerciseDetailPage({
     );
   }
 
-  const name = locale === 'en' ? exercise.name_en : exercise.name_es;
+  const name = displayExerciseName(locale === 'en' ? exercise.name_en : exercise.name_es);
   const description = locale === 'en' ? exercise.description_en : exercise.description_es;
   const instructions = locale === 'en' && exercise.instructions_en?.length
     ? exercise.instructions_en

@@ -5,6 +5,7 @@ import { Pause, Play, SkipForward, Square } from 'lucide-react';
 import CircularTimer from './CircularTimer';
 import type { FlatExercise } from '@/lib/session/flatten';
 import { useContinuousPlayer } from '@/lib/session/useContinuousPlayer';
+import { displayExerciseName } from '@/lib/exercises/display-name';
 
 interface Props {
   sessionId: string;
@@ -29,7 +30,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
         {phaseLabel}
       </p>
       <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-        {info.exerciseName}
+        {displayExerciseName(info.exerciseName)}
       </h2>
       {info.phase === 'work' && info.sets > 0 && (
         <p className="font-label-sm text-label-sm text-on-surface-variant mt-1">
@@ -50,7 +51,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
       </div>
       {info.nextLabel && (
         <p className="font-body-md text-body-md text-on-surface-variant mb-sm">
-          {t('nextExercise')}: <span className="text-on-surface font-medium">{info.nextLabel}</span>
+          {t('nextExercise')}: <span className="text-on-surface font-medium">{displayExerciseName(info.nextLabel)}</span>
         </p>
       )}
 

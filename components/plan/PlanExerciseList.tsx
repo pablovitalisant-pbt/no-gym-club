@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 import { Dumbbell } from 'lucide-react';
 import { resolveExerciseMedia } from '@/lib/exercises/resolve-media';
 import { lookupMedia, type MediaIndex } from '@/lib/exercises/media-index';
+import { displayExerciseName } from '@/lib/exercises/display-name';
 import { sectionExercises, sectionMinutes, SESSION_SECTIONS } from '@/lib/plan/session-summary';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 
@@ -39,7 +40,7 @@ function ExerciseItem({
         )}
       </span>
       <span className="min-w-0">
-        <span className="block font-label-bold text-on-surface">{ex.exercise}</span>
+        <span className="block font-label-bold text-on-surface">{displayExerciseName(ex.exercise)}</span>
         <span className="block text-label-sm text-on-surface-variant">{exerciseAmount(ex)}</span>
       </span>
     </>

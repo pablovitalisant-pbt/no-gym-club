@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button';
 import type { FlatExercise } from '@/lib/session/flatten';
 import { repsTargets, initialRepInputs, buildRepEntries } from '@/lib/session/continuous-view';
 import { saveExerciseReps } from '@/app/[locale]/(session)/session/[id]/actions';
+import { displayExerciseName } from '@/lib/exercises/display-name';
 
 interface Props {
   sessionId: string;
@@ -40,7 +41,7 @@ export default function ContinuousSummary({ sessionId, exercises, onDone }: Prop
         {targets.map((target) => (
           <div key={target.index} className="brutalist-border bg-surface-800 p-sm">
             <p className="font-label-bold text-label-sm uppercase text-on-surface mb-2">
-              {target.exercise}
+              {displayExerciseName(target.exercise)}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {(inputs[target.index] ?? []).map((value, slot) => {

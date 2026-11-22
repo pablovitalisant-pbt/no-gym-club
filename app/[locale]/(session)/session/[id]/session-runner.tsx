@@ -10,6 +10,7 @@ import CircularTimer from '@/components/session/CircularTimer';
 import ContinuousPlayer from '@/components/session/ContinuousPlayer';
 import ContinuousSummary from '@/components/session/ContinuousSummary';
 import type { SessionData } from '@/lib/types/session';
+import { displayExerciseName } from '@/lib/exercises/display-name';
 import { flattenSession, type SessionSection } from '@/lib/session/flatten';
 import { startOptions, resumeRunnerState } from '@/lib/session/continuous-view';
 import { buildTimeline } from '@/lib/session/continuous';
@@ -578,7 +579,7 @@ export default function SessionRunner({
 
           {/* Exercise name */}
           <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase mb-1">
-            {current.exercise}
+            {displayExerciseName(current.exercise)}
           </h2>
 
           {/* Exercise image / placeholder */}
@@ -586,7 +587,7 @@ export default function SessionRunner({
             {current.gif_url && !imageError ? (
               <img
                 src={current.gif_url}
-                alt={current.exercise}
+                alt={displayExerciseName(current.exercise)}
                 className="w-48 h-48 object-contain rounded-lg"
                 onError={() => setImageError(true)}
               />
@@ -660,12 +661,12 @@ export default function SessionRunner({
           </div>
 
           <p className="font-headline-md text-headline-md text-on-surface mt-md">
-            {current?.exercise}
+            {current && displayExerciseName(current.exercise)}
           </p>
 
           {nextEx && (
             <p className="font-body-md text-body-md text-on-surface-variant mt-sm">
-              {t('nextExercise')}: <span className="text-on-surface font-medium">{nextEx.exercise}</span>
+              {t('nextExercise')}: <span className="text-on-surface font-medium">{displayExerciseName(nextEx.exercise)}</span>
             </p>
           )}
         </div>
@@ -679,7 +680,7 @@ export default function SessionRunner({
           </p>
 
           <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-            {current.exercise}
+            {displayExerciseName(current.exercise)}
           </h2>
 
           <p className="font-body-md text-body-md text-on-surface-variant">
@@ -753,7 +754,7 @@ export default function SessionRunner({
                 {t('nextExercise')}
               </p>
               <h3 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-                {nextEx.exercise}
+                {displayExerciseName(nextEx.exercise)}
               </h3>
               {nextEx.sets != null && nextEx.reps && (
                 <p className="font-mono-data text-mono-data text-on-surface mt-2">

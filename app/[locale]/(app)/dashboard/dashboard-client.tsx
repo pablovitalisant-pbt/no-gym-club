@@ -6,6 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { Play, Brain } from 'lucide-react';
 import type { SessionData } from '@/lib/types/session';
+import { displayExerciseName } from '@/lib/exercises/display-name';
 
 // ─── Types ───
 
@@ -120,7 +121,7 @@ function SessionCard({
               {items.map((ex, i) => (
                 <div key={i} className="bg-surface-800 border border-outline p-sm flex justify-between items-center">
                   <div>
-                    <p className="font-label-bold text-on-surface">{ex.exercise}</p>
+                    <p className="font-label-bold text-on-surface">{displayExerciseName(ex.exercise)}</p>
                     <p className="text-label-sm text-on-surface-variant">
                       {ex.sets != null && ex.reps
                         ? `${ex.sets} × ${ex.reps}`

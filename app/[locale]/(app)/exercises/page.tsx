@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getFlag } from '@/lib/flags';
 import { Dumbbell } from 'lucide-react';
 import { resolveExerciseMedia } from '@/lib/exercises/resolve-media';
+import { displayExerciseName } from '@/lib/exercises/display-name';
 import type { Database } from '@/lib/supabase/types';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
@@ -106,7 +107,7 @@ export default async function ExercisesPage({
       {/* Exercise grid (Stitch spec: 3-col, cards with image overlay + badge) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter md:gap-md">
         {(exercises || []).map((ex: ExerciseRow) => {
-          const name = locale === 'en' ? ex.name_en : ex.name_es;
+          const name = displayExerciseName(locale === 'en' ? ex.name_en : ex.name_es);
           const media = resolveExerciseMedia(ex);
           return (
             <a
