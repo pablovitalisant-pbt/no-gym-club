@@ -11,5 +11,5 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 
 ## 2026-11-22 00:06 - v2-assessment-b - commit d56cc04 - INVALIDO
 - Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-assessment-b
-- [ ] P-20261122-0006-1 (media) HALLAZGO: EXP-1 — Peso fuera de rango sin validación visible
-- [ ] P-20261122-0006-2 (baja) HALLAZGO: EXP-2 — Texto largo en limitaciones
+- [x] P-20261122-0006-1 (media) HALLAZGO: EXP-1 — Peso fuera de rango sin validación visible -> ARREGLADO (commit v2-fix-qa-assessment)
+- [x] P-20261122-0006-2 (baja) HALLAZGO: EXP-2 — Texto largo en limitaciones -> ARREGLADO (commit v2-fix-qa-assessment; limitations_notes sin validación de largo en servidor -> BACKLOG cleanup v2-10)

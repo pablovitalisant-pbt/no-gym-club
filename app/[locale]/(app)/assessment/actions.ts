@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { type Database } from '@/lib/supabase/types';
-import { validateProfileV2 } from '@/lib/assessment/validate';
+import { validateProfileV2, profileRangeError } from '@/lib/assessment/validate';
 import type {
   CardioPreference,
   FocusArea,
@@ -46,6 +46,15 @@ export async function saveProfile(data: ProfileData) {
   // validar campos requeridos
   if (!data.age || !data.weight_kg || !data.height_cm) {
     return { success: false, error: 'Missing required fields' };
+  }
+
+  const outOfRange = profileRangeError({
+    age: data.age,
+    weight_kg: data.weight_kg,
+    height_cm: data.height_cm,
+  });
+  if (outOfRange) {
+    return { success: false, error: `${outOfRange} out of range` };
   }
 
   const v2 = validateProfileV2(data);

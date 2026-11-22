@@ -54,6 +54,9 @@ export function FocusAreas({ value, onChange, notes, onNotesChange }: Props) {
         placeholder={t('profile.focusNotesPlaceholder')}
         aria-label={t('profile.focusNotes')}
       />
+      <p className="text-right text-[10px] opacity-50 font-mono-data">
+        {t('profile.charCount', { count: notes.length })}
+      </p>
     </div>
   );
 }

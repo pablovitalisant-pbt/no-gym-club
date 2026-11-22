@@ -34,6 +34,32 @@ export type FocusArea = (typeof FOCUS_AREAS)[number];
 
 type Result<T> = { ok: true; value: T } | { ok: false; error: string };
 
+export const PROFILE_RANGES = {
+  age: { min: 14, max: 100 },
+  weight_kg: { min: 30, max: 250 },
+  height_cm: { min: 100, max: 250 },
+} as const;
+export type ProfileRangeField = keyof typeof PROFILE_RANGES;
+
+/** true si el valor (string del form o numero) cae dentro del rango del campo. */
+export function inProfileRange(field: ProfileRangeField, raw: string | number): boolean {
+  if (raw === '' || raw === null || raw === undefined) return false;
+  const n = typeof raw === 'string' ? Number(raw) : raw;
+  if (!Number.isFinite(n)) return false;
+  const { min, max } = PROFILE_RANGES[field];
+  return n >= min && n <= max;
+}
+
+/** primer campo fuera de rango, o null si todos son validos. */
+export function profileRangeError(
+  input: Record<ProfileRangeField, number>,
+): ProfileRangeField | null {
+  for (const field of Object.keys(PROFILE_RANGES) as ProfileRangeField[]) {
+    if (!inProfileRange(field, input[field])) return field;
+  }
+  return null;
+}
+
 export interface ProfileV2 {
   training_history: TrainingHistory | null;
   health_limitations: HealthLimitation[];

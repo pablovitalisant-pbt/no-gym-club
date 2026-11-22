@@ -212,7 +212,9 @@
       "focus_skill_muscleup": "Muscle-up",
       "focus_skill_pistol": "Pistol squat",
       "focusNotes": "Algo más que quieras contarnos",
-      "focusNotesPlaceholder": "Ej.: quiero mi primera dominada estricta"
+      "focusNotesPlaceholder": "Ej.: quiero mi primera dominada estricta",
+      "outOfRange": "Valor entre {min} y {max}",
+      "charCount": "{count}/300"
     },
     "equipment": {
       "title": "Equipamiento disponible",

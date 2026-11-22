@@ -52,6 +52,9 @@ export function HealthStep({ limitations, onToggle, notes, onNotesChange, onBack
           className={inputCls}
           placeholder={t('health.notesPlaceholder')}
         />
+        <p className="text-right text-[10px] opacity-50 font-mono-data">
+          {t('profile.charCount', { count: notes.length })}
+        </p>
       </div>
 
       <div className="flex justify-between pt-lg">

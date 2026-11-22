@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
-import { TRAINING_HISTORY, type FocusArea, type TrainingHistory } from '@/lib/assessment/validate';
+import { TRAINING_HISTORY, PROFILE_RANGES, inProfileRange, type FocusArea, type TrainingHistory } from '@/lib/assessment/validate';
 import { FocusAreas } from './FocusAreas';
 
 interface Props {
@@ -31,6 +31,19 @@ export function ProfileStep(p: Props) {
   const inputCls = 'w-full bg-surface-900 brutalist-border brutalist-input p-4 text-on-surface font-mono-data text-body-md';
   const cardCls = 'brutalist-border p-4 bg-surface-800 peer-checked:bg-primary-container peer-checked:text-on-primary-container transition-all group-hover:bg-surface-700';
 
+  const rangeError = (field: keyof typeof PROFILE_RANGES, value: string) =>
+    value !== '' && !inProfileRange(field, value)
+      ? t('profile.outOfRange', PROFILE_RANGES[field])
+      : null;
+  const ageError = rangeError('age', p.age);
+  const weightError = rangeError('weight_kg', p.weight);
+  const heightError = rangeError('height_cm', p.height);
+  const canContinue =
+    inProfileRange('age', p.age) &&
+    inProfileRange('weight_kg', p.weight) &&
+    inProfileRange('height_cm', p.height) &&
+    p.trainingHistory !== null;
+
   return (
     <div className="space-y-lg">
       <header>
@@ -43,15 +56,18 @@ export function ProfileStep(p: Props) {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
         <div className="space-y-xs">
           <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="age">{t('profile.age')}</label>
-          <input id="age" type="number" min={14} max={100} required value={p.age} onChange={(e) => p.setAge(e.target.value)} className={inputCls} placeholder="25" />
+          <input id="age" type="number" min={14} max={100} required value={p.age} onChange={(e) => p.setAge(e.target.value)} className={inputCls} placeholder="25" aria-invalid={!!ageError} />
+          {ageError && <p className="text-error text-[10px] font-label-bold">{ageError}</p>}
         </div>
         <div className="space-y-xs">
           <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="weight">{t('profile.weight')}</label>
-          <input id="weight" type="number" min={30} max={250} step="0.1" required value={p.weight} onChange={(e) => p.setWeight(e.target.value)} className={inputCls} placeholder="75" />
+          <input id="weight" type="number" min={30} max={250} step="0.1" required value={p.weight} onChange={(e) => p.setWeight(e.target.value)} className={inputCls} placeholder="75" aria-invalid={!!weightError} />
+          {weightError && <p className="text-error text-[10px] font-label-bold">{weightError}</p>}
         </div>
         <div className="space-y-xs">
           <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="height">{t('profile.height')}</label>
-          <input id="height" type="number" min={100} max={250} required value={p.height} onChange={(e) => p.setHeight(e.target.value)} className={inputCls} placeholder="180" />
+          <input id="height" type="number" min={100} max={250} required value={p.height} onChange={(e) => p.setHeight(e.target.value)} className={inputCls} placeholder="180" aria-invalid={!!heightError} />
+          {heightError && <p className="text-error text-[10px] font-label-bold">{heightError}</p>}
         </div>
       </div>
 
@@ -114,7 +130,7 @@ export function ProfileStep(p: Props) {
       </div>
 
       <div className="pt-lg">
-        <Button type="button" variant="primary" onClick={p.onNext} disabled={!p.age || !p.weight || !p.height || !p.trainingHistory} iconRight={ArrowRight} className="w-full uppercase !py-md">
+        <Button type="button" variant="primary" onClick={p.onNext} disabled={!canContinue} iconRight={ArrowRight} className="w-full uppercase !py-md">
           {t('next')}
         </Button>
       </div>
