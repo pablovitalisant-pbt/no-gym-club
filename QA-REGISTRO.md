@@ -29,3 +29,7 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 - Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-corrido-b
 - [x] P-20261122-0123-1 (alta) FALLA: QA-04 — La sesión no se reanuda tras recargar -> ARREGLADO v2-fix-qa-corrido (resumeRunnerState al montar el runner); re-QA pendiente
 - [x] P-20261122-0123-2 (baja) HALLAZGO: EXP-1 — Audio apagado visible en modo inglés -> DESCARTADO observacion sin defecto: el toggle de audio funciona en /en
+
+## 2026-11-22 01:30 - v2-corrido-reqa - commit 77016a4 - PASA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-corrido-reqa
+- Sin pendientes nuevos.

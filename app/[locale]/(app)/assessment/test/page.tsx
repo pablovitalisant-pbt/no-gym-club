@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { getFlag } from '@/lib/flags';
-import { TestForm } from './test-form';
+import { createClient } from '@/lib/supabase/server';
+import { TestWizard } from '@/components/assessment/tests/TestWizard';
 
 export default async function TestPage({
   params: { locale },
@@ -18,5 +19,18 @@ export default async function TestPage({
     );
   }
 
-  return <TestForm />;
+  const supabase = createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  let hasBar = false;
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('available_equipment')
+      .eq('id', user.id)
+      .maybeSingle();
+    hasBar = (profile?.available_equipment ?? []).includes('bar');
+  }
+
+  return <TestWizard hasBar={hasBar} />;
 }

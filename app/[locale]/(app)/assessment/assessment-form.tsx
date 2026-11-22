@@ -94,7 +94,7 @@ export function AssessmentForm() {
     if (!result.par_q_cleared) {
       router.push('/dashboard?parq=blocked');
     } else {
-      router.push('/dashboard?assessment=done');
+      router.push('/assessment/test');
     }
   }
 

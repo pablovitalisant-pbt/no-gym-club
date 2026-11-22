@@ -25,12 +25,14 @@ export default function PlanDashboard({
   locale,
   plan,
   hasAssessment,
+  assessmentHref = '/assessment',
   initialDay,
   startEnabled = false,
 }: {
   locale: string;
   plan: PlanRow | null;
   hasAssessment: boolean;
+  assessmentHref?: string;
   initialDay?: number | null;
   startEnabled?: boolean;
 }) {
@@ -48,9 +50,7 @@ export default function PlanDashboard({
       <div className="brutalist-border bg-surface-800 p-md text-center space-y-sm">
         <h2 className="font-headline-md text-headline-md text-on-surface">{t('assessmentTitle')}</h2>
         <p className="text-on-surface-variant font-body-md">{t('assessmentBody')}</p>
-        <Link href="/assessment" className="inline-block">
-          <Button className="uppercase">{t('assessmentCta')}</Button>
-        </Link>
+        <Link href={assessmentHref} className="inline-block"><Button className="uppercase">{t('assessmentCta')}</Button></Link>
       </div>
     );
   }

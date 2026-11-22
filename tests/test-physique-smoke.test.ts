@@ -48,10 +48,10 @@ describe('Slice 4b — test physique guide', () => {
     expect(raw).toContain('assessment');
   });
 
-  it('test/test-form.tsx existe y es Client Component', () => {
+  it('el wizard v2 existe y es Client Component', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/assessment/test/test-form.tsx',
+      'components/assessment/tests/TestWizard.tsx',
     );
     const raw = readFileSync(path, 'utf-8');
     expect(raw).toContain("'use client'");
@@ -82,22 +82,21 @@ describe('Slice 4b — test physique guide', () => {
     expect(en.assessment?.test).toBeDefined();
 
     const requiredKeys = [
-      'pushups',
-      'pullups',
-      'squats',
-      'dips',
-      'plank',
-      'pushupsTitle',
-      'pullupsTitle',
-      'squatsTitle',
-      'dipsTitle',
-      'plankTitle',
+      'title',
+      'hint',
+      'cannot',
       'reps',
-      'plankStart',
-      'plankStop',
+      'start',
+      'stop',
       'back',
       'next',
       'submit',
+      'pushupTitle',
+      'sitTitle',
+      'plankTitle',
+      'hangTitle',
+      'pullupTitle',
+      'walkTitle',
     ];
 
     requiredKeys.forEach((key) => {
@@ -112,19 +111,14 @@ describe('Slice 4b — test physique guide', () => {
     });
   });
 
-  // ─── Timer en test-form ───
-  it('test-form.tsx tiene logica de timer (setInterval o useEffect + seconds)', () => {
+  // ─── Timer del wizard ───
+  it('useStopwatch tiene logica de timer (setInterval + clearInterval)', () => {
     const path = resolve(
       root,
-      'app/[locale]/(app)/assessment/test/test-form.tsx',
+      'components/assessment/tests/useStopwatch.ts',
     );
     const raw = readFileSync(path, 'utf-8');
-    // debe tener logica de cronometro para la plancha
-    const hasTimer =
-      raw.includes('setInterval') ||
-      raw.includes('useEffect') ||
-      raw.includes('seconds') ||
-      raw.includes('timer');
-    expect(hasTimer, 'test-form debe tener timer para plank').toBe(true);
+    expect(raw.includes('setInterval')).toBe(true);
+    expect(raw.includes('clearInterval')).toBe(true);
   });
 });

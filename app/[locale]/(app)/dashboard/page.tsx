@@ -35,6 +35,7 @@ export default async function DashboardPage({
 
   let planRow: PlanRow | null = null;
   let hasAssessment = false;
+  let parqCleared = false;
 
   if (user && showPlanV2) {
     const { data: plan } = await supabase
@@ -58,6 +59,13 @@ export default async function DashboardPage({
       .limit(1)
       .maybeSingle();
     hasAssessment = Boolean(assessment);
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('par_q_cleared')
+      .eq('id', user.id)
+      .maybeSingle();
+    parqCleared = Boolean(profile?.par_q_cleared);
   }
 
   let initialSession: { id: string; session_data: SessionData; completed_at: string | null } | null = null;
@@ -92,6 +100,7 @@ export default async function DashboardPage({
           locale={locale}
           plan={planRow}
           hasAssessment={hasAssessment}
+          assessmentHref={parqCleared ? '/assessment/test' : '/assessment'}
           initialDay={parseDayParam(searchParams?.day)}
           startEnabled={getFlag('plan_session_runner')}
         />
