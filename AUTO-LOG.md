@@ -18,3 +18,4 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 | 2026-11-22 | fix QA assessment (rangos edad/peso/altura, maxLength 300) | deep (USD 1.50) | 427 tests, build 0 | (este commit) | cierra P-20261122-0006-1/-2 |
 | 2026-11-22 | v2-05b ajuste generador (variante inicial segun test, pool de fundamentos, 3 dias por defecto) | deep (USD 1.30) | 431 tests, build 0 | (este commit) | Evidencia: prueba real DT fase 0 extremo/intermedio, 165 s y 158 s, 200 OK |
 | 2026-11-22 | v2-06a dashboard v2 (dia actual, nav, completar, crear programa) | deep (USD 2.08) | 452 tests, build 0 | (este commit) | flag training_plan_v2 false; QA pendiente |
+| 2026-11-22 | fix tests no escriben feature-flags.json real (FEATURE_FLAGS_PATH) | deep (USD 0.83) | 455/455 x2, hash del archivo real intacto | (este commit) | habilita QA en paralelo con el Programador |

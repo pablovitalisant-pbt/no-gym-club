@@ -1,24 +1,29 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { readFileSync, writeFileSync } from 'fs';
-import { resolve } from 'path';
+import { readFileSync, writeFileSync, mkdtempSync } from 'fs';
+import { tmpdir } from 'os';
+import { resolve, join } from 'path';
 
 const root = resolve(__dirname, '..');
-const flagsPath = resolve(root, 'config/feature-flags.json');
+const realFlagsPath = resolve(root, 'config/feature-flags.json');
+
+// Bug #10: nunca escribir el archivo real (otro proceso puede leerlo a medias).
+// Cada test-file usa su propio temporal via FEATURE_FLAGS_PATH.
+const tmpFlagsPath = join(mkdtempSync(join(tmpdir(), 'ngc-flags-')), 'feature-flags.json');
+const originalFlags = readFileSync(realFlagsPath, 'utf-8');
+writeFileSync(tmpFlagsPath, originalFlags);
+process.env.FEATURE_FLAGS_PATH = tmpFlagsPath;
 
 function readFlags(): Record<string, boolean> {
-  return JSON.parse(readFileSync(flagsPath, 'utf-8'));
+  return JSON.parse(readFileSync(tmpFlagsPath, 'utf-8'));
 }
 
 function writeFlags(flags: Record<string, boolean>) {
-  const current = JSON.parse(readFileSync(flagsPath, 'utf-8'));
-  writeFileSync(flagsPath, JSON.stringify({ ...current, ...flags }, null, 2));
+  const current = JSON.parse(readFileSync(tmpFlagsPath, 'utf-8'));
+  writeFileSync(tmpFlagsPath, JSON.stringify({ ...current, ...flags }, null, 2));
 }
 
-// preservar estado original y restaurar al terminar
-const originalFlags = readFileSync(flagsPath, 'utf-8');
-
 afterEach(() => {
-  writeFileSync(flagsPath, originalFlags);
+  writeFileSync(tmpFlagsPath, originalFlags);
 });
 
 describe('Slice 1c — landing feature flag', () => {

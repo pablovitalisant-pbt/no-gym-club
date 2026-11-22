@@ -9,7 +9,10 @@ export function getFlag(key: string): boolean {
   if (process.env[envKey] !== undefined) {
     return process.env[envKey] === 'true';
   }
-  const flagsPath = resolve(process.cwd(), 'config/feature-flags.json');
+  // FEATURE_FLAGS_PATH: override para tests (archivo temporal, nunca el real)
+  const flagsPath = process.env.FEATURE_FLAGS_PATH
+    ? resolve(process.env.FEATURE_FLAGS_PATH)
+    : resolve(process.cwd(), 'config/feature-flags.json');
   const raw = readFileSync(flagsPath, 'utf-8');
   const flags: Record<string, boolean> = JSON.parse(raw);
   return flags[key] ?? false;
