@@ -17,6 +17,7 @@ async function loadOwnPlan(planId: string, userId: string) {
     .select('current_day_index, completed_day_indexes, plan_data')
     .eq('id', planId)
     .eq('user_id', userId)
+    .eq('is_active', true)
     .maybeSingle();
   return { supabase, data: data as PlanStateRow | null, error };
 }

@@ -45,6 +45,42 @@ describe('Bug #9b — reintentos en embeddings NVIDIA', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it('error de red → reintenta con el mismo backoff y termina ok', async () => {
+    const fetchMock = vi
+      .fn()
+      .mockRejectedValueOnce(new TypeError('fetch failed'))
+      .mockResolvedValueOnce(res(200));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { getEmbedding } = await import('@/lib/nvidia/client');
+    const p = getEmbedding('texto');
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(await p).toEqual([0.1, 0.2]);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+  });
+
+  it('error de red persistente → falla tras 3 reintentos', async () => {
+    const fetchMock = vi.fn().mockRejectedValue(new TypeError('timeout'));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { getEmbedding } = await import('@/lib/nvidia/client');
+    const p = getEmbedding('texto');
+    const assertion = expect(p).rejects.toThrow('timeout');
+    await vi.advanceTimersByTimeAsync(1000 + 2000 + 4000);
+    await assertion;
+    expect(fetchMock).toHaveBeenCalledTimes(4);
+  });
+
+  it('pasa un AbortSignal con timeout de 20s al fetch', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(res(200));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const { getEmbedding } = await import('@/lib/nvidia/client');
+    await getEmbedding('texto');
+    const init = fetchMock.mock.calls[0][1] as { signal?: unknown };
+    expect(init.signal).toBeInstanceOf(AbortSignal);
+  });
+
   it('502×4 → falla tras 3 reintentos', async () => {
     const fetchMock = vi.fn().mockResolvedValue(res(502));
     vi.stubGlobal('fetch', fetchMock);

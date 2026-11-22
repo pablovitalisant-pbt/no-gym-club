@@ -121,6 +121,6 @@ Registro: `BUGS.md` en la raiz del proyecto
 - URL: `http://localhost:3123`
 - Levantar: `npm run dev -- -p 3123`
 - Preparar datos: `PBRAVOT_QA_DIR=..\\_dt\\qa node .pbravot/qa-preparar.mjs`
-- Cuentas sintéticas: `qa.extremo@nogym.test` (52 años, limitaciones knees/lower_back), `qa.intermedio@nogym.test` (30 años, focus chest/shoulders) y `qa.nuevo@nogym.test` (sin perfil). Las contraseñas se regeneran y escriben en `cuentas.json`, nunca se imprimen.
-- Reiniciar datos: ejecutar el preparador; borra únicamente filas de esas cuentas filtradas por `user_id` y recrea sus perfiles/resultados.
+- Cuentas sintéticas: `qa.extremo@nogym.test` (52 años, limitaciones knees/lower_back, plan activo fase 0 desde `.pbravot/fixtures/fase0-extremo.json`), `qa.intermedio@nogym.test` (30 años, focus chest/shoulders, plan activo fase 0 desde `.pbravot/fixtures/fase0-intermedio.json`) y `qa.nuevo@nogym.test` (sin perfil ni plan). Las contraseñas se regeneran y escriben en `cuentas.json`, nunca se imprimen.
+- Reiniciar datos: ejecutar el preparador; borra únicamente filas de esas cuentas filtradas por `user_id` y recrea sus perfiles/resultados/planes. Cada plan queda en `current_day_index 0`, sin días completados y con `start_level` fijo (`untrained_extreme` / `intermediate`); el fixture se valida (7 días, al menos 1 rest) antes de insertarlo.
 - Excepción aprobada por Pablo el 2026-11-21: no existe base de pruebas; Fase E usa la base Supabase compartida con cuentas sintéticas. `guardas: []` y `QA_EXCEPCION_PRODUCCION=pablo-2026-11-21`.

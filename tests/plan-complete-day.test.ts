@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { completeDay, isPhaseEnd, needsNextPhase } from '../lib/plan/plan';
+import { completeDay, needsNextPhase } from '../lib/plan/plan';
 import type { PlanData } from '../lib/types/plan';
 
 const emptyState = { current_day_index: 0, completed_day_indexes: [] as number[] };
@@ -38,18 +38,10 @@ describe('completeDay', () => {
   });
 });
 
-describe('isPhaseEnd', () => {
-  it('detecta los fines de fase', () => {
-    expect(isPhaseEnd(27)).toBe(true);
-    expect(isPhaseEnd(55)).toBe(true);
-    expect(isPhaseEnd(83)).toBe(true);
-  });
-
-  it('no marca otros dias', () => {
-    expect(isPhaseEnd(0)).toBe(false);
-    expect(isPhaseEnd(26)).toBe(false);
-    expect(isPhaseEnd(28)).toBe(false);
-    expect(isPhaseEnd(56)).toBe(false);
+describe('isPhaseEnd retirado', () => {
+  it('no exporta isPhaseEnd sin uso en produccion', async () => {
+    const mod = await import('../lib/plan/plan');
+    expect('isPhaseEnd' in mod).toBe(false);
   });
 });
 

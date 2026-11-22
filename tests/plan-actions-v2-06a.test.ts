@@ -62,6 +62,7 @@ describe('completePlanDay', () => {
     expect(h.updates).toHaveLength(0);
     expect(h.filters).toContainEqual(['id', 'plan-ajeno']);
     expect(h.filters).toContainEqual(['user_id', 'user-1']);
+    expect(h.filters).toContainEqual(['is_active', true]);
   });
 
   it('completa: avanza el puntero y agrega el indice', async () => {

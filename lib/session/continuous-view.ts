@@ -1,7 +1,20 @@
 import type { SessionExercise } from '@/lib/types/session';
-import type { Segment, SegmentKind } from './continuous';
+import type { ContinuousState, Segment, SegmentKind } from './continuous';
+import { tick } from './continuous';
 
 export type StartOption = 'continuous' | 'step';
+
+export type InitialRunnerState = 'continuous' | 'summary' | 'idle';
+
+/** Estado con el que debe montar el runner si hay un snapshot continuo persistido. */
+export function resumeRunnerState(
+  snapshot: { state: ContinuousState } | null,
+  timeline: Segment[],
+  now: number,
+): InitialRunnerState {
+  if (!snapshot) return 'idle';
+  return tick(snapshot.state, timeline, now).done ? 'summary' : 'continuous';
+}
 
 /** Opciones de la pantalla inicial del runner según el flag. */
 export function startOptions(continuousEnabled: boolean): StartOption[] {

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { ChevronLeft, ChevronRight, Check, Moon, Play } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { TOTAL_DAYS } from '@/lib/plan/plan';
 import type { PlanDayView } from '@/lib/plan/day-view';
 import PlanExerciseList from './PlanExerciseList';
 
@@ -60,7 +61,7 @@ export default function DayView({
         <button
           type="button"
           onClick={onNext}
-          disabled={idx === 83}
+          disabled={idx >= TOTAL_DAYS - 1}
           aria-label={t('nextDay')}
           className="p-2 border border-border text-text-primary disabled:opacity-30"
         >

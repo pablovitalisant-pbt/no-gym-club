@@ -7,7 +7,7 @@ import { CalendarDays } from 'lucide-react';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { planDayView } from '@/lib/plan/day-view';
-import { needsNextPhase } from '@/lib/plan/plan';
+import { needsNextPhase, TOTAL_DAYS } from '@/lib/plan/plan';
 import type { PlanData } from '@/lib/types/plan';
 import DayView from './DayView';
 import PlanCalendar from './PlanCalendar';
@@ -56,7 +56,7 @@ export default function PlanDashboard({
   }
 
   if (!plan || plan.plan_data.phases.length === 0) {
-    return <CreatePlanCard locale={locale} />;
+    return <CreatePlanCard />;
   }
 
   const planId = plan.id;
@@ -119,16 +119,16 @@ export default function PlanDashboard({
         currentDayIndex={current}
         completedDayIndexes={completed}
         onPrev={() => setViewIdx((i) => Math.max(0, i - 1))}
-        onNext={() => setViewIdx((i) => Math.min(83, i + 1))}
+        onNext={() => setViewIdx((i) => Math.min(TOTAL_DAYS - 1, i + 1))}
         onComplete={handleComplete} onSetCurrent={handleSetCurrent}
         onStart={startEnabled ? handleStart : undefined} completing={busy}
       />
       {nextPhase && (
-        <div className="mt-md"><CreatePlanCard locale={locale} phaseIndex={plan.plan_data.phases.length} /></div>
+        <div className="mt-md"><CreatePlanCard phaseIndex={plan.plan_data.phases.length} /></div>
       )}
       {error && <p className="text-error font-body-md mt-sm">{t('actionError')}</p>}
       <p className="text-label-sm text-on-surface-variant mt-md">
-        {t('completedCount', { done: completed.length, total: 84 })}
+        {t('completedCount', { done: completed.length, total: TOTAL_DAYS })}
       </p>
       {calendarOpen && plan && (
         <PlanCalendar

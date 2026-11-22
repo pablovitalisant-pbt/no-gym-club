@@ -8,8 +8,6 @@ import {
   resume,
   skip,
   tick,
-  toSnapshot,
-  fromSnapshot,
 } from '../lib/session/continuous';
 import type { SessionExercise } from '../lib/types/session';
 
@@ -91,9 +89,9 @@ describe('motor de corrido', () => {
     expect(tick(s, tl, 70000).done).toBe(true);
   });
 
-  it('el snapshot sobrevive un round-trip JSON', () => {
-    const s = pause(start(0), 3000);
-    const copy = fromSnapshot(JSON.parse(JSON.stringify(toSnapshot(s))));
-    expect(copy).toEqual(s);
+  it('no exporta helpers de snapshot sin uso en produccion', async () => {
+    const mod = await import('../lib/session/continuous');
+    expect('toSnapshot' in mod).toBe(false);
+    expect('fromSnapshot' in mod).toBe(false);
   });
 });

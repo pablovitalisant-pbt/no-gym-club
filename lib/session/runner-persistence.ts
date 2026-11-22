@@ -29,50 +29,26 @@ export interface RunnerSnapshot {
   updatedAt: number;
 }
 
-function key(sessionId: string): string {
-  return STORAGE_PREFIX + sessionId;
-}
-
-export function saveSnapshot(snapshot: RunnerSnapshot): void {
-  localStorage.setItem(key(snapshot.sessionId), JSON.stringify(snapshot));
-}
-
-export function loadSnapshot(sessionId: string): RunnerSnapshot | null {
-  try {
-    const raw = localStorage.getItem(key(sessionId));
-    if (!raw) return null;
-    const data = JSON.parse(raw) as RunnerSnapshot;
-    if (Date.now() - data.updatedAt > STALE_THRESHOLD_MS) {
-      localStorage.removeItem(key(sessionId));
-      return null;
-    }
-    return data;
-  } catch {
-    return null;
-  }
-}
-
-export function clearSnapshot(sessionId: string): void {
-  localStorage.removeItem(key(sessionId));
-}
-
-export interface ContinuousRunnerSnapshot {
+interface StoredSnapshot {
   sessionId: string;
-  state: import('./continuous').ContinuousState;
   updatedAt: number;
 }
 
-export function saveContinuousSnapshot(snapshot: ContinuousRunnerSnapshot): void {
-  localStorage.setItem(CONTINUOUS_PREFIX + snapshot.sessionId, JSON.stringify(snapshot));
+function saveWithPrefix<T extends StoredSnapshot>(prefix: string, snapshot: T): void {
+  localStorage.setItem(prefix + snapshot.sessionId, JSON.stringify(snapshot));
 }
 
-export function loadContinuousSnapshot(sessionId: string): ContinuousRunnerSnapshot | null {
+function loadWithPrefix<T extends StoredSnapshot>(
+  prefix: string,
+  sessionId: string,
+): T | null {
+  const key = prefix + sessionId;
   try {
-    const raw = localStorage.getItem(CONTINUOUS_PREFIX + sessionId);
+    const raw = localStorage.getItem(key);
     if (!raw) return null;
-    const data = JSON.parse(raw) as ContinuousRunnerSnapshot;
+    const data = JSON.parse(raw) as T;
     if (Date.now() - data.updatedAt > STALE_THRESHOLD_MS) {
-      localStorage.removeItem(CONTINUOUS_PREFIX + sessionId);
+      localStorage.removeItem(key);
       return null;
     }
     return data;
@@ -81,6 +57,34 @@ export function loadContinuousSnapshot(sessionId: string): ContinuousRunnerSnaps
   }
 }
 
+function clearWithPrefix(prefix: string, sessionId: string): void {
+  localStorage.removeItem(prefix + sessionId);
+}
+
+export function saveSnapshot(snapshot: RunnerSnapshot): void {
+  saveWithPrefix(STORAGE_PREFIX, snapshot);
+}
+
+export function loadSnapshot(sessionId: string): RunnerSnapshot | null {
+  return loadWithPrefix<RunnerSnapshot>(STORAGE_PREFIX, sessionId);
+}
+
+export function clearSnapshot(sessionId: string): void {
+  clearWithPrefix(STORAGE_PREFIX, sessionId);
+}
+
+export interface ContinuousRunnerSnapshot extends StoredSnapshot {
+  state: import('./continuous').ContinuousState;
+}
+
+export function saveContinuousSnapshot(snapshot: ContinuousRunnerSnapshot): void {
+  saveWithPrefix(CONTINUOUS_PREFIX, snapshot);
+}
+
+export function loadContinuousSnapshot(sessionId: string): ContinuousRunnerSnapshot | null {
+  return loadWithPrefix<ContinuousRunnerSnapshot>(CONTINUOUS_PREFIX, sessionId);
+}
+
 export function clearContinuousSnapshot(sessionId: string): void {
-  localStorage.removeItem(CONTINUOUS_PREFIX + sessionId);
+  clearWithPrefix(CONTINUOUS_PREFIX, sessionId);
 }

@@ -16,20 +16,29 @@ export async function getEmbedding(
   inputType: 'passage' | 'query' = 'passage',
 ): Promise<number[]> {
   for (let attempt = 0; ; attempt++) {
-    const response = await fetch(`${NVIDIA_BASE_URL}/embeddings`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: EMBEDDING_MODEL,
-        input: [text],
-        input_type: inputType,
-        dimensions: EMBEDDING_DIMENSIONS,
-        encoding_format: 'float',
-      }),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${NVIDIA_BASE_URL}/embeddings`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.NVIDIA_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: EMBEDDING_MODEL,
+          input: [text],
+          input_type: inputType,
+          dimensions: EMBEDDING_DIMENSIONS,
+          encoding_format: 'float',
+        }),
+        signal: AbortSignal.timeout(20_000),
+      });
+    } catch (err) {
+      // Red caida o timeout: mismo backoff que 429/5xx.
+      if (attempt >= RETRY_DELAYS_MS.length) throw err;
+      await sleep(RETRY_DELAYS_MS[attempt]);
+      continue;
+    }
 
     if (response.ok) {
       const data = await response.json();

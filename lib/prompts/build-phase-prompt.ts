@@ -1,4 +1,4 @@
-import type { PlanPhase } from '@/lib/types/plan';
+import type { PlanDay, PlanPhase } from '@/lib/types/plan';
 import type { StartLevel } from '@/lib/assessment/level';
 import type { PushupVariant } from '@/lib/assessment/validate';
 
@@ -59,24 +59,58 @@ const EXTREME_RULE =
 const STARTING_VARIANT_RULE =
   '- STARTING VARIANT: the main exercise of each movement pattern must start at the variant the athlete achieved in the assessment test, or one easier. pushup_variant wall -> wall push-up; knee -> knee push-up; incline -> incline push-up; floor with fewer than 10 reps -> incline or floor with few reps. In phase 1 never prescribe a harder variant than the tested one.';
 
+// Ejemplo real de PlanDay de entrenamiento (valida contra validatePhase).
+export const TRAINING_DAY_EXAMPLE: PlanDay = {
+  type: 'full',
+  label_es: 'Cuerpo completo',
+  label_en: 'Full body',
+  session: {
+    title_es: 'Cuerpo completo',
+    title_en: 'Full body',
+    warmup: [
+      {
+        exercise: 'Wall Push-Up',
+        duration_seconds: 45,
+        rest_seconds: 15,
+        work_seconds: 45,
+        notes_es: 'Ritmo suave',
+        notes_en: 'Easy pace',
+      },
+    ],
+    main: [
+      {
+        exercise: 'Chair Sit-to-Stand',
+        sets: 3,
+        reps: '6-10',
+        rpe: 7,
+        rest_seconds: 90,
+        work_seconds: 40,
+        notes_es: 'Sube controlado',
+        notes_en: 'Controlled tempo',
+      },
+    ],
+    cooldown: [
+      {
+        exercise: 'Knee Plank',
+        duration_seconds: 30,
+        rest_seconds: 0,
+        work_seconds: 30,
+        notes_es: 'Respira',
+        notes_en: 'Breathe',
+      },
+    ],
+    rationale_es: 'Base de empuje y piernas',
+    rationale_en: 'Push and legs foundation',
+    science_refs: ['overcoming_gravity'],
+  },
+};
+
 const SCHEMA = `{
   "index": 0,
   "name_es": "...", "name_en": "...",
   "week_template": [
-    {
-      "type": "push|pull|legs|upper|lower|full|skill|cardio|metabolic|mobility|rest",
-      "label_es": "...", "label_en": "...",
-      "session": null,
-      "session_example_when_training": {
-        "title_es": "...", "title_en": "...",
-        "warmup": [{ "exercise": "name_en", "duration_seconds": 45, "rest_seconds": 15, "work_seconds": 45, "notes_es": "...", "notes_en": "..." }],
-        "main": [{ "exercise": "name_en", "sets": 3, "reps": "6-10", "rpe": 7, "rest_seconds": 90, "work_seconds": 40, "notes_es": "...", "notes_en": "..." }],
-        "cooldown": [{ "exercise": "name_en", "duration_seconds": 30, "rest_seconds": 0, "work_seconds": 30, "notes_es": "...", "notes_en": "..." }],
-        "finisher": [],
-        "cardio": [],
-        "rationale_es": "...", "rationale_en": "...", "science_refs": ["..."]
-      }
-    }
+    ${JSON.stringify(TRAINING_DAY_EXAMPLE, null, 2)},
+    { "type": "rest", "label_es": "...", "label_en": "...", "session": null }
   ],
   "rationale_es": "...", "rationale_en": "...",
   "science_refs": ["..."],

@@ -1,0 +1,829 @@
+{
+ "index": 0,
+ "name_es": "Fase 1: Base de calistenia con foco en pecho y hombros",
+ "name_en": "Phase 1: Bodyweight foundation with chest and shoulder focus",
+ "week_template": [
+  {
+   "type": "push",
+   "label_es": "Empuje: pecho y hombros",
+   "label_en": "Push: chest and shoulders",
+   "session": {
+    "title_es": "Empuje horizontal + tracción",
+    "title_en": "Horizontal push + pull",
+    "warmup": [
+     {
+      "exercise": "dynamic chest stretch (male)",
+      "duration_seconds": 40,
+      "rest_seconds": 10,
+      "work_seconds": 40,
+      "notes_es": "Movilidad dinámica de pecho, sin rebotes.",
+      "notes_en": "Dynamic chest mobility, no bouncing."
+     },
+     {
+      "exercise": "chest and front of shoulder stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Apertura suave de pecho y hombro anterior.",
+      "notes_en": "Gentle chest and front-shoulder opening."
+     },
+     {
+      "exercise": "standing archer",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Activación de escápula y manguito rotador.",
+      "notes_en": "Scapular and rotator-cuff activation."
+     },
+     {
+      "exercise": "scapula push-up",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Activación escapular suave, rango corto.",
+      "notes_en": "Gentle scapular activation, short range."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "wide hand push up",
+      "sets": 3,
+      "reps": "8-12",
+      "rpe": 7,
+      "rest_seconds": 90,
+      "work_seconds": 40,
+      "notes_es": "Sem 1-2: 3x8-10; Sem 3-4: 4x8-12. Escápulas controladas y codos a ~45°.",
+      "notes_en": "Weeks 1-2: 3x8-10; weeks 3-4: 4x8-12. Controlled scapulae, elbows at ~45°."
+     },
+     {
+      "exercise": "diamond push-up",
+      "sets": 3,
+      "reps": "6-10",
+      "rpe": 8,
+      "rest_seconds": 90,
+      "work_seconds": 40,
+      "notes_es": "Sem 1: 3x6; progresar a 3x10. Énfasis en tríceps y pecho interno.",
+      "notes_en": "Week 1: 3x6; progress to 3x10. Emphasis on triceps and inner chest."
+     },
+     {
+      "exercise": "push-up to side plank",
+      "sets": 3,
+      "reps": "6-10",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "6-10 por lado. Estabilidad de hombro y core; no rotar la cadera.",
+      "notes_en": "6-10 per side. Shoulder and core stability; do not rotate the hip."
+     },
+     {
+      "exercise": "bodyweight standing row (with towel)",
+      "sets": 3,
+      "reps": "10-15",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "Tracción horizontal para equilibrar el empuje; pausa de 1 s al final.",
+      "notes_en": "Horizontal pull to balance pressing; 1-s pause at the end."
+     },
+     {
+      "exercise": "bodyweight standing one arm row (with towel)",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "10-12 por brazo; evitar rotar el torso.",
+      "notes_en": "10-12 per arm; avoid torso rotation."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "chest and front of shoulder stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento suave de pecho y hombro anterior.",
+      "notes_en": "Gentle chest and front-shoulder stretch."
+     },
+     {
+      "exercise": "triceps stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento de tríceps sin dolor.",
+      "notes_en": "Pain-free triceps stretch."
+     },
+     {
+      "exercise": "upper back stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Relajación de espalda alta y escápulas.",
+      "notes_en": "Upper-back and scapular relaxation."
+     }
+    ],
+    "finisher": [],
+    "cardio": [],
+    "rationale_es": "Sesión de empuje con volumen extra para pecho y hombros, equilibrada con tracción horizontal. La progresión se logra por repeticiones y series dentro de la fase, sin cambiar ejercicios.",
+    "rationale_en": "Pressing session with extra chest and shoulder volume, balanced by horizontal pulling. Progression is achieved through reps and sets within the phase, without changing exercises.",
+    "science_refs": [
+     "Overcoming Gravity, ch. 6: Weight-Lifting Backgrounds Moving to Bodyweight Training",
+     "Overcoming Gravity, ch. 18: Trained Beginner Routine",
+     "Overcoming Gravity, ch. 5: Bodyweight Progression Without Weights"
+    ]
+   },
+   "session_example_when_training": {
+    "title_es": "Empuje horizontal + tracción",
+    "title_en": "Horizontal push + pull",
+    "warmup": [
+     {
+      "exercise": "dynamic chest stretch (male)",
+      "duration_seconds": 40,
+      "rest_seconds": 10,
+      "work_seconds": 40,
+      "notes_es": "Movilidad dinámica de pecho, sin rebotes.",
+      "notes_en": "Dynamic chest mobility, no bouncing."
+     },
+     {
+      "exercise": "chest and front of shoulder stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Apertura suave de pecho y hombro anterior.",
+      "notes_en": "Gentle chest and front-shoulder opening."
+     },
+     {
+      "exercise": "standing archer",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Activación de escápula y manguito rotador.",
+      "notes_en": "Scapular and rotator-cuff activation."
+     },
+     {
+      "exercise": "scapula push-up",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Activación escapular suave, rango corto.",
+      "notes_en": "Gentle scapular activation, short range."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "wide hand push up",
+      "sets": 3,
+      "reps": "8-12",
+      "rpe": 7,
+      "rest_seconds": 90,
+      "work_seconds": 40,
+      "notes_es": "Sem 1-2: 3x8-10; Sem 3-4: 4x8-12. Escápulas controladas y codos a ~45°.",
+      "notes_en": "Weeks 1-2: 3x8-10; weeks 3-4: 4x8-12. Controlled scapulae, elbows at ~45°."
+     },
+     {
+      "exercise": "diamond push-up",
+      "sets": 3,
+      "reps": "6-10",
+      "rpe": 8,
+      "rest_seconds": 90,
+      "work_seconds": 40,
+      "notes_es": "Sem 1: 3x6; progresar a 3x10. Énfasis en tríceps y pecho interno.",
+      "notes_en": "Week 1: 3x6; progress to 3x10. Emphasis on triceps and inner chest."
+     },
+     {
+      "exercise": "push-up to side plank",
+      "sets": 3,
+      "reps": "6-10",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "6-10 por lado. Estabilidad de hombro y core; no rotar la cadera.",
+      "notes_en": "6-10 per side. Shoulder and core stability; do not rotate the hip."
+     },
+     {
+      "exercise": "bodyweight standing row (with towel)",
+      "sets": 3,
+      "reps": "10-15",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "Tracción horizontal para equilibrar el empuje; pausa de 1 s al final.",
+      "notes_en": "Horizontal pull to balance pressing; 1-s pause at the end."
+     },
+     {
+      "exercise": "bodyweight standing one arm row (with towel)",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "10-12 por brazo; evitar rotar el torso.",
+      "notes_en": "10-12 per arm; avoid torso rotation."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "chest and front of shoulder stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento suave de pecho y hombro anterior.",
+      "notes_en": "Gentle chest and front-shoulder stretch."
+     },
+     {
+      "exercise": "triceps stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento de tríceps sin dolor.",
+      "notes_en": "Pain-free triceps stretch."
+     },
+     {
+      "exercise": "upper back stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Relajación de espalda alta y escápulas.",
+      "notes_en": "Upper-back and scapular relaxation."
+     }
+    ],
+    "finisher": [],
+    "cardio": [],
+    "rationale_es": "Sesión de empuje con volumen extra para pecho y hombros, equilibrada con tracción horizontal. La progresión se logra por repeticiones y series dentro de la fase, sin cambiar ejercicios.",
+    "rationale_en": "Pressing session with extra chest and shoulder volume, balanced by horizontal pulling. Progression is achieved through reps and sets within the phase, without changing exercises.",
+    "science_refs": [
+     "Overcoming Gravity, ch. 6: Weight-Lifting Backgrounds Moving to Bodyweight Training",
+     "Overcoming Gravity, ch. 18: Trained Beginner Routine",
+     "Overcoming Gravity, ch. 5: Bodyweight Progression Without Weights"
+    ]
+   }
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  },
+  {
+   "type": "lower",
+   "label_es": "Pierna y core + cardio moderado",
+   "label_en": "Lower body and core + moderate cardio",
+   "session": {
+    "title_es": "Pierna, core y trote moderado",
+    "title_en": "Legs, core, and moderate run",
+    "warmup": [
+     {
+      "exercise": "squat to overhead reach",
+      "duration_seconds": 40,
+      "rest_seconds": 10,
+      "work_seconds": 40,
+      "notes_es": "Sentadilla no profunda con alcance overhead, ritmo suave.",
+      "notes_en": "Non-deep squat with overhead reach, easy pace."
+     },
+     {
+      "exercise": "half knee bends (male)",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Flexión parcial de rodilla para entrada en calor.",
+      "notes_en": "Partial knee bend for warm-up."
+     },
+     {
+      "exercise": "walking high knees lunge",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Zancada caminando con rodilla alta, controlada.",
+      "notes_en": "Controlled walking lunge with high knee."
+     },
+     {
+      "exercise": "mountain climber",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Ritmo suave, sin perder alineación del tronco.",
+      "notes_en": "Easy pace, keep trunk alignment."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "split squats",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 45,
+      "notes_es": "10-12 por pierna; torso estable y rodilla alineada.",
+      "notes_en": "10-12 per leg; stable torso and aligned knee."
+     },
+     {
+      "exercise": "glute bridge two legs on bench (male)",
+      "sets": 3,
+      "reps": "12-15",
+      "rpe": 6,
+      "rest_seconds": 60,
+      "work_seconds": 40,
+      "notes_es": "Activación de glúteo; pausa de 1 s arriba.",
+      "notes_en": "Glute activation; 1-s pause at the top."
+     },
+     {
+      "exercise": "lunge with twist",
+      "sets": 3,
+      "reps": "8-10",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 45,
+      "notes_es": "8-10 por lado; rotación controlada sin cargar la espalda.",
+      "notes_en": "8-10 per side; controlled rotation without loading the back."
+     },
+     {
+      "exercise": "lying leg raise flat bench",
+      "sets": 3,
+      "reps": "10-15",
+      "rpe": 7,
+      "rest_seconds": 60,
+      "work_seconds": 35,
+      "notes_es": "Core estable; evitar arquear la lumbar.",
+      "notes_en": "Stable core; avoid arching the lower back."
+     },
+     {
+      "exercise": "leg pull in flat bench",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 60,
+      "work_seconds": 35,
+      "notes_es": "Control excéntrico; no balancear las piernas.",
+      "notes_en": "Eccentric control; do not swing the legs."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "hug keens to chest",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Relajación de cadera y espalda baja.",
+      "notes_en": "Hip and lower-back relaxation."
+     },
+     {
+      "exercise": "standing lateral stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento lateral suave.",
+      "notes_en": "Gentle lateral stretch."
+     },
+     {
+      "exercise": "side push neck stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento cervical lateral suave.",
+      "notes_en": "Gentle lateral neck stretch."
+     }
+    ],
+    "finisher": [],
+    "cardio": [
+     {
+      "exercise": "run",
+      "duration_seconds": 720,
+      "rest_seconds": 0,
+      "work_seconds": 720,
+      "notes_es": "Trote moderado de 10-15 min según semana; ritmo conversacional. Sem 1: 10 min; Sem 4: 15 min.",
+      "notes_en": "Moderate 10-15 min run depending on week; conversational pace. Week 1: 10 min; week 4: 15 min."
+     }
+    ],
+    "rationale_es": "Trabajo de pierna y core con cardio moderado dentro de la sesión. El trote se mantiene en intensidad conversacional y progresa por tiempo, no por velocidad.",
+    "rationale_en": "Leg and core work with moderate cardio inside the session. Running stays at conversational intensity and progresses by time, not speed.",
+    "science_refs": [
+     "Overcoming Gravity, ch. 18: Trained Beginner Routine",
+     "Overcoming Gravity, ch. 5: Fewer Exercises, Better Practice",
+     "Principio de sobrecarga en calistenia sin pesos"
+    ]
+   },
+   "session_example_when_training": {
+    "title_es": "Pierna, core y trote moderado",
+    "title_en": "Legs, core, and moderate run",
+    "warmup": [
+     {
+      "exercise": "squat to overhead reach",
+      "duration_seconds": 40,
+      "rest_seconds": 10,
+      "work_seconds": 40,
+      "notes_es": "Sentadilla no profunda con alcance overhead, ritmo suave.",
+      "notes_en": "Non-deep squat with overhead reach, easy pace."
+     },
+     {
+      "exercise": "half knee bends (male)",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Flexión parcial de rodilla para entrada en calor.",
+      "notes_en": "Partial knee bend for warm-up."
+     },
+     {
+      "exercise": "walking high knees lunge",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Zancada caminando con rodilla alta, controlada.",
+      "notes_en": "Controlled walking lunge with high knee."
+     },
+     {
+      "exercise": "mountain climber",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Ritmo suave, sin perder alineación del tronco.",
+      "notes_en": "Easy pace, keep trunk alignment."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "split squats",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 45,
+      "notes_es": "10-12 por pierna; torso estable y rodilla alineada.",
+      "notes_en": "10-12 per leg; stable torso and aligned knee."
+     },
+     {
+      "exercise": "glute bridge two legs on bench (male)",
+      "sets": 3,
+      "reps": "12-15",
+      "rpe": 6,
+      "rest_seconds": 60,
+      "work_seconds": 40,
+      "notes_es": "Activación de glúteo; pausa de 1 s arriba.",
+      "notes_en": "Glute activation; 1-s pause at the top."
+     },
+     {
+      "exercise": "lunge with twist",
+      "sets": 3,
+      "reps": "8-10",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 45,
+      "notes_es": "8-10 por lado; rotación controlada sin cargar la espalda.",
+      "notes_en": "8-10 per side; controlled rotation without loading the back."
+     },
+     {
+      "exercise": "lying leg raise flat bench",
+      "sets": 3,
+      "reps": "10-15",
+      "rpe": 7,
+      "rest_seconds": 60,
+      "work_seconds": 35,
+      "notes_es": "Core estable; evitar arquear la lumbar.",
+      "notes_en": "Stable core; avoid arching the lower back."
+     },
+     {
+      "exercise": "leg pull in flat bench",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 60,
+      "work_seconds": 35,
+      "notes_es": "Control excéntrico; no balancear las piernas.",
+      "notes_en": "Eccentric control; do not swing the legs."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "hug keens to chest",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Relajación de cadera y espalda baja.",
+      "notes_en": "Hip and lower-back relaxation."
+     },
+     {
+      "exercise": "standing lateral stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento lateral suave.",
+      "notes_en": "Gentle lateral stretch."
+     },
+     {
+      "exercise": "side push neck stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento cervical lateral suave.",
+      "notes_en": "Gentle lateral neck stretch."
+     }
+    ],
+    "finisher": [],
+    "cardio": [
+     {
+      "exercise": "run",
+      "duration_seconds": 720,
+      "rest_seconds": 0,
+      "work_seconds": 720,
+      "notes_es": "Trote moderado de 10-15 min según semana; ritmo conversacional. Sem 1: 10 min; Sem 4: 15 min.",
+      "notes_en": "Moderate 10-15 min run depending on week; conversational pace. Week 1: 10 min; week 4: 15 min."
+     }
+    ],
+    "rationale_es": "Trabajo de pierna y core con cardio moderado dentro de la sesión. El trote se mantiene en intensidad conversacional y progresa por tiempo, no por velocidad.",
+    "rationale_en": "Leg and core work with moderate cardio inside the session. Running stays at conversational intensity and progresses by time, not speed.",
+    "science_refs": [
+     "Overcoming Gravity, ch. 18: Trained Beginner Routine",
+     "Overcoming Gravity, ch. 5: Fewer Exercises, Better Practice",
+     "Principio de sobrecarga en calistenia sin pesos"
+    ]
+   }
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  },
+  {
+   "type": "pull",
+   "label_es": "Tracción y hombro",
+   "label_en": "Pull and shoulder",
+   "session": {
+    "title_es": "Tracción + accesorios de hombro y pecho",
+    "title_en": "Pulling + shoulder and chest accessories",
+    "warmup": [
+     {
+      "exercise": "bodyweight standing row (with towel)",
+      "duration_seconds": 40,
+      "rest_seconds": 10,
+      "work_seconds": 40,
+      "notes_es": "Activación ligera de tracción, sin fatigarse.",
+      "notes_en": "Light pulling activation without fatigue."
+     },
+     {
+      "exercise": "standing archer",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Activación de hombro y escápula.",
+      "notes_en": "Shoulder and scapular activation."
+     },
+     {
+      "exercise": "swing 360",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Movilidad controlada de hombro.",
+      "notes_en": "Controlled shoulder mobility."
+     },
+     {
+      "exercise": "upper back stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Preparación suave de espalda alta.",
+      "notes_en": "Gentle upper-back preparation."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "bodyweight standing close-grip row",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "Sem 1-2: 3x10; Sem 3-4: 3x12 o 4x10. Codos cerca del torso.",
+      "notes_en": "Weeks 1-2: 3x10; weeks 3-4: 3x12 or 4x10. Elbows close to torso."
+     },
+     {
+      "exercise": "bodyweight squatting row (with towel)",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "Tracción horizontal con apoyo; pausa de 1 s.",
+      "notes_en": "Supported horizontal pull; 1-s pause."
+     },
+     {
+      "exercise": "scapula dips",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 6,
+      "rest_seconds": 60,
+      "work_seconds": 35,
+      "notes_es": "Movimiento escapular puro, sin flexionar codos.",
+      "notes_en": "Pure scapular movement, no elbow bend."
+     },
+     {
+      "exercise": "push-up plus",
+      "sets": 3,
+      "reps": "8-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 35,
+      "notes_es": "Protracción y retracción escapular; énfasis en serrato.",
+      "notes_en": "Scapular protraction and retraction; serratus emphasis."
+     },
+     {
+      "exercise": "bench dip on floor",
+      "sets": 3,
+      "reps": "8-12",
+      "rpe": 7,
+      "rest_seconds": 90,
+      "work_seconds": 40,
+      "notes_es": "Rango cómodo para hombro; no descender más allá de lo controlable.",
+      "notes_en": "Comfortable shoulder range; do not descend beyond control."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "back pec stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Apertura de pecho y hombro anterior.",
+      "notes_en": "Chest and front-shoulder opening."
+     },
+     {
+      "exercise": "overhead triceps stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento de tríceps y hombro.",
+      "notes_en": "Triceps and shoulder stretch."
+     },
+     {
+      "exercise": "chest and front of shoulder stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Relajación final de pecho y hombro.",
+      "notes_en": "Final chest and shoulder relaxation."
+     }
+    ],
+    "finisher": [],
+    "cardio": [],
+    "rationale_es": "Sesión de tracción con accesorios de hombro y pecho. Se mantiene la simetría semanal empuje-tracción y se refuerza la salud escapular con volumen moderado.",
+    "rationale_en": "Pulling session with shoulder and chest accessories. Weekly push-pull balance is maintained and scapular health is reinforced with moderate volume.",
+    "science_refs": [
+     "Overcoming Gravity, ch. 6: Weight-Lifting Backgrounds Moving to Bodyweight Training",
+     "Overcoming Gravity, ch. 18: Trained Beginner Routine",
+     "Overcoming Gravity, ch. 5: Fewer Exercises, Better Practice"
+    ]
+   },
+   "session_example_when_training": {
+    "title_es": "Tracción + accesorios de hombro y pecho",
+    "title_en": "Pulling + shoulder and chest accessories",
+    "warmup": [
+     {
+      "exercise": "bodyweight standing row (with towel)",
+      "duration_seconds": 40,
+      "rest_seconds": 10,
+      "work_seconds": 40,
+      "notes_es": "Activación ligera de tracción, sin fatigarse.",
+      "notes_en": "Light pulling activation without fatigue."
+     },
+     {
+      "exercise": "standing archer",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Activación de hombro y escápula.",
+      "notes_en": "Shoulder and scapular activation."
+     },
+     {
+      "exercise": "swing 360",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Movilidad controlada de hombro.",
+      "notes_en": "Controlled shoulder mobility."
+     },
+     {
+      "exercise": "upper back stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 10,
+      "work_seconds": 30,
+      "notes_es": "Preparación suave de espalda alta.",
+      "notes_en": "Gentle upper-back preparation."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "bodyweight standing close-grip row",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "Sem 1-2: 3x10; Sem 3-4: 3x12 o 4x10. Codos cerca del torso.",
+      "notes_en": "Weeks 1-2: 3x10; weeks 3-4: 3x12 or 4x10. Elbows close to torso."
+     },
+     {
+      "exercise": "bodyweight squatting row (with towel)",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 40,
+      "notes_es": "Tracción horizontal con apoyo; pausa de 1 s.",
+      "notes_en": "Supported horizontal pull; 1-s pause."
+     },
+     {
+      "exercise": "scapula dips",
+      "sets": 3,
+      "reps": "10-12",
+      "rpe": 6,
+      "rest_seconds": 60,
+      "work_seconds": 35,
+      "notes_es": "Movimiento escapular puro, sin flexionar codos.",
+      "notes_en": "Pure scapular movement, no elbow bend."
+     },
+     {
+      "exercise": "push-up plus",
+      "sets": 3,
+      "reps": "8-12",
+      "rpe": 7,
+      "rest_seconds": 75,
+      "work_seconds": 35,
+      "notes_es": "Protracción y retracción escapular; énfasis en serrato.",
+      "notes_en": "Scapular protraction and retraction; serratus emphasis."
+     },
+     {
+      "exercise": "bench dip on floor",
+      "sets": 3,
+      "reps": "8-12",
+      "rpe": 7,
+      "rest_seconds": 90,
+      "work_seconds": 40,
+      "notes_es": "Rango cómodo para hombro; no descender más allá de lo controlable.",
+      "notes_en": "Comfortable shoulder range; do not descend beyond control."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "back pec stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Apertura de pecho y hombro anterior.",
+      "notes_en": "Chest and front-shoulder opening."
+     },
+     {
+      "exercise": "overhead triceps stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Estiramiento de tríceps y hombro.",
+      "notes_en": "Triceps and shoulder stretch."
+     },
+     {
+      "exercise": "chest and front of shoulder stretch",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "Relajación final de pecho y hombro.",
+      "notes_en": "Final chest and shoulder relaxation."
+     }
+    ],
+    "finisher": [],
+    "cardio": [],
+    "rationale_es": "Sesión de tracción con accesorios de hombro y pecho. Se mantiene la simetría semanal empuje-tracción y se refuerza la salud escapular con volumen moderado.",
+    "rationale_en": "Pulling session with shoulder and chest accessories. Weekly push-pull balance is maintained and scapular health is reinforced with moderate volume.",
+    "science_refs": [
+     "Overcoming Gravity, ch. 6: Weight-Lifting Backgrounds Moving to Bodyweight Training",
+     "Overcoming Gravity, ch. 18: Trained Beginner Routine",
+     "Overcoming Gravity, ch. 5: Fewer Exercises, Better Practice"
+    ]
+   }
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  }
+ ],
+ "rationale_es": "Fase 1 de 3 para atleta avanzado sin material. Se asumen 3 días de entrenamiento semanales porque no se especificó days_per_week. La base combina empuje, tracción y pierna-core, con volumen extra para pecho y hombros y tracción horizontal suficiente para mantener el equilibrio. La progresión intrameso se expresa en repeticiones y series, manteniendo los mismos ejercicios durante las 4 semanas. El cardio es moderado y solo dentro de la sesión.",
+ "rationale_en": "Phase 1 of 3 for an advanced bodyweight athlete with no equipment. Three weekly training days are assumed because days_per_week was not specified. The foundation combines push, pull, and leg-core work, with extra chest and shoulder volume and enough horizontal pulling to maintain balance. Intra-mesocycle progression is expressed through reps and sets while keeping the same exercises for all 4 weeks. Cardio is moderate and only inside sessions.",
+ "science_refs": [
+  "Overcoming Gravity, ch. 6: Weight-Lifting Backgrounds Moving to Bodyweight Training",
+  "Overcoming Gravity, ch. 18: Trained Beginner Routine",
+  "Overcoming Gravity, ch. 5: Bodyweight Progression Without Weights",
+  "Overcoming Gravity, ch. 5: Fewer Exercises, Better Practice",
+  "Principio de sobrecarga en calistenia sin pesos",
+  "Adaptaciones neuromusculares en calistenia"
+ ],
+ "generated_at": "2026-11-22T03:15:00.000Z"
+}

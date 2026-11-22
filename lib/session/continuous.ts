@@ -126,19 +126,6 @@ export function tick(state: ContinuousState, timeline: Segment[], now: number): 
   };
 }
 
-export interface ContinuousSnapshot {
-  version: 1;
-  state: ContinuousState;
-}
-
-export function toSnapshot(state: ContinuousState): ContinuousSnapshot {
-  return { version: 1, state: { ...state } };
-}
-
-export function fromSnapshot(snapshot: ContinuousSnapshot): ContinuousState {
-  return { ...snapshot.state };
-}
-
 function freeze(state: ContinuousState, now: number, running: boolean): ContinuousState {
   const remaining = state.running
     ? state.remaining - (now - state.updatedAt) / 1000

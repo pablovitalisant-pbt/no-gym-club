@@ -11,7 +11,8 @@ import ContinuousPlayer from '@/components/session/ContinuousPlayer';
 import ContinuousSummary from '@/components/session/ContinuousSummary';
 import type { SessionData } from '@/lib/types/session';
 import { flattenSession, type SessionSection } from '@/lib/session/flatten';
-import { startOptions } from '@/lib/session/continuous-view';
+import { startOptions, resumeRunnerState } from '@/lib/session/continuous-view';
+import { buildTimeline } from '@/lib/session/continuous';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playBeep } from '@/lib/audio';
 import { useAudioPreference } from '@/lib/useAudioPreference';
@@ -19,6 +20,7 @@ import {
   saveSnapshot,
   loadSnapshot,
   clearSnapshot,
+  loadContinuousSnapshot,
 } from '@/lib/session/runner-persistence';
 
 type RunnerState =
@@ -213,6 +215,16 @@ export default function SessionRunner({
         }
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Reanudar el modo de corrido tras recargar (el snapshot continuo solo lo leía
+  // useContinuousPlayer, que no se monta si el runner queda en 'idle').
+  useEffect(() => {
+    if (!continuousEnabled) return;
+    const snapshot = loadContinuousSnapshot(sessionId);
+    if (!snapshot) return;
+    setState(resumeRunnerState(snapshot, buildTimeline(allExercises), Date.now()));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -770,6 +782,7 @@ export default function SessionRunner({
             onSaved={() => {
               setTimeout(() => {
                 router.push('/dashboard');
+                router.refresh();
               }, 1500);
             }}
           />

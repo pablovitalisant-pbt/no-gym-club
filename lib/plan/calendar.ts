@@ -54,7 +54,7 @@ export function buildCalendar(
   });
 }
 
-/** Lee ?day=N; null si falta, no es entero o cae fuera de 0-83. */
+/** Lee ?day=N; null si falta, no es entero o cae fuera del rango 0..TOTAL_DAYS-1. */
 export function parseDayParam(raw: string | undefined | null): number | null {
   if (raw == null || raw === '') return null;
   const n = Number(raw);

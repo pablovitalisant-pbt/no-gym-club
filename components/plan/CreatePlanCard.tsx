@@ -6,7 +6,7 @@ import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { Sparkles } from 'lucide-react';
 
-export default function CreatePlanCard({ locale, phaseIndex = 0 }: { locale: string; phaseIndex?: number }) {
+export default function CreatePlanCard({ phaseIndex = 0 }: { phaseIndex?: number }) {
   const t = useTranslations('dashboard.plan');
   const router = useRouter();
   const sending = useRef(false);
@@ -22,7 +22,7 @@ export default function CreatePlanCard({ locale, phaseIndex = 0 }: { locale: str
       const res = await fetch('/api/generate-phase', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ phase_index: phaseIndex, locale }),
+        body: JSON.stringify({ phase_index: phaseIndex }),
       });
       if (!res.ok) {
         setError(true);

@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { buildPhasePrompt } from '@/lib/prompts/build-phase-prompt';
+import { buildPhasePrompt, TRAINING_DAY_EXAMPLE } from '@/lib/prompts/build-phase-prompt';
+import { validatePhase } from '@/lib/plan/validate-phase';
 
 const extremeProfile = {
   age: 52,
@@ -127,6 +128,26 @@ describe('build-phase-prompt — reglas obligatorias', () => {
     expect(system).toContain('science_refs');
     expect(system).toContain('generated_at');
     expect(system.toLowerCase()).toContain('json');
+  });
+
+  it('no pide session_example_when_training y el ejemplo de entrenamiento valida', () => {
+    const { system, user } = build();
+    expect(system).not.toContain('session_example_when_training');
+    expect(user).not.toContain('session_example_when_training');
+    expect(system).toContain(JSON.stringify(TRAINING_DAY_EXAMPLE, null, 2));
+
+    const rest = { type: 'rest', label_es: 'Descanso', label_en: 'Rest', session: null };
+    const result = validatePhase({
+      index: 0,
+      name_es: 'Fase',
+      name_en: 'Phase',
+      week_template: [TRAINING_DAY_EXAMPLE, rest, rest, rest, rest, rest, rest],
+      rationale_es: '',
+      rationale_en: '',
+      science_refs: [],
+      generated_at: '2026-11-22T00:00:00.000Z',
+    });
+    expect(result.ok).toBe(true);
   });
 
   it('incluye perfil, assessment, nivel, fase, corpus y catalogo en el user prompt', () => {

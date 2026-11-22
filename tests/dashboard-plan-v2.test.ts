@@ -75,6 +75,11 @@ describe('Slice v2-06a — dashboard con plan v2', () => {
     expect(src).toContain("t('createHint')");
   });
 
+  it('CreatePlanCard no envia locale en el body de generate-phase', () => {
+    const src = read(resolve(planDir, 'CreatePlanCard.tsx'));
+    expect(src).not.toContain('locale');
+  });
+
   it('keys i18n plan simetricas ES/EN', () => {
     const es = JSON.parse(read(resolve(root, 'messages/es.json')));
     const en = JSON.parse(read(resolve(root, 'messages/en.json')));

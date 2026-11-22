@@ -1,0 +1,439 @@
+{
+ "index": 0,
+ "name_es": "Fase 1 — Base y adaptación anatómica",
+ "name_en": "Phase 1 — Foundation & Anatomical Adaptation",
+ "week_template": [
+  {
+   "type": "full",
+   "label_es": "Cuerpo completo — Sesión A",
+   "label_en": "Full Body — Session A",
+   "session": {
+    "title_es": "Cuerpo completo base: empuje, tracción y piernas con apoyo",
+    "title_en": "Full-body foundation: push, pull and supported legs",
+    "warmup": [
+     {
+      "exercise": "ankle circles",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Sentado o de pie, círculos suaves en ambos tobillos. Sin dolor ni crujidos fuertes.",
+      "notes_en": "Seated or standing, gentle circles in both ankles. No pain or hard clicking."
+     },
+     {
+      "exercise": "march sit (wall)",
+      "duration_seconds": 40,
+      "rest_seconds": 20,
+      "work_seconds": 40,
+      "notes_es": "Marcha suave apoyado en la pared para subir el pulso sin impacto en las rodillas.",
+      "notes_en": "Gentle marching against the wall to raise the pulse without knee impact."
+     },
+     {
+      "exercise": "elevator",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Movilidad de escápulas y hombros lenta y controlada, rango cómodo.",
+      "notes_en": "Slow, controlled scapular and shoulder mobility within a comfortable range."
+     },
+     {
+      "exercise": "standing pelvic tilt",
+      "duration_seconds": 40,
+      "rest_seconds": 20,
+      "work_seconds": 40,
+      "notes_es": "Toma conciencia de la pelvis neutra antes de entrenar; costillas abajo, respiración tranquila.",
+      "notes_en": "Find a neutral pelvis before training; ribs down, calm breathing."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "push-up (wall)",
+      "sets": 2,
+      "reps": "5-8",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Variante probada en la evaluación (pared), nunca más difícil en esta fase. Semanas 1-2: 2×5 con pausa de 1 s abajo. Semanas 3-4: 2×8 solo si el cuerpo se mantiene en línea. Manos a la altura de los hombros, puños o antebrazo si las muñecas molestan.",
+      "notes_en": "Tested variant (wall) — never harder in this phase. Weeks 1-2: 2×5 with a 1 s pause at the bottom. Weeks 3-4: 2×8 only if the body stays in line. Hands at shoulder height, fists or forearms if the wrists complain."
+     },
+     {
+      "exercise": "bodyweight standing row (with towel)",
+      "sets": 2,
+      "reps": "8-10",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Tracción de pie con toalla, sin colgarse (sin dominadas). Semanas 1-2: 2×8 con codos pegados al cuerpo. Semanas 3-4: 2×10 apretando 2 s arriba. Equilibra el volumen de empuje y protege los hombros.",
+      "notes_en": "Standing towel row, no hanging (no pull-ups). Weeks 1-2: 2×8 with elbows close to the body. Weeks 3-4: 2×10 squeezing 2 s at the top. Balances pushing volume and protects the shoulders."
+     },
+     {
+      "exercise": "potty squat with support",
+      "sets": 2,
+      "reps": "6-8",
+      "rpe": 6,
+      "rest_seconds": 120,
+      "work_seconds": 40,
+      "notes_es": "Sentarse en una silla y levantarse con apoyo de manos en la pared o en la silla. Rango parcial: muslos por encima de la horizontal, sin bajar profundo (limitación de rodillas). Semanas 1-2: 2×6. Semanas 3-4: 2×8 usando menos ayuda de las manos.",
+      "notes_en": "Sit down to a chair and stand using hands on the wall or chair for support. Partial range: thighs above horizontal, no deep squat (knee limitation). Weeks 1-2: 2×6. Weeks 3-4: 2×8 using less hand assistance."
+     },
+     {
+      "exercise": "low glute bridge on floor",
+      "sets": 2,
+      "reps": "8-10",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Empuje de cadera sin arquear la zona lumbar: costillas abajo y glúteo activo. Movimiento de extensión de cadera, nunca flexión cargada de columna. Semanas 1-2: 2×8. Semanas 3-4: 2×10 con 2 s de pausa arriba.",
+      "notes_en": "Hip extension without arching the lower back: ribs down, glutes working. Hip extension only, never loaded spinal flexion. Weeks 1-2: 2×8. Weeks 3-4: 2×10 with a 2 s pause at the top."
+     },
+     {
+      "exercise": "bodyweight incline side plank",
+      "sets": 1,
+      "reps": "10-15 s por lado",
+      "rpe": 6,
+      "rest_seconds": 60,
+      "work_seconds": 20,
+      "notes_es": "Manos apoyadas en la pared o en una superficie elevada, costados firmes y cadera alineada; de rodillas solo si las rodillas lo toleran bien. Semanas 1-2: 10 s por lado. Semanas 3-4: 15 s por lado.",
+      "notes_en": "Hands on the wall or an elevated surface, ribs stacked and hips aligned; from the knees only if the knees tolerate it well. Weeks 1-2: 10 s per side. Weeks 3-4: 15 s per side."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "calf stretch with hands against wall",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "30 s por pierna, estiramiento suave sin rebotes; respiración lenta.",
+      "notes_en": "30 s per leg, gentle stretch without bouncing; slow breathing."
+     },
+     {
+      "exercise": "seated lower back stretch",
+      "duration_seconds": 40,
+      "rest_seconds": 0,
+      "work_seconds": 40,
+      "notes_es": "Estiramiento relajado de espalda baja y glúteos; sin forzar ni buscar rango doloroso.",
+      "notes_en": "Relaxed lower-back and glute stretch; do not force or chase a painful range."
+     }
+    ],
+    "finisher": [],
+    "cardio": [
+     {
+      "exercise": "walking",
+      "duration_seconds": 420,
+      "rest_seconds": 0,
+      "work_seconds": 420,
+      "notes_es": "Caminata ligera de 5-8 min al final, ritmo de conversación (RPE 3-4). Nunca por encima de tu condición actual; la evaluación fue de 8 min, así que empieza por 5 min en la semana 1 y llega a 8 min en la semana 4.",
+      "notes_en": "Light 5-8 min walk at the end, conversational pace (RPE 3-4). Never above your current condition; the assessment was 8 min, so start with 5 min in week 1 and build to 8 min by week 4."
+     }
+    ],
+    "rationale_es": "Sesión de cuerpo completo, sencilla y repetible, pensada para un principiante absoluto de 52 años con sobrepeso y limitaciones de rodillas y espalda baja. Volumen bajo (1-2 series por ejercicio), RPE 6-7 y descansos largos (90-120 s) para que el tejido conectivo se adapte antes que la motivación. El empuje se queda en la variante de pared evaluada (5 repeticiones) y la tracción se hace de pie con toalla, sin colgarse. La sentadilla se sustituye por sentarse-levantarse con apoyo y rango parcial (sin saltos, sin sentadilla profunda) y la cadena posterior trabaja con puente de glúteo, un movimiento de extensión de cadera que no carga la columna en flexión. El trabajo de core es anti-extensión/lateral suave, seguro para la zona lumbar.",
+    "rationale_en": "Simple, repeatable full-body session for a 52-year-old absolute beginner with excess bodyweight and knee and lower-back limitations. Low volume (1-2 sets per exercise), RPE 6-7 and long rests (90-120 s) so connective tissue adapts at the same pace as motivation. Pushing stays at the assessed wall variant (5 reps) and pulling is a standing towel row with no hanging. Squatting is replaced by supported sit-to-stand in a partial range (no jumps, no deep squat) and the posterior chain works through a glute bridge, a hip-extension drill that does not load the spine in flexion. Core work is gentle anti-extension/lateral work, safe for the lower back.",
+    "science_refs": [
+     "Low, Overcoming Gravity ch. 6 — Programming for the Purely Sedentary Beginner",
+     "Low, Overcoming Gravity ch. 17 — Sample Untrained Beginner Full-Body Routine",
+     "Low, Overcoming Gravity ch. 6 — Older Adults: Warm-Up, Mobility, and Recovery"
+    ]
+   },
+   "session_example_when_training": null
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  },
+  {
+   "type": "full",
+   "label_es": "Cuerpo completo — Sesión B",
+   "label_en": "Full Body — Session B",
+   "session": {
+    "title_es": "Cuerpo completo base: misma estructura, técnica más limpia",
+    "title_en": "Full-body foundation: same structure, cleaner technique",
+    "warmup": [
+     {
+      "exercise": "ankle circles",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Círculos suaves, tobillo relajado, sin buscar rango máximo.",
+      "notes_en": "Gentle circles, relaxed ankle, no chasing maximum range."
+     },
+     {
+      "exercise": "march sit (wall)",
+      "duration_seconds": 40,
+      "rest_seconds": 20,
+      "work_seconds": 40,
+      "notes_es": "Marcha apoyado en la pared; respiración continua, sin impacto.",
+      "notes_en": "Marching against the wall; continuous breathing, no impact."
+     },
+     {
+      "exercise": "elevator",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Hombros arriba y abajo con control; sin encogerse con fuerza.",
+      "notes_en": "Shoulders up and down with control; no forceful shrugging."
+     },
+     {
+      "exercise": "standing pelvic tilt",
+      "duration_seconds": 40,
+      "rest_seconds": 20,
+      "work_seconds": 40,
+      "notes_es": "Activa el abdomen suave para proteger la zona lumbar antes de las series.",
+      "notes_en": "Gently brace the abdomen to protect the lower back before the sets."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "push-up (wall)",
+      "sets": 2,
+      "reps": "5-8",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Misma variante de pared que la evaluación. Semanas 1-2: 2×5. Semanas 3-4: 2×8 con cuerpo en línea y codos a 45°. Si aparece dolor de hombro o muñeca, repite el nivel anterior.",
+      "notes_en": "Same wall variant as the assessment. Weeks 1-2: 2×5. Weeks 3-4: 2×8 with the body in line and elbows at 45°. If shoulder or wrist pain appears, repeat the previous level."
+     },
+     {
+      "exercise": "bodyweight standing row (with towel)",
+      "sets": 2,
+      "reps": "8-10",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Aprieta escápulas al final de cada repetición. Semanas 1-2: 2×8. Semanas 3-4: 2×10. Mismo número de series que el empuje para mantener el equilibrio.",
+      "notes_en": "Squeeze the shoulder blades at the end of each rep. Weeks 1-2: 2×8. Weeks 3-4: 2×10. Same number of sets as pushing to keep the balance."
+     },
+     {
+      "exercise": "potty squat with support",
+      "sets": 2,
+      "reps": "6-8",
+      "rpe": 6,
+      "rest_seconds": 120,
+      "work_seconds": 40,
+      "notes_es": "Sentarse-levantarse con apoyo, rango parcial y rodillas alineadas con los pies. Semanas 1-2: 2×6. Semanas 3-4: 2×8 bajando un poco más solo si no hay dolor de rodilla.",
+      "notes_en": "Supported sit-to-stand, partial range with knees tracking over the feet. Weeks 1-2: 2×6. Weeks 3-4: 2×8 going slightly lower only if there is no knee pain."
+     },
+     {
+      "exercise": "low glute bridge on floor",
+      "sets": 2,
+      "reps": "8-10",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Empuje desde los talones, sin arquear la lumbar. Semanas 1-2: 2×8. Semanas 3-4: 2×10 con pausa de 2 s.",
+      "notes_en": "Push through the heels without arching the lower back. Weeks 1-2: 2×8. Weeks 3-4: 2×10 with a 2 s pause."
+     },
+     {
+      "exercise": "bodyweight incline side plank",
+      "sets": 1,
+      "reps": "10-15 s por lado",
+      "rpe": 6,
+      "rest_seconds": 60,
+      "work_seconds": 20,
+      "notes_es": "Costado firme y cadera alineada; apoya las manos altas para reducir la exigencia. Semanas 1-2: 10 s. Semanas 3-4: 15 s.",
+      "notes_en": "Firm side and aligned hips; place the hands high to reduce the demand. Weeks 1-2: 10 s. Weeks 3-4: 15 s."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "calf stretch with hands against wall",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "30 s por pierna, sin rebotes, respirando lento.",
+      "notes_en": "30 s per leg, no bouncing, breathing slowly."
+     },
+     {
+      "exercise": "seated lower back stretch",
+      "duration_seconds": 40,
+      "rest_seconds": 0,
+      "work_seconds": 40,
+      "notes_es": "Relaja la espalda baja sin buscar rango máximo; termina con respiración tranquila.",
+      "notes_en": "Relax the lower back without seeking maximum range; finish with calm breathing."
+     }
+    ],
+    "finisher": [],
+    "cardio": [
+     {
+      "exercise": "walking",
+      "duration_seconds": 420,
+      "rest_seconds": 0,
+      "work_seconds": 420,
+      "notes_es": "Caminata ligera 5-8 min, ritmo de conversación. Progresa solo si las articulaciones están tranquilas al día siguiente.",
+      "notes_en": "Light 5-8 min walk at conversational pace. Progress only if the joints feel calm the next day."
+     }
+    ],
+    "rationale_es": "La segunda sesión semanal repite exactamente el mismo patrón para favorecer el aprendizaje motor: el principiante absoluto mejora la técnica repitiendo, no variando. Se mantienen 1-2 series por ejercicio, RPE 6-7 y descansos de 90-120 s. La progresión dentro de la fase se expresa en repeticiones y segundos, nunca cambiando de ejercicio ni añadiendo saltos, sentadilla profunda o flexión cargada de columna.",
+    "rationale_en": "The second weekly session repeats the exact same pattern to drive motor learning: an absolute beginner improves technique through repetition, not variety. Sets stay at 1-2 per exercise, RPE 6-7 and 90-120 s rests. Progression within the phase is expressed in reps and seconds, never by swapping exercises or adding jumps, deep squats or loaded spinal flexion.",
+    "science_refs": [
+     "Low, Overcoming Gravity ch. 6 — Programming for the Purely Sedentary Beginner",
+     "Low, Overcoming Gravity ch. 17 — Sample Untrained Beginner Full-Body Routine"
+    ]
+   },
+   "session_example_when_training": null
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  },
+  {
+   "type": "full",
+   "label_es": "Cuerpo completo — Sesión C",
+   "label_en": "Full Body — Session C",
+   "session": {
+    "title_es": "Cuerpo completo base: cierre de semana con la mejor técnica",
+    "title_en": "Full-body foundation: end of week with the best technique",
+    "warmup": [
+     {
+      "exercise": "ankle circles",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Movilidad de tobillo tranquila, sin dolor.",
+      "notes_en": "Calm ankle mobility, no pain."
+     },
+     {
+      "exercise": "march sit (wall)",
+      "duration_seconds": 40,
+      "rest_seconds": 20,
+      "work_seconds": 40,
+      "notes_es": "Marcha suave apoyado; si hay fatiga acumulada, mantén un ritmo más lento.",
+      "notes_en": "Gentle supported marching; if fatigue has accumulated, keep a slower rhythm."
+     },
+     {
+      "exercise": "elevator",
+      "duration_seconds": 30,
+      "rest_seconds": 15,
+      "work_seconds": 30,
+      "notes_es": "Movilidad de hombros y escápulas, rango cómodo.",
+      "notes_en": "Shoulder and scapular mobility within a comfortable range."
+     },
+     {
+      "exercise": "standing pelvic tilt",
+      "duration_seconds": 40,
+      "rest_seconds": 20,
+      "work_seconds": 40,
+      "notes_es": "Encuentra la pelvis neutra y respira; es la base de toda la sesión.",
+      "notes_en": "Find the neutral pelvis and breathe; this is the base of the whole session."
+     }
+    ],
+    "main": [
+     {
+      "exercise": "push-up (wall)",
+      "sets": 2,
+      "reps": "5-8",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Misma variante de pared. Semanas 1-2: 2×5. Semanas 3-4: 2×8. Si la técnica se rompe, vuelve a 5 repeticiones: repetir el nivel es un éxito en esta fase.",
+      "notes_en": "Same wall variant. Weeks 1-2: 2×5. Weeks 3-4: 2×8. If technique breaks down, return to 5 reps: repeating the level is a success in this phase."
+     },
+     {
+      "exercise": "bodyweight standing row (with towel)",
+      "sets": 2,
+      "reps": "8-10",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Tracción controlada, sin tirones. Semanas 1-2: 2×8. Semanas 3-4: 2×10 con pausa de 1-2 s arriba.",
+      "notes_en": "Controlled pull, no jerking. Weeks 1-2: 2×8. Weeks 3-4: 2×10 with a 1-2 s pause at the top."
+     },
+     {
+      "exercise": "potty squat with support",
+      "sets": 2,
+      "reps": "6-8",
+      "rpe": 6,
+      "rest_seconds": 120,
+      "work_seconds": 40,
+      "notes_es": "Sentarse-levantarse con apoyo, rango parcial, sin bajar a dolor de rodilla. Semanas 1-2: 2×6. Semanas 3-4: 2×8.",
+      "notes_en": "Supported sit-to-stand, partial range, never descending into knee pain. Weeks 1-2: 2×6. Weeks 3-4: 2×8."
+     },
+     {
+      "exercise": "low glute bridge on floor",
+      "sets": 2,
+      "reps": "8-10",
+      "rpe": 6,
+      "rest_seconds": 90,
+      "work_seconds": 30,
+      "notes_es": "Extensión de cadera limpia, sin compensar con la lumbar. Semanas 1-2: 2×8. Semanas 3-4: 2×10.",
+      "notes_en": "Clean hip extension without compensating with the lower back. Weeks 1-2: 2×8. Weeks 3-4: 2×10."
+     },
+     {
+      "exercise": "bodyweight incline side plank",
+      "sets": 1,
+      "reps": "10-15 s por lado",
+      "rpe": 6,
+      "rest_seconds": 60,
+      "work_seconds": 20,
+      "notes_es": "Mantén el costado firme sin hundir la cadera. Semanas 1-2: 10 s por lado. Semanas 3-4: 15 s por lado.",
+      "notes_en": "Keep the side firm without letting the hip sag. Weeks 1-2: 10 s per side. Weeks 3-4: 15 s per side."
+     }
+    ],
+    "cooldown": [
+     {
+      "exercise": "calf stretch with hands against wall",
+      "duration_seconds": 30,
+      "rest_seconds": 0,
+      "work_seconds": 30,
+      "notes_es": "30 s por pierna, estiramiento cómodo y respiración lenta.",
+      "notes_en": "30 s per leg, comfortable stretch and slow breathing."
+     },
+     {
+      "exercise": "seated lower back stretch",
+      "duration_seconds": 40,
+      "rest_seconds": 0,
+      "work_seconds": 40,
+      "notes_es": "Cierre relajado para la espalda baja; sin forzar el rango.",
+      "notes_en": "Relaxed lower-back finish; do not force the range."
+     }
+    ],
+    "finisher": [],
+    "cardio": [
+     {
+      "exercise": "walking",
+      "duration_seconds": 420,
+      "rest_seconds": 0,
+      "work_seconds": 420,
+      "notes_es": "Caminata ligera de 5-8 min para cerrar la semana. Mantén el ritmo de conversación y no añadas intensidad: el objetivo es acumular minutos fáciles.",
+      "notes_en": "Light 5-8 min walk to close the week. Keep the conversational pace and add no intensity: the goal is accumulating easy minutes."
+     }
+    ],
+    "rationale_es": "Tercera y última sesión de la semana con la misma selección de ejercicios, lo que consolida el patrón y permite comparar la técnica entre sesiones. Se respeta el nivel evaluado (flexión de pared, sentarse-levantarse con apoyo) y se evita cualquier progresión más difícil dentro de la fase 1. El descanso de 48 h entre sesiones protege rodillas y espalda baja, y la caminata ligera mantiene la base cardiovascular sin superar la condición actual.",
+    "rationale_en": "Third and final session of the week with the same exercise selection, consolidating the pattern and allowing technique comparison between sessions. The assessed level is respected (wall push-up, supported sit-to-stand) and no harder progression is introduced inside phase 1. The 48 h between sessions protects knees and lower back, and the light walk maintains the cardiovascular base without exceeding the current condition.",
+    "science_refs": [
+     "Low, Overcoming Gravity ch. 6 — The Previously Athletic Sedentary Trainee (restraint in the first weeks)",
+     "Low, Overcoming Gravity ch. 6 — Older Adults: Warm-Up, Mobility, and Recovery",
+     "Progresión segura para principiantes absolutos (safety_screening)"
+    ]
+   },
+   "session_example_when_training": null
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  },
+  {
+   "type": "rest",
+   "label_es": "Descanso",
+   "label_en": "Rest",
+   "session": null,
+   "session_example_when_training": null
+  }
+ ],
+ "rationale_es": "Fase 1 de 3 para un principiante absoluto de 52 años, 118 kg, sin historial de entrenamiento y con limitaciones de rodillas y espalda baja. El objetivo no es ganar fuerza rápida sino crear una adaptación anatómica: 3 sesiones de cuerpo completo, 1-2 series por ejercicio, RPE 6-7 y descansos de 90-120 s. Se usa una sola variante por patrón durante las 4 semanas (flexión de pared evaluada, tracción de pie con toalla, sentarse-levantarse con apoyo, puente de glúteo y plancha lateral inclinada) y la progresión se expresa únicamente en repeticiones o segundos en las notas. Se eliminan saltos, burpees, sentadilla profunda, colgadas y cualquier flexión cargada de columna. El cardio es caminata ligera de 5-8 min al final de cada sesión, dentro de la sesión y nunca en días de descanso, respetando la preferencia por intensidad ligera y los 8 min de la evaluación.",
+ "rationale_en": "Phase 1 of 3 for a 52-year-old absolute beginner, 118 kg, no training history, with knee and lower-back limitations. The goal is not fast strength gain but anatomical adaptation: 3 full-body sessions, 1-2 sets per exercise, RPE 6-7 and 90-120 s rests. A single variant per pattern is used for all 4 weeks (the assessed wall push-up, standing towel row, supported sit-to-stand, glute bridge and incline side plank) and progression is expressed only in reps or seconds in the notes. Jumps, burpees, deep squats, hanging and any loaded spinal flexion are excluded. Cardio is a light 5-8 min walk at the end of each session, inside the session and never on rest days, respecting the light-intensity preference and the 8 min walking assessment.",
+ "science_refs": [
+  "Low, Overcoming Gravity ch. 6 — Programming for the Purely Sedentary Beginner",
+  "Low, Overcoming Gravity ch. 17 — Sample Untrained Beginner Full-Body Routine",
+  "Low, Overcoming Gravity ch. 6 — Older Adults: Warm-Up, Mobility, and Recovery",
+  "Progresión segura para principiantes absolutos (safety_screening)"
+ ],
+ "generated_at": "2025-01-01T00:00:00Z"
+}

@@ -11,6 +11,7 @@ const h = vi.hoisted(() => ({
   deepseekCalls: [] as { messages: { role: string; content: string }[]; options: unknown }[],
   rpcCalls: [] as { name: string; args: Record<string, unknown> }[],
   embeddingCalls: 0,
+  embeddingError: null as Error | null,
 }));
 
 vi.mock('@/lib/supabase/server', () => {
@@ -96,6 +97,7 @@ vi.mock('@/lib/deepseek/client', () => ({
 
 vi.mock('@/lib/nvidia/client', () => ({
   getEmbedding: async () => {
+    if (h.embeddingError) throw h.embeddingError;
     h.embeddingCalls += 1;
     return [0.1, 0.2, 0.3];
   },
@@ -192,6 +194,7 @@ beforeEach(() => {
   h.deepseekCalls.length = 0;
   h.rpcCalls.length = 0;
   h.embeddingCalls = 0;
+  h.embeddingError = null;
 });
 
 describe('POST /api/generate-phase', () => {
@@ -251,6 +254,18 @@ describe('POST /api/generate-phase', () => {
     expect(res.status).toBe(502);
     expect(h.deepseekCalls).toHaveLength(2);
     expect(h.planUpdates).toHaveLength(0);
+  });
+
+  it('error interno devuelve mensaje generico y loguea el detalle', async () => {
+    h.embeddingError = new Error('detalle sensible de NVIDIA');
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const res = await POST(request());
+    expect(res.status).toBe(500);
+    const body = (await res.json()) as { error: string };
+    expect(body.error).toBe('Internal server error');
+    expect(JSON.stringify(body)).not.toContain('detalle sensible');
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 
   it('usa dos consultas RAG cuando el nivel es untrained_extreme', async () => {

@@ -209,7 +209,8 @@ describe('v2-05b — defaults y pool de fundamentos', () => {
     const prompt = firstPrompt();
     expect(prompt).toContain('Incline Push-Up');
     expect(prompt).toContain('Chair Squat');
-    expect(prompt.split('Wall Push-Up').length - 1).toBe(1);
+    // cuenta solo el catalogo: el ejemplo de PlanDay del schema tambien lo nombra
+    expect(prompt.split('- Wall Push-Up [').length - 1).toBe(1);
   });
 });
 

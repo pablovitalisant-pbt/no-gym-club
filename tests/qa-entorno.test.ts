@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { validateFixture } from '../.pbravot/qa-preparar.mjs';
 
 const root = resolve(__dirname, '..');
 
@@ -31,5 +32,37 @@ describe('entorno QA', () => {
     for (const route of ['landing', 'login', 'dashboard', 'assessment', 'exercises', 'progress', 'weekly-report']) {
       expect(sweep).toContain(route);
     }
+  });
+
+  it('los fixtures de fase 0 son fases reales validas', () => {
+    for (const file of ['fase0-extremo.json', 'fase0-intermedio.json']) {
+      const phase = JSON.parse(readFileSync(resolve(root, '.pbravot/fixtures', file), 'utf8'));
+      expect(() => validateFixture(phase, file)).not.toThrow();
+      expect(phase.week_template).toHaveLength(7);
+      expect(phase.week_template.filter((d: { type: string }) => d.type === 'rest').length).toBeGreaterThan(0);
+    }
+  });
+
+  it('rechaza una fase sin 7 dias o sin rest', () => {
+    expect(() => validateFixture({ index: 0, week_template: [] }, 'x')).toThrow();
+    expect(() =>
+      validateFixture({ index: 0, week_template: Array(7).fill({ type: 'full' }) }, 'x'),
+    ).toThrow();
+  });
+
+  it('siembra un plan activo para extremo e intermedio y ninguno para nuevo', () => {
+    const raw = readFileSync(resolve(root, '.pbravot/qa-preparar.mjs'), 'utf8');
+    expect(raw).toContain('fase0-extremo.json');
+    expect(raw).toContain('fase0-intermedio.json');
+    expect(raw).toContain("from('training_plans')");
+    expect(raw).toContain('version: 2');
+    expect(raw).toContain('total_weeks: 12');
+    expect(raw).toContain('phase_weeks: 4');
+    expect(raw).toContain('current_day_index: 0');
+    expect(raw).toContain('completed_day_indexes: []');
+    expect(raw).toContain('is_active: true');
+    expect(raw).toContain('untrained_extreme');
+    expect(raw).toContain("'intermediate'");
+    expect(raw.indexOf('validateFixture(')).toBeLessThan(raw.indexOf("from('training_plans')"));
   });
 });

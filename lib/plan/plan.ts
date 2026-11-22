@@ -43,10 +43,6 @@ export function completeDay(state: PlanState, idx: number): PlanState {
   };
 }
 
-export function isPhaseEnd(idx: number): boolean {
-  return idx === 27 || idx === 55 || idx === 83;
-}
-
 export function needsNextPhase(plan: PlanData, state: PlanState): boolean {
   const idx = state.current_day_index;
   if (idx < 0 || idx >= TOTAL_DAYS) return false;
