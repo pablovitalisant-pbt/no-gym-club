@@ -25,9 +25,10 @@ Diseño: fondo #0a0a0a, superficies #111/#1a1a1a, acento #e8570a, texto #f5f5f5/
 
 ## Estado (2026-11-22 01:45)
 
-- **v2 completo en `main` local, sin push** (último commit: ver `git log`). Backlog PRD §10.6 ítems 1–10 hechos; 11 (videos) pendiente.
+- **v2 en producción (https://no-gym-club.vercel.app, deploy f126321, 2026-11-22)** (último commit: ver `git log`). Backlog PRD §10.6 ítems 1–10 hechos; 11 (videos) pendiente.
 - Migraciones 0010–0012 aplicadas en Supabase (proyecto `jvfwnddijgwgokmjagpi`, vía conector Supabase). Corpus: 50 + 38 (Overcoming Gravity). Embeddings: `nvidia/nemotron-3.5-embed-1b` 1024d (Bug #9).
 - QA Fase E (Codex) con excepción de base compartida (Opción A): assessment, plan (crear/navegar/completar/calendario/sesión) y modo de corrido en PASA tras fixes. QA-REGISTRO sin pendientes abiertos.
 - Ponytail audit 2026-11-22: contador 0. Diferidos: borrar pipeline v1 (generate-session, build-session-prompt, flag ai_session_generation) DESPUÉS del release; refactor session-runner (780 L) y assessment-form; casts `as unknown as`; timezone del usuario (#16); trigger de integridad plan_id (#18); advisors Supabase (search_* SECURITY DEFINER ejecutables por anon, extensión vector en public, leaked password protection) — preexistentes.
-- **Release (Señal 3) pendiente de UAT de Pablo.** Flags a encender en `config/feature-flags.json` para el release: `training_plan_v2`, `plan_session_runner`, `continuous_session_mode`, `phase_generation_evidence_adjustment`. Sin variables de entorno nuevas. Luego push a main (Vercel despliega) y humo de producción.
+- Release hecho con aprobación de Pablo (02:07, sin UAT local: app sin usuarios reales). Pendiente: configurar humoProd en qa-entorno.json para qa-prod.ps1. Flags a encender en `config/feature-flags.json` para el release: `training_plan_v2`, `plan_session_runner`, `continuous_session_mode`, `phase_generation_evidence_adjustment`. Sin variables de entorno nuevas. Luego push a main (Vercel despliega) y humo de producción.
 - Cuentas QA: `qa.extremo@nogym.test`, `qa.intermedio@nogym.test`, `qa.nuevo@nogym.test` (contraseñas en `_dt\qa\cuentas.json`, se regeneran con `qa-preparar`).
+
