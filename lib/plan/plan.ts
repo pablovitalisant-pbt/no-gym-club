@@ -1,6 +1,9 @@
 import type { PlanData, PlanDay } from '../types/plan';
 
 export const TOTAL_DAYS = 84;
+// validatePhase exige al menos 1 dia rest por semana; nunca se generan 7 dias
+// de entrenamiento seguidos (recuperacion).
+export const MAX_TRAINING_DAYS = 6;
 const DAYS_PER_WEEK = 7;
 const DAYS_PER_PHASE = 28;
 

@@ -1,4 +1,5 @@
 import type { PlanDay, PlanPhase } from '@/lib/types/plan';
+import { MAX_TRAINING_DAYS } from '@/lib/plan/plan';
 import type { StartLevel } from '@/lib/assessment/level';
 import type { PushupVariant } from '@/lib/assessment/validate';
 
@@ -122,7 +123,7 @@ const SYSTEM_HEAD = `You are a street workout coach for No Gym Club. You design 
 Rules:
 - Output ONLY valid JSON. No markdown, no commentary outside the JSON.
 - week_template must contain exactly 7 days (7-day template) repeated identically for all 4 weeks of the phase.
-- Training days = the athlete's available_days_per_week; every other day must be "rest" with "session": null.
+- Training days = the athlete's available_days_per_week, capped at ${MAX_TRAINING_DAYS}; every other day must be "rest" with "session": null. There is always at least 1 full rest day per week for recovery (a 7-day request becomes 6 training days + 1 rest day).
 - Use the same exercises for the whole phase. Progression inside the phase is expressed through reps/sets/time in notes_es and notes_en; never swap exercises between weeks.
 - Phase 1 (index 0) builds the foundation; phases 2 and 3 progress from the previous phase and its training log.
 - Every exercise MUST include work_seconds (circuit mode) and rest_seconds.
@@ -150,6 +151,8 @@ function focusRule(areas: string[] | null): string {
 }
 
 function formatProfile(p: PhaseProfile): string {
+  const requestedDays = p.available_days_per_week;
+  const trainingDays = Math.min(requestedDays, MAX_TRAINING_DAYS);
   return [
     `- Age: ${p.age ?? 'unknown'}`,
     `- Weight: ${p.weight_kg ?? 'unknown'} kg`,
@@ -160,7 +163,11 @@ function formatProfile(p: PhaseProfile): string {
     `- Cardio preference: ${p.cardio_preference ?? 'none'}`,
     `- Focus areas: ${(p.focus_areas ?? []).join(', ') || 'balanced'}`,
     p.focus_notes ? `- Focus notes: ${p.focus_notes}` : '',
-    `- Days/week: ${p.available_days_per_week}`,
+    `- Days/week: ${trainingDays}${
+      requestedDays > MAX_TRAINING_DAYS
+        ? ` (requested ${requestedDays}; ${requestedDays - trainingDays} day reserved for full rest and recovery — mention this in rationale_es and rationale_en)`
+        : ''
+    }`,
     `- Equipment: ${(p.available_equipment ?? []).join(', ') || 'bodyweight'}`,
   ]
     .filter(Boolean)

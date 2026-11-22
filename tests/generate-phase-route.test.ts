@@ -239,6 +239,16 @@ describe('POST /api/generate-phase', () => {
     expect(body.phase.index).toBe(0);
   });
 
+  it('recorta 7 dias/semana a 6 en el prompt enviado a DeepSeek', async () => {
+    h.profile = { ...baseProfile, available_days_per_week: 7 };
+    h.deepseekResponses = [JSON.stringify(validPhase(0))];
+    const res = await POST(request());
+    expect(res.status).toBe(200);
+    const prompt = JSON.stringify(h.deepseekCalls[0].messages);
+    expect(prompt).toContain('Days/week: 6');
+    expect(prompt).toContain('requested 7');
+  });
+
   it('reintenta una vez enviando los errores de validacion y luego guarda', async () => {
     h.deepseekResponses = [JSON.stringify({ index: 0 }), JSON.stringify(validPhase(0))];
     const res = await POST(request());

@@ -72,3 +72,10 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Evidencia**: llamada directa a `/v1/embeddings` con el modelo → 410 "reached its end of life". NVIDIA había anunciado su deprecación para noviembre 2026. `GET /v1/models` + prueba de cada candidato: solo responden `nvidia/nemotron-3-embed-1b` (solo 2048d), `nvidia/nemotron-3.5-embed-1b` (acepta `dimensions: 1024`, query y passage) y `nvidia/nemotron-3.5-embed-8b` (4096d).
 - **Causa raíz**: modelo retirado por el proveedor; el código lo tiene fijo en `lib/nvidia/client.ts`.
 - **Solución**: (en curso, slice v2-bug9) migrar a `nvidia/nemotron-3.5-embed-1b` con `dimensions: 1024` (se mantiene `vector(1024)` e índices ivfflat), y re-embeber corpus y catálogo con el modelo nuevo (los vectores de modelos distintos no son comparables).
+
+## Bug #10: 'No pudimos crear el programa' con 7 dias por semana
+- **Fecha**: 2026-11-22
+- **Clasificacion**: B/E = logica de negocio, visible en produccion
+- **Evidencia**: mismo endpoint en prod con qa.intermedio (4 dias) 200 en 33 s; perfil de Pablo available_days_per_week=7. El prompt pedia dias de entrenamiento = dias disponibles (0 descansos) y validatePhase exige >=1 dia rest -> dos validaciones fallidas -> 502.
+- **Solucion**: MAX_TRAINING_DAYS=6 en lib/plan/plan.ts; el prompt usa min(dias,6) y explica el descanso en el rationale.
+

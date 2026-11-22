@@ -150,6 +150,15 @@ describe('build-phase-prompt — reglas obligatorias', () => {
     expect(result.ok).toBe(true);
   });
 
+  it('7 dias/semana se recortan a 6 de entrenamiento y siempre queda 1 dia rest', () => {
+    const { system, user } = build({
+      profile: { ...extremeProfile, available_days_per_week: 7 },
+    });
+    expect(user).toContain('Days/week: 6');
+    expect(user).toContain('requested 7');
+    expect(system.toLowerCase()).toContain('at least 1 full rest day');
+  });
+
   it('incluye perfil, assessment, nivel, fase, corpus y catalogo en el user prompt', () => {
     const { user } = build();
     expect(user).toContain('52');
