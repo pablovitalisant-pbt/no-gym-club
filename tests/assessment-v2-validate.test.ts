@@ -55,6 +55,16 @@ describe('validateProfileV2', () => {
     const r = validateProfileV2({ timezone: 42 });
     expect(r.ok).toBe(false);
   });
+
+  it('acepta limitations_notes de hasta 300 caracteres', () => {
+    const r = validateProfileV2({ limitations_notes: 'a'.repeat(300) });
+    expect(r.ok).toBe(true);
+  });
+
+  it('rechaza limitations_notes de 301 caracteres', () => {
+    const r = validateProfileV2({ limitations_notes: 'a'.repeat(301) });
+    expect(r.ok).toBe(false);
+  });
 });
 
 describe('validateTestResultsV2', () => {

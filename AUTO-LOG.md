@@ -25,3 +25,4 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 | 2026-11-22 | QA Fase E plan v2 (Codex, flags training_plan_v2+plan_session_runner+phase_generation) | codex | QA-01,03,04,05,06 PASA (generacion real en UI, puntero, calendario, sesion completa con RPE); QA-02 FALLA descartada: caso mal escrito por el DT (7 avances, no 8) | - | hook pre-commit instalado |
 | 2026-11-22 | v2-09a modo de corrido: timeline + motor por timestamps | deep (USD 1.09) | 497 tests, build 0 | (este commit) | flag continuous_session_mode |
 | 2026-11-22 | v2-09b modo de corrido UI (ContinuousPlayer, resumen con reps opcionales) | deep (USD 1.97) | 507 tests, build 0 | (este commit) | ~510 lineas (excede 200) |
+| 2026-11-22 | v2-10 limpieza (410 en generate-session con v2, 6 flags sin uso eliminados, fuera logs BUG8/Bug3, limitations_notes<=300) | deep (USD 1.59) | 511 tests, build 0 | (este commit) | |

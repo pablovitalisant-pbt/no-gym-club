@@ -121,8 +121,12 @@ export function validateProfileV2(input: unknown): Result<ProfileV2> {
   }
 
   const rawNotes = src.limitations_notes;
-  if (rawNotes !== undefined && rawNotes !== null && typeof rawNotes !== 'string') {
-    return { ok: false, error: 'limitations_notes must be text' };
+  if (
+    rawNotes !== undefined &&
+    rawNotes !== null &&
+    (typeof rawNotes !== 'string' || rawNotes.length > 300)
+  ) {
+    return { ok: false, error: 'limitations_notes must be text up to 300 chars' };
   }
 
   const rawCardio = src.cardio_preference ?? 'none';
