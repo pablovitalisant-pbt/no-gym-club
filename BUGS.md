@@ -64,3 +64,11 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Solución**: se migró de la API paginada `oss.exercisedb.dev` (cursor roto) al dataset estático `https://github.com/hasaneyldrm/exercises-dataset` — 1,324 ejercicios en un solo archivo JSON, licencia MIT. Nuevo script `scripts/import-exercises-dataset.ts` que lee el JSON completo en un fetch, filtra equipment = "body weight" (325 ejercicios), dedup por `name_en` contra la DB actual, e inserta los nuevos.
 - **Nota de traducción**: el dataset no tiene `name_es` — solo `name` en inglés. Las filas nuevas usan `name_es = name_en`, mismo comportamiento que las 11 filas sin traducir del catálogo actual. Las instrucciones sí están traducidas al español en `instruction_steps.es` (array de pasos), que se inserta en `instructions_es`.
 - **Nota de imágenes**: las filas nuevas no tienen `gif_url` ni `image_url` — quedan en `null` hasta el futuro sourcing de imágenes.
+
+## Bug #9: Embeddings NVIDIA caídos — modelo `nvidia/nv-embedqa-e5-v5` retirado
+- **Fecha**: 2026-11-21
+- **Clasificación**: C = Integración externa (NVIDIA NIM)
+- **Síntoma**: `seed-corpus-og.ts --apply` → 38/38 errores `NVIDIA API error: 410 Gone`. Afecta también a producción: `getEmbedding()` falla, por lo que `search_corpus`/`search_exercises` (RAG) no funcionan.
+- **Evidencia**: llamada directa a `/v1/embeddings` con el modelo → 410 "reached its end of life". NVIDIA había anunciado su deprecación para noviembre 2026. `GET /v1/models` + prueba de cada candidato: solo responden `nvidia/nemotron-3-embed-1b` (solo 2048d), `nvidia/nemotron-3.5-embed-1b` (acepta `dimensions: 1024`, query y passage) y `nvidia/nemotron-3.5-embed-8b` (4096d).
+- **Causa raíz**: modelo retirado por el proveedor; el código lo tiene fijo en `lib/nvidia/client.ts`.
+- **Solución**: (en curso, slice v2-bug9) migrar a `nvidia/nemotron-3.5-embed-1b` con `dimensions: 1024` (se mantiene `vector(1024)` e índices ivfflat), y re-embeber corpus y catálogo con el modelo nuevo (los vectores de modelos distintos no son comparables).

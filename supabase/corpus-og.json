@@ -1,0 +1,230 @@
+[
+  {
+    "title": "Intensity and Volume Are the Two Main Workout Levers (Low, Overcoming Gravity, ch. 5)",
+    "content": "For any single session, intensity and volume are the two dials that matter most. Intensity means how hard each repetition is: a harder progression, added external load, or a more demanding leverage. Volume is the total work: repetitions per set, sets per exercise, and exercises per session. Beginners should raise one dial at a time and keep the rest fixed long enough to see whether the body is adapting. A practical default is three sets of five to fifteen repetitions for the main movements, resting about three minutes between strength sets. When a set becomes comfortable at the top of the range, add repetitions first; when the top is reached across all sets, move to a harder variation. Changing everything at once makes it impossible to know what produced progress or what caused a flare-up.",
+    "category": "program_design",
+    "tags": ["intensity", "volume", "sets", "reps", "session structure"]
+  },
+  {
+    "title": "Bodyweight Progression Without Weights: Repetitions, Sets, and Exercises (Low, Overcoming Gravity, ch. 5)",
+    "content": "With barbells, the simplest way to apply progressive overload is to add a small amount of weight each workout. Bodyweight training rarely offers that option unless a vest or ankle weights are available. The equivalent levers are repetitions, sets, and occasionally total exercises. Start with three sets in the five-to-fifteen range and add one repetition at a time across workouts. Keep rest, tempo, and exercise choice stable while doing so, otherwise the comparison is meaningless. Adding weight is usually faster for strength than adding repetitions, so use a weighted vest or pulley when possible and stay in a five-to-fifteen repetition band. For a beginner, one extra repetition or one extra set is enough stimulation; adding whole new exercises is rarely necessary and often delays technical mastery.",
+    "category": "progressive_overload",
+    "tags": ["bodyweight", "progressive overload", "repetitions", "sets", "weight vest"]
+  },
+  {
+    "title": "Fewer Exercises, Better Practice (Low, Overcoming Gravity, ch. 5)",
+    "content": "New bodyweight movements demand coordination that most beginners have not developed. Learning many at once dilutes practice and slows each one down. A better rule is to choose a small number of pushing, pulling, and leg movements, and practice them until technique is consistent before adding anything else. Extra exercises also add two or three sets each, which can push total volume past what joints and connective tissue tolerate. More variety is not the same as more progress. If a session feels too easy, add repetitions or a set to an existing movement rather than a new exercise. Keep the routine short enough to repeat three times per week, and review exercise selection only after several weeks of consistent execution.",
+    "category": "program_design",
+    "tags": ["exercise selection", "practice", "beginner", "volume", "technique"]
+  },
+  {
+    "title": "Supercompensation and Recovery Between Sessions (Low, Overcoming Gravity, ch. 5)",
+    "content": "A hard session lowers performance for roughly twenty-four to forty-eight hours. With adequate sleep, food, and rest, the body rebounds above its previous level; this rebound is supercompensation. Training again before it happens stacks fatigue and eventually flattens progress. Beginners typically do well with forty-eight to seventy-two hours between full-body sessions, which is why three non-consecutive days per week is a common default. Signs that recovery is insufficient include falling repetitions, persistent soreness, poor sleep, and irritability. When they appear, reduce volume or add a rest day before changing the program. Hypertrophy adaptations continue for two to three days after training, so the next session does not need to be rushed. Recovery is part of the program, not time away from it.",
+    "category": "recovery",
+    "tags": ["supercompensation", "fatigue", "rest days", "sleep", "frequency"]
+  },
+  {
+    "title": "Repetition Ranges for Strength, Hypertrophy, and Endurance (Low, Overcoming Gravity, ch. 5)",
+    "content": "The repetition range shapes the adaptation. Strength is trained mostly with one to eight repetitions close to but not at failure, using about three minutes of rest. Hypertrophy responds best to roughly five to fifteen repetitions taken near failure, with one to three minutes of rest. Endurance work sits above fifteen to twenty repetitions with short rests of thirty to ninety seconds. These ranges overlap and are not absolute laws, but they give a practical starting point. Bodyweight beginners can use five to fifteen repetitions for both strength and muscle while they learn movements. As training advances, bias the range toward the current goal rather than trying to maximize everything simultaneously. A routine that mixes all three ranges without a clear priority usually produces mediocre results in each.",
+    "category": "hypertrophy",
+    "tags": ["rep ranges", "strength", "hypertrophy", "endurance", "rest times"]
+  },
+  {
+    "title": "Attribute Training and How Often Each Quality Can Be Trained (Low, Overcoming Gravity, ch. 5)",
+    "content": "Every exercise in a routine should serve an attribute: strength, hypertrophy, endurance, skill, mobility, flexibility, or rehabilitation. These attributes differ in how often they can be trained. High-intensity strength and hypertrophy work usually fits two to four sessions per week because it needs recovery. Mobility, easy flexibility, light skill practice, and recovery walks can be done almost daily if they leave you feeling better. Rehabilitation and prehabilitation are placed at the end of sessions or on off days. Once the categories are clear, the weekly schedule mostly organizes itself: demanding work gets spaced, low-intensity work fills the gaps. Avoid adding high-intensity work on rest days; it competes with recovery instead of supporting it.",
+    "category": "program_design",
+    "tags": ["attributes", "frequency", "mobility", "skill work", "recovery"]
+  },
+  {
+    "title": "The Basic Hierarchy of a Training Session (Low, Overcoming Gravity, ch. 5)",
+    "content": "A productive session follows a stable order. Begin with five to fifteen minutes of blood flow and joint mobility, including the wrists, shoulders, and hips. Next comes skill or technique work while the nervous system is fresh, such as handstand practice. Then perform power, isometric, or strength exercises, ordered from most demanding to least. Conditioning, endurance, or circuits follow strength work. Finish with prehabilitation, isolation work, flexibility, and a short cool-down with easy breathing. This sequence protects the quality of the most neurologically demanding work and places fatigue-producing work last. Not every category is required in every session; mobility or flexibility can move to rest days when time is short. The point is to keep the highest-priority attribute early and the lowest-priority fatigue late.",
+    "category": "program_design",
+    "tags": ["warm-up", "exercise order", "skill work", "strength", "cool-down"]
+  },
+  {
+    "title": "Programming for the Purely Sedentary Beginner (Low, Overcoming Gravity, ch. 6)",
+    "content": "People who have never exercised need a slower entry than almost any other group. Movement awareness is often poor, so technique matters more than load or progression. Start with easy variations and higher repetitions, roughly five to twenty per set, and accept that staying at the same level for several weeks is a success if alignment improves. Higher repetitions build blood flow and give connective tissue time to adapt, which high intensity does not. Progress only when the movement looks consistent and feels controlled. If range of motion or joint position is even slightly off, repeat the current level instead of advancing. A few months of patient repetition work usually produces a better foundation than rushing into harder variations.",
+    "category": "population",
+    "tags": ["sedentary", "beginner", "technique", "high reps", "progression"]
+  },
+  {
+    "title": "Training Considerations for Overweight and Obese Beginners (Low, Overcoming Gravity, ch. 6)",
+    "content": "Overweight and obese individuals benefit from treating exercise progression and weight management as separate tracks. Bodyweight movements load the joints substantially, so slower progression through the charts reduces the chance of overuse injury. Chronic low-grade inflammation can also slow recovery, making patience more important. Start with joint-friendly variations and higher repetitions, and prioritize consistent weekly sessions over rapid difficulty jumps. Diet and calorie control are part of the plan, not an afterthought, because lower body mass directly reduces joint stress during pushing, squatting, and pulling. Walking and low-impact cardio can be added on off days. If joint pain appears, reduce the offending movement rather than pushing through it, and consider professional guidance when other health conditions are present.",
+    "category": "population",
+    "tags": ["overweight", "obesity", "joint load", "weight loss", "slow progression"]
+  },
+  {
+    "title": "The Previously Athletic Sedentary Trainee (Low, Overcoming Gravity, ch. 6)",
+    "content": "Former athletes return with a strong work ethic and fast initial strength gains, which makes the first month the riskiest. Muscles and nerves recover quickly; tendons and connective tissue lag behind. Hold back for the first three to four weeks even if the work feels easy. Watch for twinges, aching, or localized discomfort around joints, and respond by dropping to an easier progression and using higher repetitions rather than pushing harder. Very intense early work can cause severe soreness and, in rare cases, dangerous muscle breakdown; brown urine or marked swelling requires urgent medical care. Once symptoms settle, rebuild gradually with twelve to fifteen repetitions before advancing. A little restraint early prevents months of tendon problems later.",
+    "category": "population",
+    "tags": ["returning athlete", "connective tissue", "tendons", "overuse", "restart"]
+  },
+  {
+    "title": "Older Adults: Warm-Up, Mobility, and Recovery (Low, Overcoming Gravity, ch. 6)",
+    "content": "Older trainees generally need more preparation and less total intensity. A useful warm-up guideline is ten minutes plus one quarter of your age, so a sixty-year-old warms up for about twenty-five minutes. Mobility and flexibility work may need to occupy more time than strength work, especially when long-standing limitations exist. Build movement quality and range of motion before adding load. A three-times-weekly full-body session may be too much for some older adults; splitting the same work across more days can improve recovery and reduce fatigue. Static stretching before training is usually avoided, but it can help when a position cannot otherwise be reached. Safety takes priority over performance. Medical conditions such as diabetes or hypertension warrant professional guidance before beginning.",
+    "category": "population",
+    "tags": ["older adults", "warm-up", "mobility", "recovery", "safety"]
+  },
+  {
+    "title": "Weight-Lifting Backgrounds Moving to Bodyweight Training (Low, Overcoming Gravity, ch. 6)",
+    "content": "People with at least six months of consistent weight training usually transfer well to bodyweight movements. Bent-arm pushing and pulling often come quickly. The exception is straight-arm work: planche, front lever, back lever, and straight-arm press handstands. Strength may arrive faster than the elbows and shoulders can tolerate, so progression should be slowed deliberately and monitored for aching, pinching, or stinging around the joints. Check for imbalances created by previous training. Pushing is normally slightly stronger than pulling, but a gap of more than one progression level suggests a weak link. Adding horizontal pulling is the usual correction for a pressing-dominant background. Keep the first months conservative and let connective tissue catch up with muscle.",
+    "category": "population",
+    "tags": ["weight training", "straight-arm", "elbows", "imbalance", "transition"]
+  },
+  {
+    "title": "Full-Body Routines Versus Splits for Beginners (Low, Overcoming Gravity, ch. 7)",
+    "content": "For beginners, a full-body routine performed two to three times per week is usually the fastest route to strength. Compound movements are trained more often, and the repeated practice improves recruitment and coordination. Split routines train each muscle group once or twice weekly; a full-body plan with the same number of sessions can train each pattern three times. Over a year, that difference compounds into many extra practices of the same skill. Hypertrophy results are similar when weekly volume per muscle group is matched, so the choice matters most for strength and skill. Splits become more useful for advanced trainees, for people with high sport-specific volumes, or when recovery limits full sessions. Isolation work is generally reserved for rehabilitation or elite-level refinement.",
+    "category": "program_design",
+    "tags": ["full body", "split routine", "frequency", "beginner", "hypertrophy"]
+  },
+  {
+    "title": "Three Full-Body Sessions per Week: Scheduling and Spacing (Low, Overcoming Gravity, ch. 7)",
+    "content": "Three full-body sessions per week give beginners a reliable balance of stimulus and recovery. A common pattern is Monday, Wednesday, and Friday, which leaves forty-eight hours between the first two sessions and seventy-two hours after the third. Other combinations such as Tuesday, Thursday, and Saturday work equally well. Choose the days you can actually keep for months, not the theoretically perfect ones. Sessions can also be arranged over a two-week cycle to fit shift work or family obligations. The key constraints are adequate spacing and at least two full rest days per week. If performance drops for several sessions, reduce volume or add a rest day rather than adding another workout. Consistency of schedule is more valuable than squeezing in extra sessions.",
+    "category": "program_design",
+    "tags": ["schedule", "frequency", "rest days", "full body", "consistency"]
+  },
+  {
+    "title": "Choosing Among the Four Main Split Templates (Low, Overcoming Gravity, ch. 7)",
+    "content": "There are four common split structures: push/pull, upper/lower, straight-arm/bent-arm, and push/pull/legs. Each can work, but the trade-off is frequency. Splitting reduces how often each movement pattern is practiced, which matters most for beginners and intermediate trainees chasing strength. Push/pull and upper/lower splits are the most practical options for bodyweight training because they keep related patterns together and allow reasonable recovery. Straight-arm/bent-arm splits suit athletes working isometrics alongside dynamic pulling and pressing. Push/pull/legs spreads frequency too thin for most non-advanced trainees. Choose a split only when schedule, sport demands, or recovery make full-body sessions impractical, and keep pushing and pulling volume balanced within the week.",
+    "category": "program_design",
+    "tags": ["split routine", "push pull", "upper lower", "frequency", "template"]
+  },
+  {
+    "title": "Linear Repetition Progression for Bodyweight Exercises (Low, Overcoming Gravity, ch. 10)",
+    "content": "Linear repetition progression is the simplest bodyweight method for beginners. Perform three sets at the same repetition count, then add one repetition to every set in the next workout: three sets of five become three sets of six, then seven. Continue until the top of the chosen range, usually fifteen repetitions, then move to a harder variation and reset to the bottom. The approach works because it applies progressive overload without equipment and keeps technique practice frequent. Progress each exercise independently; pushups may advance while dips stall, and that is normal. Keep rest and tempo stable so the comparison is honest. When several consecutive workouts produce no increase, switch to a slower method such as repetition addition rather than forcing the same jump.",
+    "category": "progressive_overload",
+    "tags": ["linear progression", "repetitions", "beginner", "bodyweight", "stalling"]
+  },
+  {
+    "title": "Repetition Addition When Linear Progression Stalls (Low, Overcoming Gravity, ch. 10)",
+    "content": "When linear repetition progression stalls, repetition addition spreads the same increase across several workouts. Instead of adding one repetition to all three sets at once, add it to one set at a time: five-five-five, then six-five-five, then six-six-five, then six-six-six. This bridges the gap for trainees who cannot yet complete the full jump while still providing a clear direction. It is especially useful for exercises that lag behind others in the same session. The method requires more patience but produces steadier progress and less form breakdown. Apply it per exercise, not across the whole routine, and keep rests consistent. Once all sets reach the target, continue with linear progression or move to the next variation.",
+    "category": "progressive_overload",
+    "tags": ["repetition addition", "stall", "sets", "progression", "patience"]
+  },
+  {
+    "title": "Using the Last Set to Failure as a Progression Gauge (Low, Overcoming Gravity, ch. 10)",
+    "content": "Last-set-to-failure progression keeps the first sets short of failure and lets only the final set reveal the current limit. A typical sequence is five-five-five, then five-five-six, then five-five-seven. If the last set can produce at least two more repetitions than the first, the trainee is usually ready to advance. The method doubles as a fatigue gauge and as a deload tool: early sets stay comfortable while the final set shows where capacity currently sits. Avoid taking every set to failure, because it raises fatigue and reduces quality on subsequent sets. Use this approach when simple linear progression has stalled or when you need a reliable read on readiness without testing a true maximum.",
+    "category": "rpe_autoregulation",
+    "tags": ["failure", "autoregulation", "fatigue", "progression", "last set"]
+  },
+  {
+    "title": "Additional Sets and Rest-Pause to Add Volume (Low, Overcoming Gravity, ch. 10)",
+    "content": "Two simple volume methods can restart stalled progress. The additional-set method adds one set at the same repetition count, for example moving from three sets of six to four sets of six. It is particularly useful for pulling movements, where extra volume often brings up the back and scapular muscles that lag behind pressing. Rest-pause keeps the set count but inserts a short break near the end: complete five, five, and four repetitions, rest twenty seconds, then perform one more. Shortening that rest over subsequent workouts turns the same work into a completed set. Both methods raise volume without changing exercise difficulty. Use one at a time, keep technique strict, and back off if joints begin to complain.",
+    "category": "progressive_overload",
+    "tags": ["additional set", "rest-pause", "volume", "pulling", "plateau"]
+  },
+  {
+    "title": "Bridging Progression Gaps with Weight or Assistance (Low, Overcoming Gravity, ch. 10)",
+    "content": "When the jump between two exercise variations is too large, external weight or assistance can bridge it. Adding a small amount of load to the easier variation builds strength and muscle without changing the movement pattern; removing the load later makes the next variation feel more manageable. Assistance works in the opposite direction: a band or pulley makes the harder variation possible immediately, and the assistance is reduced over time. Measured assistance is preferable because it can be logged and progressed. Bands and partner help are harder to quantify, which makes it difficult to know whether real progress occurred. Choose one bridge, keep it consistent for several weeks, and reduce it gradually rather than removing it abruptly.",
+    "category": "progressive_overload",
+    "tags": ["weighted calisthenics", "assistance", "pulley", "bands", "progression gap"]
+  },
+  {
+    "title": "Eccentric Repetitions as a Bridge to Harder Variations (Low, Overcoming Gravity, ch. 10)",
+    "content": "Eccentric repetitions lower the body slowly from a position that cannot yet be held or raised. They are especially effective for pulling progressions such as pull-ups and one-arm chin-up work. A practical target is three to five sets of three repetitions, starting with five- to six-second lowers and building toward ten seconds. When three ten-second eccentrics can be performed in sequence, a concentric repetition of the same movement is often possible. Reduce rest between eccentric sets as competence improves. Use eccentrics sparingly with beginners because they stress connective tissue, and avoid them when joints are already irritated. They are a bridge to a harder variation, not a permanent replacement for concentric work.",
+    "category": "progressive_overload",
+    "tags": ["eccentric", "negatives", "pull-ups", "connective tissue", "progression"]
+  },
+  {
+    "title": "Accumulation, Intensification, and Light-Heavy Periodization (Low, Overcoming Gravity, ch. 10)",
+    "content": "Two periodization models help intermediate trainees keep progressing. Accumulation and intensification alternate blocks: accumulation raises sets and repetitions while shortening rests, while intensification lowers volume and raises difficulty or load. A simple version alternates a hypertrophy week of eight to ten repetitions with a strength week of four to six. The light/heavy model applies the same idea within a week, alternating higher-repetition sessions with lower-repetition, higher-load sessions. Each style supports the other: added muscle improves strength potential, and added strength allows more repetitions at bodyweight. Choose light/heavy first because it is easier to manage, and reserve block-level accumulation for later. Change one or two variables at a time so the source of progress remains visible.",
+    "category": "periodization",
+    "tags": ["periodization", "accumulation", "intensification", "light heavy", "intermediate"]
+  },
+  {
+    "title": "Mesocycle Length and Structure (Low, Overcoming Gravity, ch. 12)",
+    "content": "A mesocycle is a training block of roughly four to eight weeks followed by a deload or recovery week. Its purpose is to give enough consistent practice for a specific set of exercises to produce adaptation, while creating a natural point to review progress. Beginners can often continue simple progression for several months, but a four- to eight-week block still helps organize expectations. Within the block, weekly microcycles can focus on preparation, hypertrophy, strength, or power. The end of the block is the time to test progress, change exercises if needed, and reduce fatigue. Longer blocks are not automatically better; if joints are sore or performance is declining, end the block early. Consistency within the block matters more than perfect planning.",
+    "category": "mesocycle",
+    "tags": ["mesocycle", "block", "microcycle", "deload", "planning"]
+  },
+  {
+    "title": "How to Deload Without Losing Adaptations (Low, Overcoming Gravity, ch. 12)",
+    "content": "A deload reduces training stress for about a week so accumulated fatigue can dissipate without losing adaptations. Complete rest is rarely necessary and often less effective than light activity. Common options are reducing frequency, cutting volume roughly in half, or dropping each exercise back one progression level. The last option doubles as prehabilitation because easier movements still train joints and connective tissue. A practical recovery week includes one or two sessions with one push, one pull, and one leg exercise, one or two sets each, stopping short of failure. The remaining days can be used for mobility, soft-tissue work, and easy walking. Deload when performance stalls, joints ache, sleep worsens, or a planned block ends. Return to normal training gradually.",
+    "category": "mesocycle",
+    "tags": ["deload", "recovery week", "volume", "frequency", "fatigue"]
+  },
+  {
+    "title": "Maximal Strength Testing After a Deload (Low, Overcoming Gravity, ch. 12)",
+    "content": "Testing maximal strength after a deload gives accurate numbers for the next block. Schedule the test near the end of the recovery week, with one easy day before the new cycle begins. Warm up thoroughly, perform five to eight easy repetitions of a lower progression, then a few repetitions of the variation being tested, and rest three to five minutes before the maximal effort. Test concentric, isometric, and eccentric work separately when relevant. The result reflects fitness after fatigue has cleared, which is more useful than a number taken while tired. Use the new values to set starting progressions and hold times, then retest only at the end of the next deload. Frequent maximal testing adds fatigue without adding information.",
+    "category": "rpe_autoregulation",
+    "tags": ["max testing", "deload", "strength test", "readiness", "mesocycle"]
+  },
+  {
+    "title": "When to Change Exercises and Training Goals (Low, Overcoming Gravity, ch. 12)",
+    "content": "Changing exercises too often prevents the repeated practice that strength depends on. Keep the same core movements for at least two or three mesocycles before judging progress. When a goal is reached, either maintain it with a small amount of low-volume work after the warm-up or replace it with a new goal. Maintenance requires far less volume than development, often a couple of short holds or sets per week. If a goal stalls because of a missing quality such as flexibility or compression, put it on hold and develop that quality before returning. Avoid rewriting the whole routine after a few weeks. Consistent practice of a few well-chosen movements produces more progress than constant novelty, especially at beginner and intermediate levels.",
+    "category": "mesocycle",
+    "tags": ["exercise selection", "goals", "maintenance", "consistency", "mesocycle"]
+  },
+  {
+    "title": "Ending a Beginner Cycle: Plateau or Planned Block (Low, Overcoming Gravity, ch. 12)",
+    "content": "A beginner mesocycle can end in two legitimate ways. The first is reaching a plateau, defined as about a week without progress in repetitions or difficulty across the main exercises. The second is completing a planned four- to eight-week block, which is preferable when joints or connective tissue are becoming sore. In the first case, a deload and a method change may be enough. In the second, use the recovery week to reassess exercises, mobility, and recovery habits. Beginners often make progress for months with simple linear methods, so do not end a block merely out of impatience. End it when progress stops or when the body signals that accumulated stress is outpacing adaptation. Then restart with an easier week before resuming.",
+    "category": "mesocycle",
+    "tags": ["plateau", "cycle", "deload", "beginner", "joint health"]
+  },
+  {
+    "title": "Energy Systems and How Long Cardio Must Last (Low, Overcoming Gravity, ch. 13)",
+    "content": "Cardiovascular endurance depends on how long an effort lasts. Very short efforts of roughly zero to ten seconds rely mainly on the phosphocreatine system. Efforts of about ten to seventy-five seconds rely heavily on glycolysis. Longer efforts rely increasingly on oxidative metabolism, with aerobic contribution rising steadily as duration increases. This means that training for endurance requires sessions substantially longer than four minutes; twenty minutes to an hour or more of sub-threshold work is a practical range. Short two- to five-minute circuits are useful for work capacity but do not fully develop aerobic capacity. Match the session length to the energy system you intend to train, and do not expect short high-intensity circuits to substitute for longer aerobic work.",
+    "category": "endurance",
+    "tags": ["energy systems", "aerobic", "anaerobic", "cardio", "duration"]
+  },
+  {
+    "title": "Endurance Methods: Accumulated Sets and Grease the Groove (Low, Overcoming Gravity, ch. 13)",
+    "content": "Endurance work tolerates more failure than strength work because it stresses energy systems more than the nervous system. A practical approach is to accumulate as many quality repetitions as possible across several sets, stopping short of failure on the early sets. For example, five sets of fifteen repetitions may produce more total work than three sets of eighteen. Grease-the-groove spreads submaximal sets through the day: perform about sixty to eighty percent of your maximum in several short sets, separated by an hour or two. For endurance, that percentage can rise to seventy-five to ninety. Ladders and pyramids are also effective. Track total repetitions rather than chasing a single exhausting set, and progress gradually.",
+    "category": "endurance",
+    "tags": ["endurance", "grease the groove", "sets", "total reps", "work capacity"]
+  },
+  {
+    "title": "Ladders and Pyramids for High-Volume Endurance (Low, Overcoming Gravity, ch. 13)",
+    "content": "Ladders and pyramids increase endurance volume without requiring a single maximal set. In a ladder, perform one repetition, rest until a fixed interval expires, then two repetitions, rest again, and continue upward until the target cannot be completed. The interval can be one minute or any other duration. Pyramids climb to a peak and then descend with decreasing repetitions, which adds even more total work. Both methods can use step sizes other than one, such as five, ten, fifteen. They are efficient because many submaximal sets accumulate quickly, but they can produce high local fatigue. Use them after strength work or on dedicated endurance days, monitor technique, and avoid adding them on top of an already high-volume week.",
+    "category": "endurance",
+    "tags": ["ladders", "pyramids", "volume", "endurance", "repetitions"]
+  },
+  {
+    "title": "Cross-Training: The 80/20 Split Between Sport and Conditioning (Low, Overcoming Gravity, ch. 13)",
+    "content": "Combining bodyweight strength training with another sport requires prioritization. For beginner and intermediate athletes, a useful guideline is roughly eighty percent of training time on sport-specific practice and twenty percent on strength and conditioning, mobility, and injury prevention. Within that twenty percent, most time goes to the primary attributes the sport demands. If sport practice already occurs five or more times per week, adding extensive strength work is usually unwise; skill practice may still fit. Strength training should develop general qualities rather than imitate sport movements. Two or three short full-body sessions can support sport performance when recovery allows. When in doubt, reduce extracurricular volume rather than adding more, and keep the coach informed.",
+    "category": "program_design",
+    "tags": ["cross-training", "80/20", "sport", "strength and conditioning", "recovery"]
+  },
+  {
+    "title": "Hybrid Templates Combining Weights and Bodyweight (Low, Overcoming Gravity, ch. 13)",
+    "content": "Hybrid templates combine bodyweight and weighted training. The simplest method is substitution: replace each barbell movement with a bodyweight equivalent in the same plane. A balanced full-body template has two upper-body pushes, two upper-body pulls, and one or two leg exercises, ideally one horizontal and one vertical movement in each upper-body pair. For example, a pushup or planche progression plus dips or handstand pushups; pull-ups plus rows or front lever work; squats or pistols plus a hamstring exercise. A second method is complementing, where a barbell lift and a bodyweight skill train together, such as bench press and planche. A third is supplementing, using weights to strengthen weak links in a bodyweight skill. Keep the weekly push-pull balance intact.",
+    "category": "program_design",
+    "tags": ["hybrid", "barbell", "bodyweight", "template", "substitution"]
+  },
+  {
+    "title": "Sample Untrained Beginner Full-Body Routine (Low, Overcoming Gravity, ch. 17)",
+    "content": "An untrained beginner needs a simple, repeatable full-body session. Warm up with easy blood-flow work, joint circles, and positions such as plank, side plank, hollow, and arch holds. Spend five to ten minutes on wall handstands as skill work, accepting short holds and long rests. Then perform three sets of five to fifteen repetitions of one push, one pull, one row, one squat, and one step-up variation, resting about three minutes between strength sets. Add an L-sit accumulation and a little compression work. Finish with wrist prehabilitation, easy flexibility, and relaxed breathing. Keep the session short enough to repeat three times weekly. At this stage, consistency and technique matter more than variety or advanced skills.",
+    "category": "program_design",
+    "tags": ["beginner routine", "warm-up", "full body", "template", "handstand"]
+  },
+  {
+    "title": "Untrained Beginner Progression and Expected Stalls (Low, Overcoming Gravity, ch. 17)",
+    "content": "Untrained beginners usually progress fastest with linear repetition progression: three sets of five become three sets of six, then seven, up to about fifteen before moving to a harder variation. Expect exercises to advance at different rates. If one stalls, keep progressing the others and switch only that exercise to repetition addition or another slower method. Stalls are normal and do not mean the whole program is wrong. When repetitions stop increasing for several sessions, check sleep, nutrition, and joint comfort before changing exercises. Progress in the first weeks can be rapid, but meaningful changes in strength and physique usually take three to four weeks. Stay with the same routine for at least four weeks before judging it.",
+    "category": "progressive_overload",
+    "tags": ["beginner", "linear progression", "stall", "patience", "routine"]
+  },
+  {
+    "title": "Consistency Beats Program Perfection (Low, Overcoming Gravity, ch. 17)",
+    "content": "Beginners often lose more progress to inconsistency and program hopping than to poor exercise selection. Searching for a perfect routine delays training; starting an imperfect plan and adjusting it produces faster results. Equally, changing the entire routine every two weeks prevents the repeated practice that drives adaptation. Choose a small set of exercises, run them for at least four weeks, and record repetitions so progress is visible. The best program is the one actually performed on a regular schedule. Minor details such as tempo or exercise order matter far less than showing up three times per week. Review the plan at the end of a block, not after every session, and change only what the evidence from your log supports.",
+    "category": "program_design",
+    "tags": ["consistency", "adherence", "program hopping", "habit", "beginner"]
+  },
+  {
+    "title": "Watching Connective Tissue in New Trainees (Low, Overcoming Gravity, ch. 17)",
+    "content": "Beginners often progress faster than their joints and connective tissue can tolerate. Muscle and coordination improve quickly, while tendons adapt more slowly. Warning signs include persistent aching, twinges, pinching, or soreness around wrists, elbows, shoulders, or knees. When these appear, reduce the offending exercise to an easier progression and use higher repetitions, roughly fifteen to twenty, without pushing to failure. Increase mobility and prehabilitation work for the area. If symptoms continue, stop the movement temporarily and seek professional advice. Do not train through sharp pain to preserve a streak. Progress that outruns tissue health is temporary; slowing down for a week or two usually prevents a much longer interruption.",
+    "category": "safety_screening",
+    "tags": ["connective tissue", "pain", "warning signs", "prehabilitation", "beginners"]
+  },
+  {
+    "title": "Trained Beginner Routine: Repetitions, Balance, and Frequency (Low, Overcoming Gravity, ch. 18)",
+    "content": "Trained beginners arrive with strength from weights or sport and often sit around levels two to six. Those at the lower end usually do better by repeating the untrained beginner progression. At levels five and six, a full-body routine three to four times per week still works well, though a split becomes reasonable when time or recovery demands it. Bring repetitions into the five-to-twelve range for strength and hypertrophy, with occasional fifteen-to-twenty work for connective tissue. Keep pushing and pulling exercises numerically equal, and add horizontal pulling when posture or pressing dominance suggests an imbalance. Limit the number of skill goals to two or three and keep straight-arm press work and L-sit progressions in the skill section. Consistency remains the dominant factor.",
+    "category": "program_design",
+    "tags": ["trained beginner", "full body", "push pull balance", "skill work", "reps"]
+  },
+  {
+    "title": "Intermediate Training: Diversified Goals and Split Routines (Low, Overcoming Gravity, ch. 19)",
+    "content": "Intermediate trainees have diversified needs. A single full-body routine becomes less effective, and training should reflect whether the goal is strength, hypertrophy, or endurance. Strength work typically moves toward three to eight repetitions with higher frequency, provided recovery and joints tolerate it. Hypertrophy stays around five to twelve repetitions and often benefits from splits. Endurance uses higher repetitions with lower strength volume. Push/pull, upper/lower, and straight-arm/bent-arm splits become practical, usually four sessions per week so each pattern is trained twice. Full-body sessions can still work at three to five times weekly when volume is manageable. Limit simultaneous goals, identify weak links, and use eccentrics, density work, or light/heavy alternation before moving to complex periodization.",
+    "category": "program_design",
+    "tags": ["intermediate", "split routine", "strength", "hypertrophy", "weak links"]
+  }
+]

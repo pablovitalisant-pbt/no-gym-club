@@ -126,6 +126,7 @@ Generar una sesión distinta cada día impide la sobrecarga progresiva: el usuar
 
 - Caso extremo obligatorio: persona de 50+ años, obesidad, nunca entrenó. El assessment debe capturar historial de entrenamiento (nunca / hace años / activo), limitaciones articulares o de salud declaradas, y capacidad real mediante tests con regresiones (push-up en pared/inclinada, sentarse-pararse de una silla, plancha en rodillas, caminata). Ningún test asume que el usuario puede hacer un push-up o una dominada.
 - El generador debe poder prescribir desde el nivel más bajo (regresiones extremas, caminata) hasta avanzado, apoyado en el corpus (población, principiante no entrenado).
+- **Meta particular (énfasis):** el assessment pregunta si el usuario quiere priorizar zonas o habilidades (p. ej. hombros y pecho, espalda, brazos, piernas/glúteos, core, o habilidades como dominada, handstand, muscle-up), más texto libre. El programa da más volumen a esas zonas sin romper el equilibrio estructural (empuje/tracción). Pedido de Pablo 2026-11-21.
 - **Cardio opcional:** el assessment pregunta si el usuario quiere cardio y con qué intensidad (ninguno / suave / moderado / intenso). El plan lo incluye según la respuesta, respetando la condición del usuario.
 
 ### 10.4 Modo "de corrido" (tipo Beachbody)
@@ -162,4 +163,5 @@ Un botón Play inicia la sesión completa y el cronómetro avanza solo: trabajo 
 | R5 | Usuario | semana 2 | abre un día equivalente de la semana 1 | ve los mismos ejercicios que la semana 1 (misma fase) | alto |
 | R6 | Usuario | fin de la fase 1 | completa el día 28 | se genera la fase 2 y la ve en el día 29 | alto |
 | R7 | Usuario | cardio elegido en assessment | ve sus días | el cardio aparece con la intensidad elegida; si eligió "ninguno", no aparece | medio |
+| R9 | Usuario | eligió énfasis hombros y pecho | ve su plan de fase 1 | los días de empuje tienen más series/ejercicios de hombro y pecho que el resto, y sigue habiendo tracción | medio |
 | R8 | Usuario | día con ejercicios | pulsa Play en modo de corrido | la sesión avanza sola trabajo→descanso→siguiente hasta el final; Pausa y Stop funcionan | alto |

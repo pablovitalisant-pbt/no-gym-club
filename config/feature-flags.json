@@ -3,11 +3,13 @@
   "auth": true,
   "dashboard": true,
   "assessment": true,
+  "assessment_v2_ui": false,
   "ai_session_generation": true,
   "session_log": true,
   "session_runner": true,
   "exercises_catalog": true,
   "calisthenics_catalog": false,
   "weekly_report": true,
-  "progress": true
+  "progress": true,
+  "corpus_overcoming_gravity": false
 }

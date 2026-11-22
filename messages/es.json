@@ -190,7 +190,14 @@
       "improve_endurance": "Mejorar resistencia",
       "master_skills": "Dominar habilidades",
       "general_fitness": "Acondicionamiento general",
-      "days": "Días disponibles por semana"
+      "days": "Días disponibles por semana",
+      "history": "Historial de entrenamiento",
+      "never": "Nunca entrené",
+      "neverSub": "Arranco desde cero",
+      "past": "Entrené hace tiempo",
+      "pastSub": "Estuve inactivo un tiempo",
+      "active": "Entreno actualmente",
+      "activeSub": "Vengo entrenando seguido"
     },
     "equipment": {
       "title": "Equipamiento disponible",
@@ -200,6 +207,31 @@
       "ground": "Suelo",
       "wall": "Muro / Pared",
       "dumbbell": "Mancuernas"
+    },
+    "health": {
+      "title": "Salud y limitaciones",
+      "hint": "Marcá las zonas con molestias o lesiones. Podés no marcar ninguna.",
+      "knees": "Rodillas",
+      "lower_back": "Zona lumbar",
+      "shoulders": "Hombros",
+      "wrists": "Muñecas",
+      "hips": "Caderas",
+      "other": "Otra",
+      "none": "Ninguna",
+      "notes": "Notas (opcional, máx. 300 caracteres)",
+      "notesPlaceholder": "Contanos algo más sobre tus limitaciones..."
+    },
+    "cardio": {
+      "title": "Cardio",
+      "hint": "¿Querés incluir cardio en tu programa?",
+      "none": "Ninguno",
+      "noneDesc": "Solo fuerza con peso corporal.",
+      "light": "Suave",
+      "lightDesc": "Caminatas o trote muy liviano.",
+      "moderate": "Moderado",
+      "moderateDesc": "Trote continuo o intervalos.",
+      "intense": "Intenso",
+      "intenseDesc": "HIIT o trabajo de alta intensidad."
     },
     "parq": {
       "title": "Cuestionario de seguridad (PAR-Q)",

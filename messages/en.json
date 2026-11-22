@@ -190,7 +190,14 @@
       "improve_endurance": "Improve endurance",
       "master_skills": "Master skills",
       "general_fitness": "General fitness",
-      "days": "Available days per week"
+      "days": "Available days per week",
+      "history": "Training history",
+      "never": "Never trained",
+      "neverSub": "Starting from scratch",
+      "past": "Trained a while ago",
+      "pastSub": "Been inactive for some time",
+      "active": "Currently training",
+      "activeSub": "Training regularly"
     },
     "equipment": {
       "title": "Available equipment",
@@ -200,6 +207,31 @@
       "ground": "Ground",
       "wall": "Wall",
       "dumbbell": "Dumbbells"
+    },
+    "health": {
+      "title": "Health & limitations",
+      "hint": "Select areas with pain or injuries. You can leave all unselected.",
+      "knees": "Knees",
+      "lower_back": "Lower back",
+      "shoulders": "Shoulders",
+      "wrists": "Wrists",
+      "hips": "Hips",
+      "other": "Other",
+      "none": "None",
+      "notes": "Notes (optional, max 300 characters)",
+      "notesPlaceholder": "Tell us more about your limitations..."
+    },
+    "cardio": {
+      "title": "Cardio",
+      "hint": "Do you want to include cardio in your program?",
+      "none": "None",
+      "noneDesc": "Bodyweight strength only.",
+      "light": "Light",
+      "lightDesc": "Walks or very easy jogging.",
+      "moderate": "Moderate",
+      "moderateDesc": "Steady jogging or intervals.",
+      "intense": "Intense",
+      "intenseDesc": "HIIT or high-intensity work."
     },
     "parq": {
       "title": "Safety Screening (PAR-Q)",
