@@ -9,6 +9,7 @@ import LogForm from '@/components/session/LogForm';
 import CircularTimer from '@/components/session/CircularTimer';
 import ContinuousPlayer from '@/components/session/ContinuousPlayer';
 import ContinuousSummary from '@/components/session/ContinuousSummary';
+import { greetingText } from '@/lib/settings/greeting';
 import type { SessionData } from '@/lib/types/session';
 import { displayExerciseName } from '@/lib/exercises/display-name';
 import { flattenSession, type SessionSection } from '@/lib/session/flatten';
@@ -48,10 +49,12 @@ export default function SessionRunner({
   sessionId,
   session,
   continuousEnabled = false,
+  displayName = null,
 }: {
   sessionId: string;
   session: SessionData;
   continuousEnabled?: boolean;
+  displayName?: string | null;
 }) {
   const t = useTranslations('session');
   const router = useRouter();
@@ -560,6 +563,7 @@ export default function SessionRunner({
         <ContinuousSummary
           sessionId={sessionId}
           exercises={allExercises}
+          displayName={displayName}
           onDone={() => setState('done')}
         />
       )}
@@ -775,7 +779,7 @@ export default function SessionRunner({
       {state === 'done' && (
         <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile space-y-6">
           <p className="font-headline-md text-headline-md text-green-500 uppercase">
-            {t('complete')}
+            {greetingText(t('completeGreeting'), displayName) ?? t('complete')}
           </p>
           <LogForm
             sessionId={sessionId}

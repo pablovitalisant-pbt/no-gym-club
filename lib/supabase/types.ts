@@ -11,6 +11,9 @@ export interface Database {
           id: string;
           username: string | null;
           full_name: string | null;
+          display_name: string | null;
+          avatar_url: string | null;
+          theme_preference: 'light' | 'dark' | 'system';
           age: number | null;
           weight_kg: number | null;
           height_cm: number | null;
@@ -41,6 +44,9 @@ export interface Database {
           id: string;
           username?: string | null;
           full_name?: string | null;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          theme_preference?: 'light' | 'dark' | 'system';
           age?: number | null;
           weight_kg?: number | null;
           height_cm?: number | null;
@@ -71,6 +77,9 @@ export interface Database {
           id?: string;
           username?: string | null;
           full_name?: string | null;
+          display_name?: string | null;
+          avatar_url?: string | null;
+          theme_preference?: 'light' | 'dark' | 'system';
           age?: number | null;
           weight_kg?: number | null;
           height_cm?: number | null;

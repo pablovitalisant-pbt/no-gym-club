@@ -17,5 +17,6 @@
   "plan_today_card": true,
   "redo_program_plan": true,
   "plan_generating_messages": true,
-  "theme_switcher": false
+  "theme_switcher": true,
+  "profile_settings": true
 }

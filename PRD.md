@@ -165,3 +165,27 @@ Un botón Play inicia la sesión completa y el cronómetro avanza solo: trabajo 
 | R7 | Usuario | cardio elegido en assessment | ve sus días | el cardio aparece con la intensidad elegida; si eligió "ninguno", no aparece | medio |
 | R9 | Usuario | eligió énfasis hombros y pecho | ve su plan de fase 1 | los días de empuje tienen más series/ejercicios de hombro y pecho que el resto, y sigue habiendo tracción | medio |
 | R8 | Usuario | día con ejercicios | pulsa Play en modo de corrido | la sesión avanza sola trabajo→descanso→siguiente hasta el final; Pausa y Stop funcionan | alto |
+
+---
+
+## 11. Configuración y comunidad (aprobado por Pablo 2026-11-22 09:54–09:57)
+
+### 11.1 Configuración personal
+Pantalla `/settings`: foto de perfil, nombre con el que la app saluda al usuario, tema (claro / oscuro / sistema), idioma, sonido, actualizar evaluación, rehacer programa, cerrar sesión.
+
+### 11.2 Comunidad — reglas aprobadas
+1. **Opt-in, apagado por defecto:** nadie aparece en "Cerca de ti" hasta activar su perfil público.
+2. **Ubicación aproximada, nunca exacta:** se muestra la comuna o una distancia redondeada ("a ~3 km"); la posición se guarda redondeada (nunca coordenadas exactas) y jamás se dibuja un punto en un mapa.
+3. **Solo mayores de 18** en la parte social (edad del perfil).
+4. **Chat solo entre conexiones aceptadas:** solicitud → aceptación → chat.
+5. **Bloquear y reportar** desde el primer día; un bloqueo oculta mutuamente perfiles, solicitudes y chat.
+6. **Perfil público mínimo y elegido por el usuario:** foto, nombre, nivel, meta, comuna y **descripción libre opcional** (pedido de Pablo; máx. 280 caracteres, reportable).
+7. **Etapas:** (1) perfil público + cercanos; (2) solicitudes + chat 1:1 (Supabase Realtime); (3) entrenamientos en pareja/grupo generados según el nivel de los participantes.
+
+| ID | Rol | Dado | Cuando | Entonces (lo que el usuario VE) | Riesgo |
+|----|-----|------|--------|-------------------------------|--------|
+| C1 | Usuario sin perfil público | — | abre "Cerca de ti" | una invitación a activar su perfil público; no ve a otros ni es visible | alto |
+| C2 | Usuario < 18 | perfil con edad < 18 | intenta activar perfil público | un aviso de que la comunidad es para mayores de 18; no puede activarlo | alto |
+| C3 | Usuario con perfil público | otros perfiles públicos cercanos | abre "Cerca de ti" | lista con foto, nombre, nivel, comuna/distancia aproximada; nunca coordenadas ni mapa | alto |
+| C4 | Usuario | ve un perfil | lo bloquea | ese perfil desaparece de su lista y él desaparece de la del otro | alto |
+| C5 | Usuario | no hay conexión aceptada | intenta chatear | solo ve "Enviar solicitud" | alto |

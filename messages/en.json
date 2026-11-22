@@ -7,7 +7,8 @@
     "dashboard": "Dashboard",
     "exercises": "Exercises",
     "progress": "Progress",
-    "report": "Report"
+    "report": "Report",
+    "settings": "Settings"
   },
   "landing": {
     "hero": "NO GYM CLUB",
@@ -50,6 +51,7 @@
   },
   "dashboard": {
     "fallback": "Dashboard — coming soon",
+    "greeting": "Hi, {name}",
     "generate": "Generate today's session",
     "generating": "Generating your session...",
     "idleHint": "Today's workout is waiting for you.",
@@ -259,6 +261,7 @@
     "side": "Side {n}",
     "restComplete": "Let's go!",
     "complete": "Session complete!",
+    "completeGreeting": "Great work, {name}!",
     "completeMessage": "Go back to the dashboard to log your RPE.",
     "backToDashboard": "Back to dashboard",
     "progress": "Exercise {current} of {total}",
@@ -282,6 +285,7 @@
     "stopConfirmYes": "Yes, end it",
     "cancel": "Cancel",
     "summaryTitle": "Session finished",
+    "summaryGreeting": "Great work, {name}!",
     "summaryIntro": "Log your reps (optional)",
     "saveReps": "Save reps",
     "omit": "Skip",
@@ -296,6 +300,9 @@
     "profile": {
       "title": "Your profile",
       "hint": "We need these parameters to calibrate your initial intensity and training volume.",
+      "displayName": "What should we call you?",
+      "displayNamePlaceholder": "Your name",
+      "displayNameHint": "Optional. We use it to greet you.",
       "age": "Age",
       "weight": "Weight (kg)",
       "height": "Height (cm)",
@@ -424,5 +431,34 @@
       "walk_20": "20–30 min",
       "walk_30": "30+ min"
     }
+  },
+  "settings": {
+    "title": "Settings",
+    "fallback": "Settings not available.",
+    "profileSection": "Profile",
+    "changePhoto": "Change photo",
+    "photoHint": "JPG or PNG, up to 1 MB.",
+    "nameLabel": "What should we call you?",
+    "namePlaceholder": "Your name",
+    "saveName": "Save name",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "nameError": "The name can't be longer than 40 characters.",
+    "imageError": "Choose an image up to 1 MB.",
+    "appearanceSection": "Appearance",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "languageSection": "Language",
+    "spanish": "Español",
+    "english": "English",
+    "soundSection": "Sound",
+    "soundOn": "On",
+    "soundOff": "Off",
+    "programSection": "Program",
+    "updateAssessment": "Update my assessment",
+    "accountSection": "Account",
+    "emailLabel": "Email",
+    "signOut": "Sign out"
   }
 }

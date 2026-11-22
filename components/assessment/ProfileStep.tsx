@@ -23,6 +23,8 @@ interface Props {
   setFocusAreas: (v: FocusArea[]) => void;
   focusNotes: string;
   setFocusNotes: (v: string) => void;
+  displayName?: string;
+  setDisplayName?: (v: string) => void;
   onNext: () => void;
 }
 
@@ -52,6 +54,22 @@ export function ProfileStep(p: Props) {
         </h2>
         <p className="font-body-md text-body-md text-on-surface-variant">{t('profile.hint')}</p>
       </header>
+
+      <div className="space-y-xs">
+        <label className="font-label-bold text-label-sm uppercase text-on-surface-variant block" htmlFor="display-name">
+          {t('profile.displayName')}
+        </label>
+        <input
+          id="display-name"
+          type="text"
+          maxLength={40}
+          value={p.displayName ?? ''}
+          onChange={(e) => p.setDisplayName?.(e.target.value)}
+          className={inputCls}
+          placeholder={t('profile.displayNamePlaceholder')}
+        />
+        <p className="text-label-sm text-on-surface-variant">{t('profile.displayNameHint')}</p>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter">
         <div className="space-y-xs">

@@ -36,6 +36,7 @@ export function AssessmentForm({ stepIndicator = true }: { stepIndicator?: boole
   const [trainingHistory, setTrainingHistory] = useState<TrainingHistory | null>(null);
   const [focusAreas, setFocusAreas] = useState<FocusArea[]>([]);
   const [focusNotes, setFocusNotes] = useState('');
+  const [displayName, setDisplayName] = useState('');
 
   // equipment
   const [equipment, setEquipment] = useState<string[]>(['bodyweight']);
@@ -83,6 +84,7 @@ export function AssessmentForm({ stepIndicator = true }: { stepIndicator?: boole
       cardio_preference: cardio,
       focus_areas: focusAreas,
       focus_notes: focusNotes.trim() || null,
+      display_name: displayName.trim() || null,
     });
 
     if (!result.success) {
@@ -145,6 +147,7 @@ export function AssessmentForm({ stepIndicator = true }: { stepIndicator?: boole
           trainingHistory={trainingHistory} setTrainingHistory={setTrainingHistory}
           focusAreas={focusAreas} setFocusAreas={setFocusAreas}
           focusNotes={focusNotes} setFocusNotes={setFocusNotes}
+          displayName={displayName} setDisplayName={setDisplayName}
           onNext={() => setStep('equipment')}
         />
       )}

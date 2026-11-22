@@ -15,6 +15,9 @@ create type skill_status as enum ('locked', 'in_progress', 'unlocked');
 create table profiles (
   id uuid primary key references auth.users(id) on delete cascade,
   username text unique, full_name text,
+  display_name text check (char_length(display_name) <= 40),
+  avatar_url text,
+  theme_preference text not null default 'dark' check (theme_preference in ('light','dark','system')),
   age integer check (age >= 10 and age <= 100),
   weight_kg numeric(5,2) check (weight_kg > 0),
   height_cm numeric(5,2) check (height_cm > 0),
@@ -226,3 +229,7 @@ begin
     limit match_count;
 end;
 $$;
+
+-- Storage: bucket de avatares (lectura pública, escritura en la carpeta del usuario)
+-- Aplicado en supabase/migrations/0013_profile_settings.sql
+-- insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true);

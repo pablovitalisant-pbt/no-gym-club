@@ -7,15 +7,17 @@ import type { FlatExercise } from '@/lib/session/flatten';
 import { repsTargets, initialRepInputs, buildRepEntries } from '@/lib/session/continuous-view';
 import { saveExerciseReps } from '@/app/[locale]/(session)/session/[id]/actions';
 import { displayExerciseName } from '@/lib/exercises/display-name';
+import { greetingText } from '@/lib/settings/greeting';
 
 interface Props {
   sessionId: string;
   exercises: FlatExercise[];
   onDone: () => void;
+  displayName?: string | null;
 }
 
 /** Pantalla final del modo de corrido: reps opcionales y luego el LogForm de RPE. */
-export default function ContinuousSummary({ sessionId, exercises, onDone }: Props) {
+export default function ContinuousSummary({ sessionId, exercises, onDone, displayName = null }: Props) {
   const t = useTranslations('session');
   const targets = repsTargets(exercises);
   const [inputs, setInputs] = useState(() => initialRepInputs(targets));
@@ -33,7 +35,7 @@ export default function ContinuousSummary({ sessionId, exercises, onDone }: Prop
   return (
     <div className="flex-grow flex flex-col items-center text-center px-margin-mobile py-10 space-y-md">
       <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-green-500 uppercase">
-        {t('summaryTitle')}
+        {greetingText(t('summaryGreeting'), displayName) ?? t('summaryTitle')}
       </h2>
       <p className="font-body-md text-body-md text-on-surface-variant">{t('summaryIntro')}</p>
 

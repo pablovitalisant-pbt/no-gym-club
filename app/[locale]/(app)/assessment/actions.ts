@@ -3,6 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { type Database } from '@/lib/supabase/types';
 import { validateProfileV2, profileRangeError } from '@/lib/assessment/validate';
+import { normalizeDisplayName } from '@/lib/settings/validate';
 import type {
   CardioPreference,
   FocusArea,
@@ -29,6 +30,7 @@ interface ProfileData {
   timezone?: string | null;
   focus_areas?: FocusArea[];
   focus_notes?: string | null;
+  display_name?: string | null;
 }
 
 export async function saveProfile(data: ProfileData) {
@@ -62,6 +64,11 @@ export async function saveProfile(data: ProfileData) {
     return { success: false, error: v2.error };
   }
 
+  const displayName = normalizeDisplayName(data.display_name);
+  if (!displayName.ok) {
+    return { success: false, error: 'display_name too long' };
+  }
+
   const hasV2 =
     data.training_history !== undefined ||
     data.health_limitations !== undefined ||
@@ -84,6 +91,7 @@ export async function saveProfile(data: ProfileData) {
     par_q_answered_at: new Date().toISOString(),
     // no pisar datos v2 existentes cuando el form legado no los manda
     ...(hasV2 ? v2.value : {}),
+    ...(data.display_name !== undefined ? { display_name: displayName.value } : {}),
   };
 
   const { error: insertError } = await supabase

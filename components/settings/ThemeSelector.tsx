@@ -1,14 +1,16 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { applyTheme, readTheme, type Theme } from '@/lib/theme';
 
-const OPTIONS: { value: Theme; label: string }[] = [
-  { value: 'light', label: 'Claro' },
-  { value: 'dark', label: 'Oscuro' },
-  { value: 'system', label: 'Sistema' },
+const OPTIONS: { value: Theme; key: string }[] = [
+  { value: 'light', key: 'themeLight' },
+  { value: 'dark', key: 'themeDark' },
+  { value: 'system', key: 'themeSystem' },
 ];
 
-export default function ThemeSelector() {
+export default function ThemeSelector({ onSelect }: { onSelect?: (theme: Theme) => void }) {
+  const t = useTranslations('settings');
   const [theme, setTheme] = useState<Theme>('dark');
 
   useEffect(() => {
@@ -24,11 +26,12 @@ export default function ThemeSelector() {
   function select(value: Theme) {
     setTheme(value);
     applyTheme(value);
+    onSelect?.(value);
   }
 
   return (
     <div role="group" aria-label="Tema" className="flex gap-xs">
-      {OPTIONS.map(({ value, label }) => (
+      {OPTIONS.map(({ value, key }) => (
         <button
           key={value}
           type="button"
@@ -40,7 +43,7 @@ export default function ThemeSelector() {
               : 'border-outline text-on-surface-variant'
           }`}
         >
-          {label}
+          {t(key)}
         </button>
       ))}
     </div>

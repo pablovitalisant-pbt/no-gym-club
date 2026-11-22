@@ -7,7 +7,8 @@
     "dashboard": "Dashboard",
     "exercises": "Ejercicios",
     "progress": "Progreso",
-    "report": "Reporte"
+    "report": "Reporte",
+    "settings": "Configuración"
   },
   "landing": {
     "hero": "NO GYM CLUB",
@@ -50,6 +51,7 @@
   },
   "dashboard": {
     "fallback": "Dashboard — próximamente",
+    "greeting": "Hola, {name}",
     "generate": "Generar sesión de hoy",
     "generating": "Generando tu sesión...",
     "idleHint": "Tu entrenamiento de hoy te está esperando.",
@@ -259,6 +261,7 @@
     "side": "Lado {n}",
     "restComplete": "¡A entrenar!",
     "complete": "¡Sesión completa!",
+    "completeGreeting": "¡Buen trabajo, {name}!",
     "completeMessage": "Vuelve al dashboard para registrar tu RPE.",
     "backToDashboard": "Volver al dashboard",
     "progress": "Ejercicio {current} de {total}",
@@ -282,6 +285,7 @@
     "stopConfirmYes": "Sí, terminar",
     "cancel": "Cancelar",
     "summaryTitle": "Sesión finalizada",
+    "summaryGreeting": "¡Buen trabajo, {name}!",
     "summaryIntro": "Registra tus reps (opcional)",
     "saveReps": "Guardar reps",
     "omit": "Omitir",
@@ -296,6 +300,9 @@
     "profile": {
       "title": "Tu perfil",
       "hint": "Necesitamos estos parámetros para calibrar tu intensidad inicial y volumen de entrenamiento.",
+      "displayName": "¿Cómo quieres que te llamemos?",
+      "displayNamePlaceholder": "Tu nombre",
+      "displayNameHint": "Opcional. Lo usamos para saludarte.",
       "age": "Edad",
       "weight": "Peso (kg)",
       "height": "Altura (cm)",
@@ -424,5 +431,34 @@
       "walk_20": "20–30 min",
       "walk_30": "30+ min"
     }
+  },
+  "settings": {
+    "title": "Configuración",
+    "fallback": "Configuración no disponible.",
+    "profileSection": "Perfil",
+    "changePhoto": "Cambiar foto",
+    "photoHint": "JPG o PNG, máximo 1 MB.",
+    "nameLabel": "¿Cómo quieres que te llamemos?",
+    "namePlaceholder": "Tu nombre",
+    "saveName": "Guardar nombre",
+    "saving": "Guardando...",
+    "saved": "Guardado",
+    "nameError": "El nombre no puede pasar de 40 caracteres.",
+    "imageError": "Elige una imagen de máximo 1 MB.",
+    "appearanceSection": "Apariencia",
+    "themeLight": "Claro",
+    "themeDark": "Oscuro",
+    "themeSystem": "Sistema",
+    "languageSection": "Idioma",
+    "spanish": "Español",
+    "english": "English",
+    "soundSection": "Sonido",
+    "soundOn": "Activada",
+    "soundOff": "Desactivada",
+    "programSection": "Programa",
+    "updateAssessment": "Actualizar mi evaluación",
+    "accountSection": "Cuenta",
+    "emailLabel": "Correo electrónico",
+    "signOut": "Cerrar sesión"
   }
 }

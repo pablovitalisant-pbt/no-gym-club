@@ -57,6 +57,12 @@ export default async function SessionPage({
     .select('name_en, gif_url')
     .not('gif_url', 'is', null);
 
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('display_name')
+    .eq('id', user.id)
+    .maybeSingle();
+
   const sessionData = session.session_data as unknown as SessionData;
 
   function enrich(exercises: SessionExercise[]): SessionExercise[] {
@@ -70,6 +76,7 @@ export default async function SessionPage({
     <SessionRunner
       sessionId={session.id}
       continuousEnabled={getFlag('continuous_session_mode')}
+      displayName={profile?.display_name ?? null}
       session={{
         ...sessionData,
         warmup: enrich(sessionData.warmup),

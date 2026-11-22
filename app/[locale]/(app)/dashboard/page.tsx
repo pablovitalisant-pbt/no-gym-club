@@ -7,6 +7,7 @@ import { parseDayParam } from '@/lib/plan/calendar';
 import { buildMediaIndex, type MediaIndex } from '@/lib/exercises/media-index';
 import type { PlanData } from '@/lib/types/plan';
 import type { SessionData } from '@/lib/types/session';
+import { greetingText } from '@/lib/settings/greeting';
 
 export default async function DashboardPage({
   params: { locale },
@@ -38,6 +39,16 @@ export default async function DashboardPage({
   let mediaIndex: MediaIndex = {};
   let hasAssessment = false;
   let parqCleared = false;
+  let displayName: string | null = null;
+
+  if (user) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('display_name')
+      .eq('id', user.id)
+      .maybeSingle();
+    displayName = profile?.display_name ?? null;
+  }
 
   if (user && showPlanV2) {
     const { data: plan } = await supabase
@@ -98,8 +109,15 @@ export default async function DashboardPage({
     }
   }
 
+  const greeting = greetingText(t('greeting'), displayName);
+
   return (
     <div>
+      {greeting && (
+        <p className="font-label-bold text-label-bold text-primary uppercase mb-xs">
+          {greeting}
+        </p>
+      )}
       <h1 className="text-2xl font-bold text-text-primary mb-6">
         Dashboard
       </h1>
