@@ -2,26 +2,43 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const h = vi.hoisted(() => ({
   chunks: [] as unknown[],
+  params: null as Record<string, unknown> | null,
 }));
 
 vi.mock('openai', () => ({
   default: class {
     chat = {
       completions: {
-        create: async () =>
-          (async function* () {
+        create: async (params: Record<string, unknown>) => {
+          h.params = params;
+          return (async function* () {
             for (const chunk of h.chunks) yield chunk;
-          })(),
+          })();
+        },
       },
     };
   },
 }));
 
-import { streamChatCompletion } from '@/lib/deepseek/client';
+import { DEEPSEEK_MODEL, streamChatCompletion } from '@/lib/deepseek/client';
 
 beforeEach(() => {
   process.env.DEEPSEEK_API_KEY = 'test-key';
   h.chunks = [];
+  h.params = null;
+});
+
+describe('DeepSeek — nombre del modelo', () => {
+  it('usa el nombre vigente deepseek-flash (Bug #11)', async () => {
+    h.chunks = [
+      { choices: [{ delta: { content: '{}' }, finish_reason: 'stop' }] },
+    ];
+    for await (const _ of streamChatCompletion([{ role: 'user', content: 'x' }])) {
+      // consume
+    }
+    expect(DEEPSEEK_MODEL).toBe('deepseek-flash');
+    expect(h.params?.model).toBe('deepseek-flash');
+  });
 });
 
 describe('DeepSeek streaming — fin por longitud', () => {

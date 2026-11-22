@@ -13,10 +13,10 @@ import {
 } from '@/lib/prompts/build-phase-prompt';
 import type { PlanData, PlanPhase } from '@/lib/types/plan';
 
-// Doc oficial de DeepSeek: deepseek-v4-flash admite hasta 262144 tokens de salida
-// (deepseek-v4-flash-0731, docs de Venice API); 16384 queda muy por debajo del
-// limite y alcanza para una plantilla semanal de 7 dias.
-const MAX_TOKENS = 16384;
+// Doc oficial de DeepSeek (api-docs.deepseek.com/quick_start/pricing, 2026-11-22):
+// deepseek-flash admite hasta 384K tokens de salida. 49152 cubre la plantilla semanal
+// de 6 dias de entrenamiento; 16384 se truncaba con 6 dias (Bug #11).
+const MAX_TOKENS = 49152;
 
 // Si el perfil no declara disponibilidad, 3 dias/semana es el minimo viable
 // del MVP (evita que el modelo improvise y elige un valor conservador).

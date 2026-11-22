@@ -125,6 +125,7 @@ Rules:
 - week_template must contain exactly 7 days (7-day template) repeated identically for all 4 weeks of the phase.
 - Training days = the athlete's available_days_per_week, capped at ${MAX_TRAINING_DAYS}; every other day must be "rest" with "session": null. There is always at least 1 full rest day per week for recovery (a 7-day request becomes 6 training days + 1 rest day).
 - Use the same exercises for the whole phase. Progression inside the phase is expressed through reps/sets/time in notes_es and notes_en; never swap exercises between weeks.
+- Keep text short: notes_es and notes_en at most 140 characters each; rationale_es and rationale_en at most 600 characters each.
 - Phase 1 (index 0) builds the foundation; phases 2 and 3 progress from the previous phase and its training log.
 - Every exercise MUST include work_seconds (circuit mode) and rest_seconds.
 - MAIN BLOCK MATCHES DAY TYPE: the main block of each training day must match the day type. A "legs" or "lower" day needs at least 2 legs exercises in main; a "push" day at least 2 push exercises; a "pull" day at least 2 pull exercises. Warmup, cooldown and finisher do not count.

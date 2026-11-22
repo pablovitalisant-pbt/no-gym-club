@@ -79,3 +79,10 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Evidencia**: mismo endpoint en prod con qa.intermedio (4 dias) 200 en 33 s; perfil de Pablo available_days_per_week=7. El prompt pedia dias de entrenamiento = dias disponibles (0 descansos) y validatePhase exige >=1 dia rest -> dos validaciones fallidas -> 502.
 - **Solucion**: MAX_TRAINING_DAYS=6 en lib/plan/plan.ts; el prompt usa min(dias,6) y explica el descanso en el rationale.
 
+
+## Bug #11: generate-phase 500 por salida truncada de DeepSeek
+- **Fecha**: 2026-11-22
+- **Clasificacion**: C = Integracion externa
+- **Evidencia**: reproducido local con qa.intermedio (7 dias -> 6 de entrenamiento): log 'DeepSeek output truncated: max_tokens reached before completion' a los 79 s; en prod 500. Con 4 dias cabia en 16384.
+- **Solucion**: maxTokens 49152 (doc oficial: hasta 384K de salida), notas <=140 y rationale <=600 caracteres, modelo deepseek-flash. Verificado local: 200 en 92 s, plantilla push/pull/legs x2 + descanso.
+

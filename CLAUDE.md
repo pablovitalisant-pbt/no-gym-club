@@ -9,12 +9,12 @@ Documento operativo para Claude Code. Leer junto con `~/.claude/CLAUDE.md` (semi
 - **Framework:** Next.js 14 (App Router) + TypeScript
 - **Estilos:** Tailwind CSS
 - **Auth + DB + Storage:** Supabase (PostgreSQL con Row Level Security)
-- **LLM:** DeepSeek V4 Flash (`deepseek-v4-flash`) vía SDK `openai` (endpoint compatible OpenAI)
+- **LLM:** DeepSeek Flash (`deepseek-flash`) vía SDK `openai` (endpoint compatible OpenAI)
 - **RAG:** pgvector (extensión Supabase, vector(1024)) — tabla `sport_science_corpus` + función `search_corpus()`. Embeddings via NVIDIA NIM `nvidia/nemotron-3.5-embed-1b` con `dimensions: 1024` (endpoint `https://integrate.api.nvidia.com/v1`). Modelo y dimensión en `lib/nvidia/client.ts` (`EMBEDDING_MODEL`, `EMBEDDING_DIMENSIONS`).
 - **i18n:** next-intl (ES default, EN secundario)
 - **Deploy:** Vercel
 
-> Usar `deepseek-v4-flash` explícito. NO usar `deepseek-chat` ni `deepseek-reasoner` (deprecados 2026-07-24).
+> Usar `deepseek-flash` explícito. NO usar `deepseek-v4-flash`, `deepseek-chat` ni `deepseek-reasoner` (el legacy se depreca; los alias viejos, 2026-07-24).
 
 ---
 

@@ -8,7 +8,7 @@ App de calistenia ("La calle es mi gimnasio"), bilingüe ES/EN, multi-tenant. **
 
 ## Stack
 
-Next.js 14 App Router + TS + Tailwind · Supabase (Auth, Postgres+RLS, Storage, pgvector) · DeepSeek `deepseek-v4-flash` (thinking activo, maxTokens 8192, ver Bug #4) · Embeddings NVIDIA NIM `nv-embedqa-e5-v5` (1024d) · next-intl · Vercel.
+Next.js 14 App Router + TS + Tailwind · Supabase (Auth, Postgres+RLS, Storage, pgvector) · DeepSeek `deepseek-flash` (thinking activo, maxTokens 8192, ver Bug #4) · Embeddings NVIDIA NIM `nv-embedqa-e5-v5` (1024d) · next-intl · Vercel.
 
 Diseño: fondo #0a0a0a, superficies #111/#1a1a1a, acento #e8570a, texto #f5f5f5/#888, borde #2a2a2a, Inter, lucide-react.
 

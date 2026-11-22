@@ -48,7 +48,7 @@ La app es **bilingüe ES/EN desde el día uno**.
 
 ## 5. Integraciones externas conocidas
 
-- **DeepSeek API** (modelo `deepseek-v4-flash`) vía SDK `openai` — generación adaptativa de sesiones. Pay-per-token. Endpoint compatible con OpenAI.
+- **DeepSeek API** (modelo `deepseek-flash`) vía SDK `openai` — generación adaptativa de sesiones. Pay-per-token. Endpoint compatible con OpenAI.
 - **Supabase** — Auth, PostgreSQL (con RLS) y Storage (videos/imágenes de ejercicios).
 - **pgvector** (extensión de Supabase) — base de conocimiento vectorial con tabla `sport_science_corpus` + función `search_corpus()` para RAG. Reemplazó a ChromaDB.
 
@@ -66,7 +66,7 @@ La app es **bilingüe ES/EN desde el día uno**.
 
 - **Stack decidido y no negociable:** Next.js 14 (App Router) + TypeScript + Tailwind CSS, Supabase (Auth + PostgreSQL con RLS + Storage), DeepSeek V4 Flash vía SDK `openai`, pgvector (extensión Supabase, tabla `sport_science_corpus`) para RAG, Vercel para deploy.
 - **i18n:** bilingüe ES/EN desde el inicio.
-- **Modelo LLM:** usar `deepseek-v4-flash` explícito. Los alias `deepseek-chat` y `deepseek-reasoner` se deprecan el 24 de julio de 2026.
+- **Modelo LLM:** usar `deepseek-flash` explícito (nombre vigente; `deepseek-v4-flash` es el alias legacy). Los alias `deepseek-chat` y `deepseek-reasoner` se deprecan el 24 de julio de 2026.
 - **Privacidad de IA:** no enviar datos personales identificables del usuario a la API sin anonimizar.
 - **Seguridad de prescripción:** ninguna sesión se genera sin pasar el screening PAR-Q. La intensidad máxima (entrenamiento al fallo) no se prescribe a principiantes sin progresión previa.
 

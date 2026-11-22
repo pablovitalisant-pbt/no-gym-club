@@ -121,6 +121,15 @@ describe('build-phase-prompt — reglas obligatorias', () => {
     expect(system.toLowerCase()).toContain('walking or jogging');
   });
 
+  it('acota notes a 140 y rationale a 600 caracteres (Bug #11)', () => {
+    const { system } = build();
+    expect(system).toContain('notes_es');
+    expect(system).toContain('notes_en');
+    expect(system).toMatch(/140 characters/);
+    expect(system).toContain('rationale_es');
+    expect(system).toMatch(/600 characters/);
+  });
+
   it('documenta el schema PlanPhase y pide JSON exacto', () => {
     const { system } = build();
     expect(system).toContain('week_template');

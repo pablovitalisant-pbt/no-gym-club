@@ -278,6 +278,13 @@ describe('POST /api/generate-phase', () => {
     spy.mockRestore();
   });
 
+  it('pide 49152 tokens de salida (Bug #11: 6 dias no caben en 16384)', async () => {
+    h.deepseekResponses = [JSON.stringify(validPhase(0))];
+    await POST(request());
+    const options = h.deepseekCalls[0].options as { maxTokens?: number };
+    expect(options.maxTokens).toBe(49152);
+  });
+
   it('usa dos consultas RAG cuando el nivel es untrained_extreme', async () => {
     h.deepseekResponses = [JSON.stringify(validPhase(0))];
     await POST(request());

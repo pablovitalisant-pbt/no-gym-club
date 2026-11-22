@@ -3,6 +3,10 @@ import OpenAI from 'openai';
 const DEEPSEEK_BASE_URL =
   process.env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com';
 
+// Nombre vigente del modelo segun api-docs.deepseek.com/quick_start/pricing
+// (consultado 2026-11-22). `deepseek-v4-flash` sigue aceptado y se enruta al mismo modelo.
+export const DEEPSEEK_MODEL = 'deepseek-flash';
+
 function createClient(): OpenAI {
   return new OpenAI({
     apiKey: process.env.DEEPSEEK_API_KEY,
@@ -17,7 +21,7 @@ export async function generateChatCompletion(
   const client = createClient();
 
   const response = await client.chat.completions.create({
-    model: 'deepseek-v4-flash',
+    model: DEEPSEEK_MODEL,
     messages,
     temperature: options?.temperature ?? 0.7,
     max_tokens: options?.maxTokens ?? 2048,
@@ -43,7 +47,7 @@ export async function* streamChatCompletion(
   const client = createClient();
 
   const stream = await client.chat.completions.create({
-    model: 'deepseek-v4-flash',
+    model: DEEPSEEK_MODEL,
     messages,
     temperature: options?.temperature ?? 0.7,
     max_tokens: options?.maxTokens ?? 2048,
