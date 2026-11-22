@@ -32,3 +32,12 @@ Diseño: fondo #0a0a0a, superficies #111/#1a1a1a, acento #e8570a, texto #f5f5f5/
 - Release hecho con aprobación de Pablo (02:07, sin UAT local: app sin usuarios reales). Pendiente: configurar humoProd en qa-entorno.json para qa-prod.ps1. Flags a encender en `config/feature-flags.json` para el release: `training_plan_v2`, `plan_session_runner`, `continuous_session_mode`, `phase_generation_evidence_adjustment`. Sin variables de entorno nuevas. Luego push a main (Vercel despliega) y humo de producción.
 - Cuentas QA: `qa.extremo@nogym.test`, `qa.intermedio@nogym.test`, `qa.nuevo@nogym.test` (contraseñas en `_dt\qa\cuentas.json`, se regeneran con `qa-preparar`).
 
+
+## Estado 2026-11-22 11:30
+
+- En producción (último deploy `d61c12b`+docs): v2 completo + legibilidad (v2-14), tests físicos v2 (v2-13), dashboard claro (v2-15), sin "(male)" (v2-16), nivel por indicadores y "Rehacer mi programa" (v2-18), mensajes de espera (v2-19), tema claro/oscuro (v2-20), configuración con foto/nombre (v2-21), comunidad etapa 1 (v2-22) y etapa 2 solicitudes + chat realtime (v2-23a/b/c). Migraciones aplicadas hasta 0015.
+- GIFs: 21 restaurados tras revisión visual (plan de Pablo); el resto del catálogo con placeholder (`_dt/gifs/revision-2026-11-22.md`). Videos propios/IA: backlog.
+- **Etapa 3 de comunidad (entrenar juntos) postergada por Pablo** hasta que pruebe lo construido.
+- Cuentas QA extremo/intermedio tienen perfil público en Santiago (Ñuñoa/Providencia) para pruebas de comunidad.
+- Costo DeepSeek de la sesión ≈ USD 95.
+- Pendientes técnicos: borrar pipeline v1 de generación diaria; refactor session-runner (~800 L) y assessment-form; timezone del usuario; trigger de integridad plan_id; advisors Supabase (search_* ejecutables por anon, vector en public, leaked password protection); humoProd en qa-entorno.json; umbrales de nivel (qa.intermedio queda beginner).
