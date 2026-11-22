@@ -18,6 +18,27 @@ const SESSION_LISTS = ['warmup', 'main', 'cooldown', 'finisher', 'cardio'] as co
 
 type Result = { ok: true; value: PlanPhase } | { ok: false; errors: string[] };
 
+export type CategoryMap = Map<string, string> | Record<string, string>;
+
+// Tipos de dia cuyo bloque principal debe estar dominado por una categoria.
+const REQUIRED_MAIN_CATEGORY: Partial<Record<DayType, string>> = {
+  push: 'push',
+  pull: 'pull',
+  legs: 'legs',
+  lower: 'legs',
+};
+
+const MIN_MAIN_OF_CATEGORY = 2;
+
+function lookupCategory(map: CategoryMap, name: string): string | undefined {
+  return map instanceof Map ? map.get(name) : map[name];
+}
+
+function hasCategories(map: CategoryMap | undefined): map is CategoryMap {
+  if (!map) return false;
+  return map instanceof Map ? map.size > 0 : Object.keys(map).length > 0;
+}
+
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null && !Array.isArray(v);
 }
@@ -67,7 +88,12 @@ function validateSession(raw: unknown, where: string, errors: string[]): void {
   }
 }
 
-function validateDay(raw: unknown, where: string, errors: string[]): void {
+function validateDay(
+  raw: unknown,
+  where: string,
+  errors: string[],
+  categoryByName?: CategoryMap,
+): void {
   if (!isRecord(raw)) {
     errors.push(`${where}: dia invalido`);
     return;
@@ -85,9 +111,26 @@ function validateDay(raw: unknown, where: string, errors: string[]): void {
     return;
   }
   validateSession(raw.session, where, errors);
+
+  const requiredCategory = REQUIRED_MAIN_CATEGORY[type as DayType];
+  if (requiredCategory && hasCategories(categoryByName)) {
+    const session = isRecord(raw.session) ? raw.session : null;
+    const main = session && Array.isArray(session.main) ? session.main : [];
+    const matching = main.filter(
+      (e) =>
+        isRecord(e) &&
+        typeof e.exercise === 'string' &&
+        lookupCategory(categoryByName, e.exercise) === requiredCategory,
+    ).length;
+    if (matching < MIN_MAIN_OF_CATEGORY) {
+      errors.push(
+        `${where}: el bloque principal necesita al menos ${MIN_MAIN_OF_CATEGORY} ejercicios de ${requiredCategory}`,
+      );
+    }
+  }
 }
 
-export function validatePhase(raw: unknown): Result {
+export function validatePhase(raw: unknown, categoryByName?: CategoryMap): Result {
   const errors: string[] = [];
   if (!isRecord(raw)) return { ok: false, errors: ['fase invalida'] };
 
@@ -100,7 +143,9 @@ export function validatePhase(raw: unknown): Result {
   if (!Array.isArray(raw.week_template) || raw.week_template.length !== 7) {
     errors.push('week_template debe tener exactamente 7 dias');
   } else {
-    raw.week_template.forEach((d, i) => validateDay(d, `week_template[${i}]`, errors));
+    raw.week_template.forEach((d, i) =>
+      validateDay(d, `week_template[${i}]`, errors, categoryByName),
+    );
     const restCount = raw.week_template.filter((d) => isRecord(d) && d.type === 'rest').length;
     if (restCount === 0) errors.push('week_template debe incluir al menos 1 dia rest');
   }

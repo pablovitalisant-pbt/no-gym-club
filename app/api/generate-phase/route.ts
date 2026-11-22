@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { streamChatCompletion } from '@/lib/deepseek/client';
 import { getEmbedding } from '@/lib/nvidia/client';
 import { deriveStartLevel, type StartLevel } from '@/lib/assessment/level';
-import { validatePhase } from '@/lib/plan/validate-phase';
+import { validatePhase, type CategoryMap } from '@/lib/plan/validate-phase';
 import { summarizePhaseLog, type PhaseLogSession } from '@/lib/plan/phase-log';
 import { getFlag } from '@/lib/flags';
 import {
@@ -22,11 +22,21 @@ const MAX_TOKENS = 16384;
 // del MVP (evita que el modelo improvise y elige un valor conservador).
 const DEFAULT_AVAILABLE_DAYS_PER_WEEK = 3;
 
-// Niveles donde la busqueda semantica puede dejar fuera las regresiones
-// basicas: se complementa con el pool de fundamentos del catalogo.
-const FOUNDATION_LEVELS: StartLevel[] = ['untrained', 'untrained_extreme', 'beginner'];
+// v2-12: cada categoria necesita al menos 6 opciones para que el modelo pueda
+// armar dias coherentes (p.ej. un dia legs con 2 ejercicios de piernas).
+const COVERAGE_CATEGORIES = ['push', 'pull', 'legs', 'core', 'mobility', 'cardio'] as const;
+const MIN_EXERCISES_PER_CATEGORY = 6;
+
+function difficultiesForLevel(
+  level: StartLevel,
+): ('beginner' | 'intermediate' | 'advanced')[] {
+  if (level === 'advanced') return ['beginner', 'intermediate', 'advanced'];
+  if (level === 'intermediate') return ['beginner', 'intermediate'];
+  return ['beginner'];
+}
 
 type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
+type ExerciseOption = { name_en: string; category: string; muscle_groups: string[] };
 
 async function generatePhaseRaw(messages: ChatMessage[]): Promise<string> {
   let raw = '';
@@ -40,14 +50,14 @@ async function generatePhaseRaw(messages: ChatMessage[]): Promise<string> {
   return raw;
 }
 
-function parseAndValidate(raw: string) {
+function parseAndValidate(raw: string, categoryByName: CategoryMap) {
   let json: unknown;
   try {
     json = JSON.parse(raw);
   } catch {
     return { ok: false as const, errors: ['response is not valid JSON'] };
   }
-  return validatePhase(json);
+  return validatePhase(json, categoryByName);
 }
 
 export async function POST(request: NextRequest) {
@@ -247,7 +257,7 @@ export async function POST(request: NextRequest) {
         filter_category: null,
       },
     );
-    const availableExercises = !exerciseError
+    const availableExercises: ExerciseOption[] = !exerciseError
       ? (exerciseRows ?? []).map(
           (r: { name_en: string; category: string; muscle_groups: string[] }) => ({
             name_en: r.name_en,
@@ -257,34 +267,45 @@ export async function POST(request: NextRequest) {
         )
       : [];
 
-    // Pool de fundamentos: regresiones que el RAG puede no devolver en los 60
-    // resultados (p.ej. push-up en pared para un principiante extremo).
-    let foundationExercises: typeof availableExercises = [];
-    if (FOUNDATION_LEVELS.includes(startLevel)) {
-      let foundationQuery = supabase
+    // v2-12: garantizar cobertura por categoria para TODOS los niveles. El RAG
+    // puede devolver 60 ejercicios concentrados en push/pull; sin legs, el
+    // modelo no puede armar un dia "legs" coherente. Se completa desde el
+    // catalogo activo, filtrado por equipamiento y dificultad del nivel.
+    const mergedExercises: ExerciseOption[] = [];
+    const seenExercises = new Set<string>();
+    const addExercises = (rows: ExerciseOption[]) => {
+      for (const ex of rows) {
+        if (seenExercises.has(ex.name_en)) continue;
+        seenExercises.add(ex.name_en);
+        mergedExercises.push(ex);
+      }
+    };
+    addExercises(availableExercises);
+
+    const difficulties = difficultiesForLevel(startLevel);
+    const equipment = profile.available_equipment;
+    for (const category of COVERAGE_CATEGORIES) {
+      const count = mergedExercises.filter((ex) => ex.category === category).length;
+      if (count >= MIN_EXERCISES_PER_CATEGORY) continue;
+      let query = supabase
         .from('exercises')
         .select('name_en, category, muscle_groups')
         .eq('is_active', true)
-        .eq('difficulty', 'beginner')
-        .limit(40);
-      const equipment = profile.available_equipment;
-      if (Array.isArray(equipment) && equipment.length) {
-        foundationQuery = foundationQuery.overlaps(
-          'equipment_required',
-          equipment,
-        );
+        .eq('category', category);
+      if (difficulties.length === 1) {
+        query = query.eq('difficulty', difficulties[0]);
+      } else {
+        query = query.in('difficulty', difficulties);
       }
-      const { data: foundationRows } = await foundationQuery;
-      foundationExercises = (foundationRows ?? []) as typeof availableExercises;
+      if (Array.isArray(equipment) && equipment.length) {
+        query = query.overlaps('equipment_required', equipment);
+      }
+      const { data } = await query.limit(40);
+      if (data) addExercises(data as ExerciseOption[]);
     }
 
-    const seenExercises = new Set<string>();
-    const mergedExercises = [...availableExercises, ...foundationExercises].filter(
-      (ex) => {
-        if (seenExercises.has(ex.name_en)) return false;
-        seenExercises.add(ex.name_en);
-        return true;
-      },
+    const categoryByName: CategoryMap = new Map(
+      mergedExercises.map((ex) => [ex.name_en, ex.category]),
     );
 
     const { system, user: userPrompt } = buildPhasePrompt({
@@ -308,7 +329,7 @@ export async function POST(request: NextRequest) {
     ];
 
     // Un reintento enviando los errores de validacion
-    let result = parseAndValidate(await generatePhaseRaw(messages));
+    let result = parseAndValidate(await generatePhaseRaw(messages), categoryByName);
     if (!result.ok) {
       const retryMessages: ChatMessage[] = [
         ...messages,
@@ -317,7 +338,7 @@ export async function POST(request: NextRequest) {
           content: `Your previous output failed validation:\n- ${result.errors.join('\n- ')}\nReturn ONLY the corrected PlanPhase JSON.`,
         },
       ];
-      result = parseAndValidate(await generatePhaseRaw(retryMessages));
+      result = parseAndValidate(await generatePhaseRaw(retryMessages), categoryByName);
     }
     if (!result.ok) {
       return NextResponse.json(

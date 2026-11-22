@@ -126,6 +126,7 @@ Rules:
 - Use the same exercises for the whole phase. Progression inside the phase is expressed through reps/sets/time in notes_es and notes_en; never swap exercises between weeks.
 - Phase 1 (index 0) builds the foundation; phases 2 and 3 progress from the previous phase and its training log.
 - Every exercise MUST include work_seconds (circuit mode) and rest_seconds.
+- MAIN BLOCK MATCHES DAY TYPE: the main block of each training day must match the day type. A "legs" or "lower" day needs at least 2 legs exercises in main; a "push" day at least 2 push exercises; a "pull" day at least 2 pull exercises. Warmup, cooldown and finisher do not count.
 - The "exercise" field must be the exact name from AVAILABLE EXERCISES (name_en, case-sensitive, character-by-character), except walking or jogging. Do not translate or invent names.
 - Use ONLY the equipment the athlete has available.
 - LIMITATIONS — knees: no jumps and no deep squat.
@@ -199,14 +200,31 @@ function formatCorpus(docs: CorpusDoc[]): string {
   return `\n\n## Sport Science Context (use these principles)\n${sections.join('\n\n')}`;
 }
 
+const CATEGORY_ORDER = ['push', 'pull', 'legs', 'core', 'mobility', 'cardio', 'skill'];
+
 function formatExercises(
   exercises: { name_en: string; category: string; muscle_groups: string[] }[],
 ): string {
   if (!exercises.length) return '';
-  const lines = exercises.map(
-    (ex) => `- ${ex.name_en} [${ex.category}] (${(ex.muscle_groups || []).join(', ')})`,
+  const groups = new Map<string, typeof exercises>();
+  for (const ex of exercises) {
+    const list = groups.get(ex.category) ?? [];
+    list.push(ex);
+    groups.set(ex.category, list);
+  }
+  const ordered = [...groups.keys()].sort((a, b) => {
+    const ia = CATEGORY_ORDER.indexOf(a);
+    const ib = CATEGORY_ORDER.indexOf(b);
+    return (ia === -1 ? CATEGORY_ORDER.length : ia) - (ib === -1 ? CATEGORY_ORDER.length : ib);
+  });
+  const sections = ordered.map(
+    (category) =>
+      `### ${category}\n${groups
+        .get(category)!
+        .map((ex) => `- ${ex.name_en} [${ex.category}] (${(ex.muscle_groups || []).join(', ')})`)
+        .join('\n')}`,
   );
-  return `\n\n## AVAILABLE EXERCISES (select "exercise" from this list — name_en only)\n${lines.join('\n')}`;
+  return `\n\n## AVAILABLE EXERCISES (select "exercise" from this list — name_en only, grouped by category)\n${sections.join('\n\n')}`;
 }
 
 export function buildPhasePrompt(input: PhasePromptInput): PhasePrompt {

@@ -23,9 +23,11 @@ Diseño: fondo #0a0a0a, superficies #111/#1a1a1a, acento #e8570a, texto #f5f5f5/
 - **No hay base de datos de prueba:** local y producción usan el mismo proyecto Supabase. Todo cambio de datos con respaldo previo en `_dt\backups\`.
 - Commits: solo el DT, desde PowerShell de Windows (en el shell Linux de la sesión git no puede borrar locks).
 
-## Estado
+## Estado (2026-11-22 01:45)
 
-- **Fase actual:** v2, slice 1 (catálogo solo calistenia + retiro de GIFs).
-- Catálogo al 2026-11-21: 616 ejercicios activos, 616 con gif_url, 292 con `dumbbell`.
-- Archivos sin commitear heredados de v1: `scripts/import-exercisedb-bodyweight.ts`, `scripts/seed-corpus-json.ts`, `supabase/corpus.json`, `supabase/seed-corpus-embeddings-clean.sql`.
-- **Contador de slices desde último ponytail audit:** 0 (v2 arranca; el último audit registrado fue 2026-06-30 → correr antes del primer deploy v2).
+- **v2 completo en `main` local, sin push** (último commit: ver `git log`). Backlog PRD §10.6 ítems 1–10 hechos; 11 (videos) pendiente.
+- Migraciones 0010–0012 aplicadas en Supabase (proyecto `jvfwnddijgwgokmjagpi`, vía conector Supabase). Corpus: 50 + 38 (Overcoming Gravity). Embeddings: `nvidia/nemotron-3.5-embed-1b` 1024d (Bug #9).
+- QA Fase E (Codex) con excepción de base compartida (Opción A): assessment, plan (crear/navegar/completar/calendario/sesión) y modo de corrido en PASA tras fixes. QA-REGISTRO sin pendientes abiertos.
+- Ponytail audit 2026-11-22: contador 0. Diferidos: borrar pipeline v1 (generate-session, build-session-prompt, flag ai_session_generation) DESPUÉS del release; refactor session-runner (780 L) y assessment-form; casts `as unknown as`; timezone del usuario (#16); trigger de integridad plan_id (#18); advisors Supabase (search_* SECURITY DEFINER ejecutables por anon, extensión vector en public, leaked password protection) — preexistentes.
+- **Release (Señal 3) pendiente de UAT de Pablo.** Flags a encender en `config/feature-flags.json` para el release: `training_plan_v2`, `plan_session_runner`, `continuous_session_mode`, `phase_generation_evidence_adjustment`. Sin variables de entorno nuevas. Luego push a main (Vercel despliega) y humo de producción.
+- Cuentas QA: `qa.extremo@nogym.test`, `qa.intermedio@nogym.test`, `qa.nuevo@nogym.test` (contraseñas en `_dt\qa\cuentas.json`, se regeneran con `qa-preparar`).
