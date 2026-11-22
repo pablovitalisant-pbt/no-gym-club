@@ -15,5 +15,6 @@
   "qa_environment": false,
   "corpus_overcoming_gravity": false,
   "training_plan_v2": false,
-  "phase_generation": false
+  "phase_generation": false,
+  "phase_generation_evidence_adjustment": false
 }

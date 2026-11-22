@@ -125,6 +125,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'corpus_overcoming_gravity',
       'training_plan_v2',
       'phase_generation',
+      'phase_generation_evidence_adjustment',
     ]);
   });
 

@@ -21,6 +21,7 @@ vi.mock('@/lib/supabase/server', () => {
       order: () => p,
       limit: () => p,
       not: () => p,
+      overlaps: () => p,
       single: () => Promise.resolve(resolve()),
       maybeSingle: () => Promise.resolve(resolve()),
       then: (res: (v: unknown) => unknown, rej: (e: unknown) => unknown) =>

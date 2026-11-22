@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { streamChatCompletion } from '@/lib/deepseek/client';
 import { getEmbedding } from '@/lib/nvidia/client';
-import { deriveStartLevel } from '@/lib/assessment/level';
+import { deriveStartLevel, type StartLevel } from '@/lib/assessment/level';
 import { validatePhase } from '@/lib/plan/validate-phase';
 import {
   buildPhasePrompt,
@@ -15,6 +15,14 @@ import type { PlanData, PlanPhase } from '@/lib/types/plan';
 // (deepseek-v4-flash-0731, docs de Venice API); 16384 queda muy por debajo del
 // limite y alcanza para una plantilla semanal de 7 dias.
 const MAX_TOKENS = 16384;
+
+// Si el perfil no declara disponibilidad, 3 dias/semana es el minimo viable
+// del MVP (evita que el modelo improvise y elige un valor conservador).
+const DEFAULT_AVAILABLE_DAYS_PER_WEEK = 3;
+
+// Niveles donde la busqueda semantica puede dejar fuera las regresiones
+// basicas: se complementa con el pool de fundamentos del catalogo.
+const FOUNDATION_LEVELS: StartLevel[] = ['untrained', 'untrained_extreme', 'beginner'];
 
 type ChatMessage = { role: 'system' | 'user' | 'assistant'; content: string };
 
@@ -222,13 +230,47 @@ export async function POST(request: NextRequest) {
         )
       : [];
 
+    // Pool de fundamentos: regresiones que el RAG puede no devolver en los 60
+    // resultados (p.ej. push-up en pared para un principiante extremo).
+    let foundationExercises: typeof availableExercises = [];
+    if (FOUNDATION_LEVELS.includes(startLevel)) {
+      let foundationQuery = supabase
+        .from('exercises')
+        .select('name_en, category, muscle_groups')
+        .eq('is_active', true)
+        .eq('difficulty', 'beginner')
+        .limit(40);
+      const equipment = profile.available_equipment;
+      if (Array.isArray(equipment) && equipment.length) {
+        foundationQuery = foundationQuery.overlaps(
+          'equipment_required',
+          equipment,
+        );
+      }
+      const { data: foundationRows } = await foundationQuery;
+      foundationExercises = (foundationRows ?? []) as typeof availableExercises;
+    }
+
+    const seenExercises = new Set<string>();
+    const mergedExercises = [...availableExercises, ...foundationExercises].filter(
+      (ex) => {
+        if (seenExercises.has(ex.name_en)) return false;
+        seenExercises.add(ex.name_en);
+        return true;
+      },
+    );
+
     const { system, user: userPrompt } = buildPhasePrompt({
-      profile,
+      profile: {
+        ...profile,
+        available_days_per_week:
+          profile.available_days_per_week ?? DEFAULT_AVAILABLE_DAYS_PER_WEEK,
+      },
       assessment: assessment as PhaseAssessment | null,
       startLevel,
       phaseIndex: phaseSlot,
       corpusDocs,
-      availableExercises,
+      availableExercises: mergedExercises,
     });
 
     const messages: ChatMessage[] = [

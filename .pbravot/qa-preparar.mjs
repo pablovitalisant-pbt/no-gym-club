@@ -6,8 +6,8 @@ import { createClient } from '@supabase/supabase-js';
 
 const EXCEPTION = 'pablo-2026-11-21';
 const accounts = [
-  { email: 'qa.extremo@nogym.test', profile: { age: 52, weight_kg: 118, height_cm: 172, training_history: 'never', health_limitations: ['knees', 'lower_back'], cardio_preference: 'light', par_q_cleared: true, assessment_completed: true }, assessment: { pushup_variant: 'wall', pushup_variant_reps: 5, sit_to_stand_30s: 6, walk_minutes: 8, knee_plank_seconds: 10, dead_hang_seconds: 0 } },
-  { email: 'qa.intermedio@nogym.test', profile: { age: 30, weight_kg: 75, height_cm: 178, training_history: 'active', health_limitations: [], cardio_preference: 'moderate', focus_areas: ['chest', 'shoulders'], par_q_cleared: true, assessment_completed: true }, assessment: { pushup_variant: 'floor', pushup_variant_reps: 25, dead_hang_seconds: 45 } },
+  { email: 'qa.extremo@nogym.test', profile: { age: 52, weight_kg: 118, height_cm: 172, training_history: 'never', health_limitations: ['knees', 'lower_back'], cardio_preference: 'light', available_days_per_week: 3, available_equipment: ['bodyweight', 'wall', 'ground'], par_q_cleared: true, assessment_completed: true }, assessment: { pushup_variant: 'wall', pushup_variant_reps: 5, sit_to_stand_30s: 6, walk_minutes: 8, knee_plank_seconds: 10, dead_hang_seconds: 0 } },
+  { email: 'qa.intermedio@nogym.test', profile: { age: 30, weight_kg: 75, height_cm: 178, training_history: 'active', health_limitations: [], cardio_preference: 'moderate', focus_areas: ['chest', 'shoulders'], available_days_per_week: 4, available_equipment: ['bodyweight', 'bar', 'ground', 'wall'], par_q_cleared: true, assessment_completed: true }, assessment: { pushup_variant: 'floor', pushup_variant_reps: 25, dead_hang_seconds: 45 } },
   { email: 'qa.nuevo@nogym.test', profile: null, assessment: null },
 ];
 

@@ -56,6 +56,9 @@ export interface PhasePrompt {
 const EXTREME_RULE =
   '- untrained_extreme: prescribe regressions only — wall or incline push-up, chair sit-to-stand, knee plank and walking. 1-2 sets per exercise, no jumps, no burpees, long rest periods (90-120s).';
 
+const STARTING_VARIANT_RULE =
+  '- STARTING VARIANT: the main exercise of each movement pattern must start at the variant the athlete achieved in the assessment test, or one easier. pushup_variant wall -> wall push-up; knee -> knee push-up; incline -> incline push-up; floor with fewer than 10 reps -> incline or floor with few reps. In phase 1 never prescribe a harder variant than the tested one.';
+
 const SCHEMA = `{
   "index": 0,
   "name_es": "...", "name_en": "...",
@@ -129,6 +132,30 @@ function formatProfile(p: PhaseProfile): string {
     .join('\n');
 }
 
+function formatAssessment(a: PhaseAssessment | null): string {
+  if (!a) return 'none';
+  const lines: string[] = [];
+  if (a.pushup_variant) {
+    lines.push(
+      `- Push-up test: ${a.pushup_variant} variant${
+        a.pushup_variant_reps != null ? `, ${a.pushup_variant_reps} reps` : ''
+      }`,
+    );
+  }
+  if (a.dead_hang_seconds != null) lines.push(`- Dead hang: ${a.dead_hang_seconds} s`);
+  if (a.knee_plank_seconds != null) lines.push(`- Knee plank: ${a.knee_plank_seconds} s`);
+  if (a.sit_to_stand_30s != null) {
+    lines.push(`- Sit-to-stand (30 s): ${a.sit_to_stand_30s} reps`);
+  }
+  if (a.walk_minutes != null) lines.push(`- Walk: ${a.walk_minutes} min`);
+  if (a.max_pushups != null) lines.push(`- Max push-ups: ${a.max_pushups}`);
+  if (a.max_pullups != null) lines.push(`- Max pull-ups: ${a.max_pullups}`);
+  if (a.max_squats != null) lines.push(`- Max squats: ${a.max_squats}`);
+  if (a.max_dips != null) lines.push(`- Max dips: ${a.max_dips}`);
+  if (a.plank_seconds != null) lines.push(`- Plank: ${a.plank_seconds} s`);
+  return lines.length ? lines.join('\n') : 'none';
+}
+
 function formatCorpus(docs: CorpusDoc[]): string {
   if (!docs.length) return '';
   const sections = docs.map(
@@ -156,6 +183,7 @@ export function buildPhasePrompt(input: PhasePromptInput): PhasePrompt {
     cardioRule(profile.cardio_preference),
     focusRule(profile.focus_areas),
     startLevel === 'untrained_extreme' ? EXTREME_RULE : '',
+    STARTING_VARIANT_RULE,
     BASE_SCHEMA_DOC,
   ]
     .filter(Boolean)
@@ -174,7 +202,7 @@ export function buildPhasePrompt(input: PhasePromptInput): PhasePrompt {
 ${formatProfile(profile)}
 
 ## Assessment Results
-${assessment ? JSON.stringify(assessment) : 'none'}
+${formatAssessment(assessment)}
 
 ## Start Level
 ${startLevel}${previous}${previousLog}${formatCorpus(input.corpusDocs)}${formatExercises(input.availableExercises)}
