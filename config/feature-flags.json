@@ -20,5 +20,5 @@
   "theme_switcher": true,
   "profile_settings": true,
   "community": true,
-  "community_chat": false
+  "community_chat": true
 }

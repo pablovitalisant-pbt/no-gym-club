@@ -26,7 +26,7 @@ export default function NearbyList({ people, radius, counts }: Props) {
             {t('requestsLink', { count: counts.pending })}
           </Link>
           <Link
-            href="/community/chat"
+            href="/community/chats"
             className="border-2 border-outline text-on-surface px-4 py-2 font-semibold hover:bg-surface-700"
           >
             {t('messagesLink', { count: counts.unread })}

@@ -130,9 +130,9 @@ describe('v2-23a migracion 0015 chat y conexiones', () => {
     );
   });
 
-  it('flag community_chat existe en false y schema.sql documenta las tablas', () => {
+  it('flag community_chat existe (booleano) y schema.sql documenta las tablas', () => {
     const flags = JSON.parse(readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'));
-    expect(flags.community_chat).toBe(false);
+    expect(typeof flags.community_chat).toBe('boolean');
     const schema = readFileSync(resolve(root, 'supabase/schema.sql'), 'utf-8');
     expect(schema).toContain('community_connections');
     expect(schema).toContain('community_messages');
