@@ -9,13 +9,31 @@ import ProfileCard from './ProfileCard';
 interface Props {
   people: CommunityPerson[];
   radius: number;
+  counts: { pending: number; unread: number } | null;
 }
 
-export default function NearbyList({ people, radius }: Props) {
+export default function NearbyList({ people, radius, counts }: Props) {
   const t = useTranslations('community');
 
   return (
     <div className="space-y-lg">
+      {counts && (
+        <div className="flex flex-wrap gap-sm">
+          <Link
+            href="/community/requests"
+            className="border-2 border-text-primary text-text-primary px-4 py-2 font-semibold"
+          >
+            {t('requestsLink', { count: counts.pending })}
+          </Link>
+          <Link
+            href="/community/chat"
+            className="border-2 border-outline text-on-surface px-4 py-2 font-semibold hover:bg-surface-700"
+          >
+            {t('messagesLink', { count: counts.unread })}
+          </Link>
+        </div>
+      )}
+
       <div className="flex flex-wrap items-start justify-between gap-sm">
         <div>
           <h1 className="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface uppercase">

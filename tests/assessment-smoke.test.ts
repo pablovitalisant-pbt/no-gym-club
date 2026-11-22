@@ -85,16 +85,16 @@ describe('Slice 4a — assessment profile + PAR-Q', () => {
   });
 
   // ─── Riesgo 3: assessment/page.tsx es Server Component con flag gate ───
-  it('(app)/layout.tsx es shell server; solo gatea la pestaña Comunidad', () => {
+  it('(app)/layout.tsx es shell server; gatea Comunidad y su badge (v2-23b)', () => {
     const raw = readFileSync(
       resolve(root, 'app/[locale]/(app)/layout.tsx'),
       'utf-8',
     );
-    // layout sigue siendo shell server; la unica condicion es la pestaña
-    // Comunidad, aprobada en v2-22 (flag community).
+    // layout sigue siendo shell server; solo consulta flags de Comunidad.
     expect(raw).not.toContain("'use client'");
     expect(raw).toContain("getFlag('community')");
-    expect(raw.match(/getFlag\(/g) ?? []).toHaveLength(1);
+    expect(raw).toContain("getFlag('community_chat')");
+    expect(raw.match(/getFlag\(/g) ?? []).toHaveLength(2);
   });
 
   it('assessment/page.tsx es Server Component con getFlag y sin use client', () => {

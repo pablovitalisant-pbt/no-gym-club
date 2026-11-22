@@ -6,6 +6,7 @@ import BottomNavBar from '@/components/layout/BottomNavBar';
 import ThemePreferenceSync from '@/components/settings/ThemePreferenceSync';
 import { isTheme } from '@/lib/settings/validate';
 import { getFlag } from '@/lib/flags';
+import { fetchCommunityCounts } from '@/lib/community/counts';
 
 export default async function AppLayout({
   children,
@@ -16,16 +17,12 @@ export default async function AppLayout({
 }) {
   const t = await getTranslations({ locale, namespace: 'nav' });
 
-  const navItems = [
+  const navItems: { href: string; label: string; badge?: number }[] = [
     { href: '/dashboard', label: t('dashboard') },
     { href: '/exercises', label: t('exercises') },
     { href: '/progress', label: t('progress') },
     { href: '/weekly-report', label: t('report') },
   ];
-
-  if (getFlag('community')) {
-    navItems.push({ href: '/community', label: t('community') });
-  }
 
   const supabase = createClient();
   const {
@@ -45,6 +42,20 @@ export default async function AppLayout({
     displayName = data?.display_name ?? null;
     avatarUrl = data?.avatar_url ?? null;
     themePreference = data?.theme_preference ?? null;
+  }
+
+  const showCommunity = getFlag('community');
+  let communityBadge = 0;
+  if (showCommunity && user && getFlag('community_chat')) {
+    const counts = await fetchCommunityCounts(supabase, user.id);
+    communityBadge = counts.pending + counts.unread;
+  }
+  if (showCommunity) {
+    navItems.push({
+      href: '/community',
+      label: t('community'),
+      ...(communityBadge > 0 ? { badge: communityBadge } : {}),
+    });
   }
 
   return (

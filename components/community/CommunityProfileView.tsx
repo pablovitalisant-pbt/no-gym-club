@@ -5,15 +5,23 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
-import type { CommunityPerson } from '@/lib/community/types';
+import type { CommunityConnection, CommunityPerson } from '@/lib/community/types';
 import { REPORT_MAX } from '@/lib/community/validate';
 import CommunityAvatar from './CommunityAvatar';
+import ConnectionActions from './ConnectionActions';
 import { blockCommunityUser, reportCommunityUser } from '../../app/[locale]/(app)/community/actions';
 
 const LEVELS = ['untrained_extreme', 'untrained', 'beginner', 'intermediate', 'advanced'];
 const GOALS = ['lose_weight', 'build_muscle', 'improve_endurance', 'master_skills', 'general_fitness'];
 
-export default function CommunityProfileView({ person }: { person: CommunityPerson }) {
+interface Props {
+  person: CommunityPerson;
+  connection: CommunityConnection | null;
+  myId: string;
+  chatEnabled: boolean;
+}
+
+export default function CommunityProfileView({ person, connection, myId, chatEnabled }: Props) {
   const t = useTranslations('community');
   const router = useRouter();
   const name = person.display_name?.trim() || '?';
@@ -75,9 +83,14 @@ export default function CommunityProfileView({ person }: { person: CommunityPers
           </div>
         )}
 
-        <Button disabled title={t('comingSoon')}>
-          {t('sendRequest')} — {t('comingSoon')}
-        </Button>
+        {chatEnabled && (
+          <ConnectionActions
+            myId={myId}
+            targetUserId={person.user_id}
+            name={name}
+            connection={connection}
+          />
+        )}
       </section>
 
       <section className="brutalist-border bg-surface-800 p-md space-y-sm">

@@ -15,6 +15,7 @@ const ICON_BY_HREF: Record<string, LucideIcon> = {
 interface NavItem {
   href: string;
   label: string;
+  badge?: number;
 }
 
 export default function BottomNavBar({ items }: { items: NavItem[] }) {
@@ -31,7 +32,7 @@ export default function BottomNavBar({ items }: { items: NavItem[] }) {
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center justify-center pt-1 transition-colors duration-150 w-20
+            className={`relative flex flex-col items-center justify-center pt-1 transition-colors duration-150 w-20
               ${isActive
                 ? 'text-primary-container border-t-2 border-primary-container'
                 : 'text-on-surface-variant hover:text-primary'
@@ -42,6 +43,11 @@ export default function BottomNavBar({ items }: { items: NavItem[] }) {
               size={20}
               className={isActive ? 'fill-primary-container' : ''}
             />
+            {item.badge ? (
+              <span className="absolute top-0 right-2 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] leading-[18px] text-center font-bold">
+                {item.badge > 99 ? '99+' : item.badge}
+              </span>
+            ) : null}
             <span className="font-label-bold text-[10px] uppercase">
               {item.label}
             </span>

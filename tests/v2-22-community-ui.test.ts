@@ -45,12 +45,12 @@ describe('v2-22 comunidad — UI', () => {
     expect(card).toContain('/community/');
   });
 
-  it('perfil: bloquear y reportar con confirmacion en UI, solicitud deshabilitada', () => {
+  it('perfil: bloquear y reportar con confirmacion en UI, acciones de conexion (v2-23b)', () => {
     const view = read('components/community/CommunityProfileView.tsx');
     expect(view).not.toContain('window.confirm');
     expect(view).toContain('blockCommunityUser');
     expect(view).toContain('reportCommunityUser');
-    expect(view).toMatch(/sendRequest[\s\S]*disabled/);
+    expect(view).toContain('ConnectionActions');
   });
 
   it('acciones: validan edad, redondean coordenadas y escriben en community_profiles', () => {

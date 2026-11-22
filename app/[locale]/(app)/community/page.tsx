@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server';
 import CommunityOptIn from '@/components/community/CommunityOptIn';
 import NearbyList from '@/components/community/NearbyList';
 import { RADIUS_OPTIONS, communityMode } from '@/lib/community/validate';
+import { fetchCommunityCounts } from '@/lib/community/counts';
 import type { CommunityPerson, OwnCommunityProfile } from '@/lib/community/types';
 
 export const dynamic = 'force-dynamic';
@@ -57,5 +58,9 @@ export default async function CommunityPage({
   const { data } = await supabase.rpc('nearby_community_profiles', { radius_km: radius });
   const people = (data ?? []) as CommunityPerson[];
 
-  return <NearbyList people={people} radius={radius} />;
+  const counts = getFlag('community_chat')
+    ? await fetchCommunityCounts(supabase, user.id)
+    : null;
+
+  return <NearbyList people={people} radius={radius} counts={counts} />;
 }

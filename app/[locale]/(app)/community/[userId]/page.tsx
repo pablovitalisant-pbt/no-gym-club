@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { getFlag } from '@/lib/flags';
 import { createClient } from '@/lib/supabase/server';
 import CommunityProfileView from '@/components/community/CommunityProfileView';
-import type { CommunityPerson } from '@/lib/community/types';
+import type { CommunityConnection, CommunityPerson } from '@/lib/community/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,5 +39,26 @@ export default async function CommunityProfilePage({
   // Sin perfil publico propio, sin bloqueo y sin fila visible: 404 generico.
   if (!person) notFound();
 
-  return <CommunityProfileView person={person} />;
+  const chatEnabled = getFlag('community_chat');
+  let connection: CommunityConnection | null = null;
+  if (chatEnabled) {
+    const { data: rows } = await supabase
+      .from('community_connections')
+      .select('id, requester_id, addressee_id, status, created_at, responded_at')
+      .or(`requester_id.eq.${user.id},addressee_id.eq.${user.id}`)
+      .in('status', ['pending', 'accepted']);
+    connection =
+      ((rows ?? []) as CommunityConnection[]).find(
+        (c) => c.requester_id === userId || c.addressee_id === userId,
+      ) ?? null;
+  }
+
+  return (
+    <CommunityProfileView
+      person={person}
+      connection={connection}
+      myId={user.id}
+      chatEnabled={chatEnabled}
+    />
+  );
 }
