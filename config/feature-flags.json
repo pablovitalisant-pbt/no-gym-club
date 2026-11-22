@@ -17,5 +17,6 @@
   "training_plan_v2": false,
   "plan_session_runner": false,
   "phase_generation": false,
-  "phase_generation_evidence_adjustment": false
+  "phase_generation_evidence_adjustment": false,
+  "continuous_session_mode": false
 }

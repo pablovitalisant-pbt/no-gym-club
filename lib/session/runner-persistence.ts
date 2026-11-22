@@ -1,4 +1,5 @@
 const STORAGE_PREFIX = 'ngc-runner:';
+const CONTINUOUS_PREFIX = 'ngc-continuous:';
 const STALE_THRESHOLD_MS = 6 * 60 * 60 * 1000; // 6 horas
 
 export interface RunnerSnapshot {
@@ -53,4 +54,33 @@ export function loadSnapshot(sessionId: string): RunnerSnapshot | null {
 
 export function clearSnapshot(sessionId: string): void {
   localStorage.removeItem(key(sessionId));
+}
+
+export interface ContinuousRunnerSnapshot {
+  sessionId: string;
+  state: import('./continuous').ContinuousState;
+  updatedAt: number;
+}
+
+export function saveContinuousSnapshot(snapshot: ContinuousRunnerSnapshot): void {
+  localStorage.setItem(CONTINUOUS_PREFIX + snapshot.sessionId, JSON.stringify(snapshot));
+}
+
+export function loadContinuousSnapshot(sessionId: string): ContinuousRunnerSnapshot | null {
+  try {
+    const raw = localStorage.getItem(CONTINUOUS_PREFIX + sessionId);
+    if (!raw) return null;
+    const data = JSON.parse(raw) as ContinuousRunnerSnapshot;
+    if (Date.now() - data.updatedAt > STALE_THRESHOLD_MS) {
+      localStorage.removeItem(CONTINUOUS_PREFIX + sessionId);
+      return null;
+    }
+    return data;
+  } catch {
+    return null;
+  }
+}
+
+export function clearContinuousSnapshot(sessionId: string): void {
+  localStorage.removeItem(CONTINUOUS_PREFIX + sessionId);
 }
