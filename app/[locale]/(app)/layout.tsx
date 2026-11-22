@@ -5,6 +5,7 @@ import TopAppBarGate from '@/components/layout/TopAppBarGate';
 import BottomNavBar from '@/components/layout/BottomNavBar';
 import ThemePreferenceSync from '@/components/settings/ThemePreferenceSync';
 import { isTheme } from '@/lib/settings/validate';
+import { getFlag } from '@/lib/flags';
 
 export default async function AppLayout({
   children,
@@ -21,6 +22,10 @@ export default async function AppLayout({
     { href: '/progress', label: t('progress') },
     { href: '/weekly-report', label: t('report') },
   ];
+
+  if (getFlag('community')) {
+    navItems.push({ href: '/community', label: t('community') });
+  }
 
   const supabase = createClient();
   const {

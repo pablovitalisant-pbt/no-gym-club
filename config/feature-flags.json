@@ -18,5 +18,6 @@
   "redo_program_plan": true,
   "plan_generating_messages": true,
   "theme_switcher": true,
-  "profile_settings": true
+  "profile_settings": true,
+  "community": true
 }

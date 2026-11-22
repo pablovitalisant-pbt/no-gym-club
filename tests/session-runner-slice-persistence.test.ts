@@ -127,6 +127,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'plan_generating_messages',
       'theme_switcher',
       'profile_settings',
+      'community',
     ]);
   });
 

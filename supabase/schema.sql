@@ -233,3 +233,14 @@ $$;
 -- Storage: bucket de avatares (lectura pública, escritura en la carpeta del usuario)
 -- Aplicado en supabase/migrations/0013_profile_settings.sql
 -- insert into storage.buckets (id, name, public) values ('avatars', 'avatars', true);
+
+-- Comunidad (aplicado en supabase/migrations/0014_community.sql)
+-- create table community_profiles (...);
+-- create table community_blocks (...);
+-- create table community_reports (...);
+-- create function nearby_community_profiles(radius_km int);
+-- create function community_profile(target uuid);
+-- grant select, insert, update on table community_profiles to authenticated;
+-- grant select, insert, delete on table community_blocks to authenticated;
+-- grant insert on table community_reports to authenticated;
+-- revoke all on table community_profiles, community_blocks, community_reports from anon;

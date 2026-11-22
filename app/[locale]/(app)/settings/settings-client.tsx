@@ -28,6 +28,7 @@ interface Props {
   displayName: string | null;
   avatarUrl: string | null;
   planId: string | null;
+  showCommunity: boolean;
 }
 
 function Avatar({ url, name }: { url: string | null; name: string | null }) {
@@ -253,6 +254,16 @@ export default function SettingsClient(p: Props) {
           </Link>
         )}
       </section>
+
+      {p.showCommunity && (
+        <section className={sectionCls}>
+          <h2 className={titleCls}>{t('communitySection')}</h2>
+          <p className="text-on-surface-variant text-label-sm">{t('communityHint')}</p>
+          <Link href="/community" className="text-label-sm underline text-on-surface-variant">
+            {t('manageCommunity')}
+          </Link>
+        </section>
+      )}
 
       <section className={sectionCls}>
         <h2 className={titleCls}>{t('accountSection')}</h2>

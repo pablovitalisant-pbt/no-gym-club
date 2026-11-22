@@ -1,7 +1,7 @@
 'use client';
 
 import { Link, usePathname } from '@/i18n/navigation';
-import { LayoutDashboard, Dumbbell, TrendingUp, BarChart3 } from 'lucide-react';
+import { LayoutDashboard, Dumbbell, TrendingUp, BarChart3, Users } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 const ICON_BY_HREF: Record<string, LucideIcon> = {
@@ -9,6 +9,7 @@ const ICON_BY_HREF: Record<string, LucideIcon> = {
   '/exercises': Dumbbell,
   '/progress': TrendingUp,
   '/weekly-report': BarChart3,
+  '/community': Users,
 };
 
 interface NavItem {

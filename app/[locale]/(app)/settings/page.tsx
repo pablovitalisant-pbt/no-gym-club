@@ -55,6 +55,7 @@ export default async function SettingsPage({
       displayName={profile?.display_name ?? null}
       avatarUrl={profile?.avatar_url ?? null}
       planId={plan?.id ?? null}
+      showCommunity={getFlag('community')}
     />
   );
 }

@@ -85,14 +85,16 @@ describe('Slice 4a — assessment profile + PAR-Q', () => {
   });
 
   // ─── Riesgo 3: assessment/page.tsx es Server Component con flag gate ───
-  it('(app)/layout.tsx es shell sin condiciones — sin getFlag', () => {
+  it('(app)/layout.tsx es shell server; solo gatea la pestaña Comunidad', () => {
     const raw = readFileSync(
       resolve(root, 'app/[locale]/(app)/layout.tsx'),
       'utf-8',
     );
-    // layout no debe gatear — es shell compartido para todas las rutas (app)
-    expect(raw).not.toContain('getFlag');
+    // layout sigue siendo shell server; la unica condicion es la pestaña
+    // Comunidad, aprobada en v2-22 (flag community).
     expect(raw).not.toContain("'use client'");
+    expect(raw).toContain("getFlag('community')");
+    expect(raw.match(/getFlag\(/g) ?? []).toHaveLength(1);
   });
 
   it('assessment/page.tsx es Server Component con getFlag y sin use client', () => {
