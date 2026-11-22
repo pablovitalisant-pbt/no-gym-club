@@ -5,8 +5,15 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { Sparkles } from 'lucide-react';
+import GeneratingMessages from './GeneratingMessages';
 
-export default function CreatePlanCard({ phaseIndex = 0 }: { phaseIndex?: number }) {
+export default function CreatePlanCard({
+  phaseIndex = 0,
+  messagesEnabled = false,
+}: {
+  phaseIndex?: number;
+  messagesEnabled?: boolean;
+}) {
   const t = useTranslations('dashboard.plan');
   const router = useRouter();
   const sending = useRef(false);
@@ -49,10 +56,14 @@ export default function CreatePlanCard({ phaseIndex = 0 }: { phaseIndex?: number
         {phaseIndex > 0 ? t('nextPhaseBody') : t('createBody')}
       </p>
       {loading ? (
-        <div className="space-y-2">
-          <p className="font-label-bold text-primary">{t('creating')}</p>
-          <p className="text-label-sm text-on-surface-variant">{t('createHint')}</p>
-        </div>
+        messagesEnabled ? (
+          <GeneratingMessages />
+        ) : (
+          <div className="space-y-2">
+            <p className="font-label-bold text-primary">{t('creating')}</p>
+            <p className="text-label-sm text-on-surface-variant">{t('createHint')}</p>
+          </div>
+        )
       ) : (
         <Button onClick={createPlan} className="uppercase">
           {t('createCta')}

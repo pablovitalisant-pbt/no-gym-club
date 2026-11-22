@@ -114,6 +114,7 @@ export default async function DashboardPage({
           startEnabled={getFlag('plan_session_runner')}
           todayCardEnabled={getFlag('plan_today_card')}
           redoEnabled={getFlag('redo_program_plan')}
+          generatingMessagesEnabled={getFlag('plan_generating_messages')}
           mediaIndex={mediaIndex}
         />
       ) : showAI ? (

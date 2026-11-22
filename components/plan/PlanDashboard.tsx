@@ -23,14 +23,14 @@ export default function PlanDashboard({
   hasAssessment,
   assessmentHref = '/assessment',
   initialDay,
-  startEnabled = false, todayCardEnabled = false, redoEnabled = false, mediaIndex = {},
+  startEnabled = false, todayCardEnabled = false, redoEnabled = false, mediaIndex = {}, generatingMessagesEnabled = false,
 }: {
   locale: string;
   plan: PlanRow | null;
   hasAssessment: boolean;
   assessmentHref?: string; initialDay?: number | null;
   startEnabled?: boolean; todayCardEnabled?: boolean; redoEnabled?: boolean;
-  mediaIndex?: MediaIndex;
+  mediaIndex?: MediaIndex; generatingMessagesEnabled?: boolean;
 }) {
   const t = useTranslations('dashboard.plan');
   const router = useRouter();
@@ -51,7 +51,7 @@ export default function PlanDashboard({
   }
 
   if (!plan || plan.plan_data.phases.length === 0) {
-    return <CreatePlanCard />;
+    return <CreatePlanCard messagesEnabled={generatingMessagesEnabled} />;
   }
 
   const planId = plan.id;
@@ -123,7 +123,7 @@ export default function PlanDashboard({
         onStart={startEnabled ? handleStart : undefined} completing={busy}
       />
       {nextPhase && (
-        <div className="mt-md"><CreatePlanCard phaseIndex={plan.plan_data.phases.length} /></div>
+        <div className="mt-md"><CreatePlanCard phaseIndex={plan.plan_data.phases.length} messagesEnabled={generatingMessagesEnabled} /></div>
       )}
       {error && <p className="text-error font-body-md mt-sm">{t('actionError')}</p>}
       <p className="text-label-sm text-on-surface-variant mt-md">

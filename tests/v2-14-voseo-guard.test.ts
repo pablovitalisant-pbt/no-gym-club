@@ -5,20 +5,7 @@ import { resolve } from 'path';
 const root = resolve(__dirname, '..');
 const es = JSON.parse(readFileSync(resolve(root, 'messages/es.json'), 'utf-8'));
 
-const VOSEO = /\b(?:tenés|podés|querés|sabés|sentís|elegí|contanos|hacé|tocá|empezá|guardá|registrá|volvé|seleccioná|marcá|respondé|consultá|arrancá|probá|decí|mirá|usá|buscá|poné|andá|vení|salí|escribí|completá|revisá|activá|desactivá|agregá|borrá|cambiá|pedí|repetí|mantené)\b/i;
-
-// Imperativos voseantes con tilde final (Intentá, Probá, Elegí, Hacé...).
-const TILDE_FINAL = /[áéí]$/i;
-// Palabras con tilde final que NO son imperativos voseantes.
-const PERMITIDAS = new Set([
-  'está', 'qué', 'sí', 'él', 'más', 'entrené', 'esté', 'aquí', 'así', 'ahí', 'allí',
-]);
-
-function tildesVoseantes(texto: string): string[] {
-  return texto
-    .split(/[^\p{L}]+/u)
-    .filter((w) => TILDE_FINAL.test(w) && !PERMITIDAS.has(w.toLowerCase()));
-}
+import { VOSEO, tildesVoseantes } from './helpers/voseo-guard';
 
 function strings(obj: unknown, path = ''): Array<[string, string]> {
   return Object.entries(obj as Record<string, unknown>).flatMap(([k, v]) => {

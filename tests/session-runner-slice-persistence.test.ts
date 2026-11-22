@@ -125,6 +125,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'assessment_step_indicator',
       'plan_today_card',
       'redo_program_plan',
+      'plan_generating_messages',
     ]);
   });
 
