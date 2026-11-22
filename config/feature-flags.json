@@ -9,8 +9,8 @@
   "exercises_catalog": true,
   "weekly_report": true,
   "progress": true,
-  "training_plan_v2": false,
-  "plan_session_runner": false,
-  "phase_generation_evidence_adjustment": false,
-  "continuous_session_mode": false
+  "training_plan_v2": true,
+  "plan_session_runner": true,
+  "phase_generation_evidence_adjustment": true,
+  "continuous_session_mode": true
 }

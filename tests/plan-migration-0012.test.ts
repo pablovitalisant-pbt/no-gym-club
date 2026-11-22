@@ -50,8 +50,8 @@ describe('migracion 0012 training plan state', () => {
     expect(schema).toContain('plan_day_index');
   });
 
-  it('feature flag training_plan_v2 existe en false', () => {
+  it('feature flag training_plan_v2 existe y es booleano', () => {
     const flags = JSON.parse(readFileSync(resolve(root, 'config/feature-flags.json'), 'utf-8'));
-    expect(flags.training_plan_v2).toBe(false);
+    expect(typeof flags.training_plan_v2).toBe('boolean');
   });
 });
