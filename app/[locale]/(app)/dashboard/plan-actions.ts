@@ -101,6 +101,27 @@ export async function startPlanSession(planId: string, dayIndex: number) {
   return { success: true as const, sessionId: inserted.id as string };
 }
 
+/** "Rehacer mi programa": archiva el plan activo, nunca lo borra. */
+export async function abandonActivePlan(planId: string) {
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { success: false as const, error: 'Unauthorized' };
+
+  const { data: plan, error: loadError } = await loadOwnPlan(planId, user.id);
+  if (loadError || !plan) return { success: false as const, error: 'Plan not found' };
+
+  const { error } = await supabase
+    .from('training_plans')
+    .update({ is_active: false, status: 'abandoned' })
+    .eq('id', planId)
+    .eq('user_id', user.id);
+  if (error) return { success: false as const, error: error.message };
+
+  return { success: true as const };
+}
+
 export async function setCurrentPlanDay(planId: string, dayIndex: number) {
   if (!validIndex(dayIndex)) return { success: false as const, error: 'Invalid day index' };
 

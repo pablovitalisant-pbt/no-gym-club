@@ -113,6 +113,7 @@ export default async function DashboardPage({
           initialDay={parseDayParam(searchParams?.day)}
           startEnabled={getFlag('plan_session_runner')}
           todayCardEnabled={getFlag('plan_today_card')}
+          redoEnabled={getFlag('redo_program_plan')}
           mediaIndex={mediaIndex}
         />
       ) : showAI ? (

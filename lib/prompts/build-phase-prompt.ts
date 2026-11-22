@@ -139,6 +139,30 @@ Rules:
 
 const BASE_SCHEMA_DOC = `\n\n## PlanPhase JSON schema (exact fields)\n${SCHEMA}\n- "session" is an object with warmup/main/cooldown on training days and exactly null on rest days.\n- "generated_at" must be an ISO-8601 timestamp.`;
 
+/**
+ * v2-18: además del push, el pull debe arrancar en la variante que el atleta
+ * ya demostró (8 dominadas no deben convertirse en remos de pie).
+ */
+function startingVariantsRule(a: PhaseAssessment | null): string {
+  const variant = a?.pushup_variant ?? 'none';
+  const reps = a?.pushup_variant_reps ?? 0;
+  const push =
+    variant === 'floor' && reps < 10
+      ? 'incline push-up or floor push-up with few reps'
+      : variant === 'floor'
+        ? 'floor push-up'
+        : variant === 'incline'
+          ? 'incline push-up'
+          : variant === 'knee'
+            ? 'knee push-up'
+            : 'wall push-up';
+  const pull =
+    (a?.max_pullups ?? 0) >= 5
+      ? 'pull-ups (never easier than the tested variant in phase 1)'
+      : 'australian pull-ups or negative pull-ups';
+  return `- STARTING VARIANTS BY PATTERN: push starts at ${push}; pull starts at ${pull}; legs and core start at the tested level (chair sit-to-stand and knee plank when those were the tests). In phase 1 never prescribe a harder variant than the tested one.`;
+}
+
 function cardioRule(pref: string | null): string {
   if ((pref ?? 'none') === 'none') {
     return '- CARDIO: none. Do not include a cardio section on any day.';
@@ -244,6 +268,7 @@ export function buildPhasePrompt(input: PhasePromptInput): PhasePrompt {
     focusRule(profile.focus_areas),
     startLevel === 'untrained_extreme' ? EXTREME_RULE : '',
     STARTING_VARIANT_RULE,
+    startingVariantsRule(assessment),
     BASE_SCHEMA_DOC,
   ]
     .filter(Boolean)

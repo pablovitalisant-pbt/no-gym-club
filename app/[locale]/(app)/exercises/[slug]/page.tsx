@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { Dumbbell } from 'lucide-react';
 import { resolveExerciseMedia } from '@/lib/exercises/resolve-media';
 import { displayExerciseName } from '@/lib/exercises/display-name';
+import BackButton from '@/components/ui/BackButton';
 import type { Database } from '@/lib/supabase/types';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
@@ -45,12 +46,12 @@ export default async function ExerciseDetailPage({
   return (
     <div className="max-w-2xl mx-auto space-y-lg">
       {/* Back link */}
-      <a
-        href={`/${locale}/exercises`}
+      <BackButton
+        fallbackHref={`/${locale}/exercises`}
         className="font-label-bold text-label-sm uppercase text-on-surface-variant hover:text-primary transition-colors inline-flex items-center gap-1"
       >
         ← {t('backToCatalog')}
-      </a>
+      </BackButton>
 
       {/* Image */}
       <div className="aspect-video bg-surface-800 border border-outline-variant overflow-hidden flex items-center justify-center">

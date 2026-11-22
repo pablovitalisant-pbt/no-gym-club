@@ -105,6 +105,12 @@
       "assessmentBody": "Complete the initial assessment to generate a program adapted to you.",
       "assessmentCta": "Take the assessment",
       "actionError": "Could not save the change. Please try again.",
+      "redoProgram": "Redo my program",
+      "redoConfirmTitle": "Redo your program?",
+      "redoConfirmBody": "We archive your current program so you can create a new one. Your logged sessions are kept.",
+      "redoConfirmCta": "Yes, redo it",
+      "redoCancel": "Cancel",
+      "updateAssessment": "Update my assessment",
       "completedCount": "{done} of {total} days completed",
       "warmup": "Warmup",
       "main": "Main",
@@ -158,7 +164,7 @@
     "equipment": "Equipment",
     "progression": "▲ Progression",
     "regression": "▼ Regression",
-    "backToCatalog": "Back to catalog",
+    "backToCatalog": "Back",
     "linkedExercises": "{count} linked"
   },
   "weekly": {

@@ -14,5 +14,6 @@
   "phase_generation_evidence_adjustment": true,
   "continuous_session_mode": true,
   "assessment_step_indicator": true,
-  "plan_today_card": true
+  "plan_today_card": true,
+  "redo_program_plan": true
 }

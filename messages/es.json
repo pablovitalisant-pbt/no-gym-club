@@ -105,6 +105,12 @@
       "assessmentBody": "Completa la evaluación inicial para generar un programa adaptado a ti.",
       "assessmentCta": "Hacer la evaluación",
       "actionError": "No se pudo guardar el cambio. Inténtalo de nuevo.",
+      "redoProgram": "Rehacer mi programa",
+      "redoConfirmTitle": "¿Rehacer tu programa?",
+      "redoConfirmBody": "Archivamos tu programa actual y podrás crear uno nuevo. Tus sesiones registradas se conservan.",
+      "redoConfirmCta": "Sí, rehacer",
+      "redoCancel": "Cancelar",
+      "updateAssessment": "Actualizar mi evaluación",
       "completedCount": "{done} de {total} días completados",
       "warmup": "Calentamiento",
       "main": "Parte principal",
@@ -158,7 +164,7 @@
     "equipment": "Equipamiento",
     "progression": "▲ Progresión",
     "regression": "▼ Regresión",
-    "backToCatalog": "Volver al catálogo",
+    "backToCatalog": "Volver",
     "linkedExercises": "{count} relacionado(s)"
   },
   "weekly": {
