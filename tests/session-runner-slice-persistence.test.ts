@@ -113,6 +113,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'dashboard',
       'assessment',
       'assessment_v2_ui',
+      'assessment_v2_focus_areas',
       'ai_session_generation',
       'session_log',
       'session_runner',
@@ -120,7 +121,9 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'calisthenics_catalog',
       'weekly_report',
       'progress',
+      'qa_environment',
       'corpus_overcoming_gravity',
+      'training_plan_v2',
     ]);
   });
 

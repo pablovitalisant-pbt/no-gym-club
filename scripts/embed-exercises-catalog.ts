@@ -16,6 +16,7 @@
 
 import { readFileSync } from 'fs';
 import { resolve } from 'path';
+import { getEmbedding, buildExerciseEmbeddingText } from '@/lib/nvidia/client';
 
 const envPath = resolve(__dirname, '..', '.env.local');
 const envRaw = readFileSync(envPath, 'utf-8');
@@ -33,6 +34,7 @@ if (!SUPABASE_URL || !SERVICE_KEY || !NVIDIA_API_KEY) {
   console.error('Missing required env vars');
   process.exit(1);
 }
+process.env.NVIDIA_API_KEY = NVIDIA_API_KEY;
 
 const HEADERS = {
   apikey: SERVICE_KEY,
@@ -80,31 +82,10 @@ async function main() {
   let errors = 0;
 
   for (const ex of exercises) {
-    const text = `${ex.name_en} — ${ex.category} — works ${(ex.muscle_groups || []).join(', ')}`;
+    const text = buildExerciseEmbeddingText(ex);
 
     try {
-      const embRes = await fetch('https://integrate.api.nvidia.com/v1/embeddings', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${NVIDIA_API_KEY}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'nvidia/nv-embedqa-e5-v5',
-          input: [`passage: ${text}`],
-          input_type: 'passage',
-        }),
-      });
-
-      if (!embRes.ok) {
-        const err = (await embRes.text()).slice(0, 120);
-        console.error(`  ✗ ${ex.name_en}: embedding API ${embRes.status} — ${err}`);
-        errors++;
-        continue;
-      }
-
-      const embData = (await embRes.json()) as { data: { embedding: number[] }[] };
-      const vector = embData.data[0].embedding;
+      const vector = await getEmbedding(text, 'passage');
 
       // PATCH to Supabase
       const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/exercises?id=eq.${ex.id}`, {

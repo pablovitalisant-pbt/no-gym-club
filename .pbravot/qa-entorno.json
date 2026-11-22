@@ -1,0 +1,16 @@
+{
+  "url": "http://localhost:3123",
+  "comando": "npm run dev -- -p 3123",
+  "envArchivos": [".env.local"],
+  "env": {
+    "QA_EXCEPCION_PRODUCCION": "pablo-2026-11-21",
+    "NEXT_PUBLIC_APP_URL": "http://localhost:3123"
+  },
+  "produccion": [],
+  "preparar": "node .pbravot/qa-preparar.mjs",
+  "restaurar": ["next-env.d.ts"],
+  "timeoutSeg": 180,
+  "guardas": [],
+  "_excepcion": "Pablo (PO) autorizo el 2026-11-21 correr la Fase E sobre la base Supabase compartida: no hay base de pruebas. La excepcion se identifica con QA_EXCEPCION_PRODUCCION=pablo-2026-11-21. Retirarla requiere una base aislada y restaurar guardas.",
+  "preview": []
+}

@@ -32,6 +32,8 @@ export interface Database {
           limitations_notes: string | null;
           cardio_preference: 'none' | 'light' | 'moderate' | 'intense';
           timezone: string | null;
+          focus_areas: string[];
+          focus_notes: string | null;
           created_at: string;
           updated_at: string;
         };
@@ -60,6 +62,8 @@ export interface Database {
           limitations_notes?: string | null;
           cardio_preference?: 'none' | 'light' | 'moderate' | 'intense';
           timezone?: string | null;
+          focus_areas?: string[];
+          focus_notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -88,6 +92,8 @@ export interface Database {
           limitations_notes?: string | null;
           cardio_preference?: 'none' | 'light' | 'moderate' | 'intense';
           timezone?: string | null;
+          focus_areas?: string[];
+          focus_notes?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -222,6 +228,10 @@ export interface Database {
           generated_by_ai: boolean;
           plan_data: Json;
           is_active: boolean;
+          current_day_index: number;
+          completed_day_indexes: number[];
+          start_level: string | null;
+          status: 'active' | 'completed' | 'abandoned';
           created_at: string;
           updated_at: string;
         };
@@ -233,6 +243,10 @@ export interface Database {
           generated_by_ai?: boolean;
           plan_data?: Json;
           is_active?: boolean;
+          current_day_index?: number;
+          completed_day_indexes?: number[];
+          start_level?: string | null;
+          status?: 'active' | 'completed' | 'abandoned';
           created_at?: string;
           updated_at?: string;
         };
@@ -244,6 +258,10 @@ export interface Database {
           generated_by_ai?: boolean;
           plan_data?: Json;
           is_active?: boolean;
+          current_day_index?: number;
+          completed_day_indexes?: number[];
+          start_level?: string | null;
+          status?: 'active' | 'completed' | 'abandoned';
           created_at?: string;
           updated_at?: string;
         };
@@ -253,6 +271,7 @@ export interface Database {
           id: string;
           user_id: string;
           plan_id: string | null;
+          plan_day_index: number | null;
           scheduled_date: string | null;
           completed_at: string | null;
           session_data: Json;
@@ -266,6 +285,7 @@ export interface Database {
           id?: string;
           user_id: string;
           plan_id?: string | null;
+          plan_day_index?: number | null;
           scheduled_date?: string | null;
           completed_at?: string | null;
           session_data?: Json;
@@ -279,6 +299,7 @@ export interface Database {
           id?: string;
           user_id?: string;
           plan_id?: string | null;
+          plan_day_index?: number | null;
           scheduled_date?: string | null;
           completed_at?: string | null;
           session_data?: Json;

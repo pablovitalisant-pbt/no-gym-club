@@ -197,7 +197,22 @@
       "past": "Trained a while ago",
       "pastSub": "Been inactive for some time",
       "active": "Currently training",
-      "activeSub": "Training regularly"
+      "activeSub": "Training regularly",
+      "focusTitle": "Any specific goal?",
+      "focusHint": "Pick up to 3 areas or skills (optional).",
+      "focus_chest": "Chest",
+      "focus_shoulders": "Shoulders",
+      "focus_back": "Back",
+      "focus_arms": "Arms",
+      "focus_legs": "Legs",
+      "focus_glutes": "Glutes",
+      "focus_core": "Core",
+      "focus_skill_pullup": "Pull-up",
+      "focus_skill_handstand": "Handstand",
+      "focus_skill_muscleup": "Muscle-up",
+      "focus_skill_pistol": "Pistol squat",
+      "focusNotes": "Anything else you want to tell us",
+      "focusNotesPlaceholder": "E.g.: I want my first strict pull-up"
     },
     "equipment": {
       "title": "Available equipment",

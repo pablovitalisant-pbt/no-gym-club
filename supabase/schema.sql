@@ -31,6 +31,8 @@ create table profiles (
   limitations_notes text,
   cardio_preference text default 'none' check (cardio_preference in ('none','light','moderate','intense')),
   timezone text,
+  focus_areas text[] default '{}' check (focus_areas <@ array['chest','shoulders','back','arms','legs','glutes','core','skill_pullup','skill_handstand','skill_muscleup','skill_pistol']::text[]),
+  focus_notes text,
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -78,6 +80,10 @@ create table training_plans (
   generated_by_ai boolean default true,
   plan_data jsonb default '{}'::jsonb,
   is_active boolean default true,
+  current_day_index int not null default 0 check (current_day_index >= 0 and current_day_index < 84),
+  completed_day_indexes int[] not null default '{}',
+  start_level text,
+  status text not null default 'active' check (status in ('active','completed','abandoned')),
   created_at timestamptz default now(),
   updated_at timestamptz default now()
 );
@@ -86,6 +92,7 @@ create table workout_sessions (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid not null references profiles(id) on delete cascade,
   plan_id uuid references training_plans(id) on delete set null,
+  plan_day_index int check (plan_day_index >= 0 and plan_day_index < 84),
   scheduled_date date, completed_at timestamptz,
   session_data jsonb default '{}'::jsonb,
   log_data jsonb, rpe integer check (rpe >= 1 and rpe <= 10),
@@ -105,8 +112,10 @@ create table skill_progress (
 -- Indices
 create index idx_assessment_results_user_id on assessment_results(user_id);
 create index idx_training_plans_user_id on training_plans(user_id);
+create unique index idx_training_plans_one_active on training_plans(user_id) where is_active;
 create index idx_workout_sessions_user_id on workout_sessions(user_id);
 create index idx_workout_sessions_scheduled_date on workout_sessions(scheduled_date);
+create index idx_workout_sessions_plan_day on workout_sessions(plan_id, plan_day_index);
 create index idx_skill_progress_user_id on skill_progress(user_id);
 create index idx_exercises_slug on exercises(slug);
 create index idx_exercises_category on exercises(category);

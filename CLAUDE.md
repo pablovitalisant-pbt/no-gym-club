@@ -10,7 +10,7 @@ Documento operativo para Claude Code. Leer junto con `~/.claude/CLAUDE.md` (semi
 - **Estilos:** Tailwind CSS
 - **Auth + DB + Storage:** Supabase (PostgreSQL con Row Level Security)
 - **LLM:** DeepSeek V4 Flash (`deepseek-v4-flash`) vía SDK `openai` (endpoint compatible OpenAI)
-- **RAG:** pgvector (extensión Supabase, vector(1024)) — tabla `sport_science_corpus` + función `search_corpus()`. Embeddings via NVIDIA NIM `nvidia/nv-embedqa-e5-v5` (endpoint `https://integrate.api.nvidia.com/v1`).
+- **RAG:** pgvector (extensión Supabase, vector(1024)) — tabla `sport_science_corpus` + función `search_corpus()`. Embeddings via NVIDIA NIM `nvidia/nemotron-3.5-embed-1b` con `dimensions: 1024` (endpoint `https://integrate.api.nvidia.com/v1`). Modelo y dimensión en `lib/nvidia/client.ts` (`EMBEDDING_MODEL`, `EMBEDDING_DIMENSIONS`).
 - **i18n:** next-intl (ES default, EN secundario)
 - **Deploy:** Vercel
 
@@ -115,3 +115,12 @@ Protocolo en `~/.claude/skills/pbt-ia-debugging.md`
 Se activa con: "hay un bug", "se rompio", "dejo de funcionar", "sigue pasando"
 
 Registro: `BUGS.md` en la raiz del proyecto
+
+## Entorno QA
+
+- URL: `http://localhost:3123`
+- Levantar: `npm run dev -- -p 3123`
+- Preparar datos: `PBRAVOT_QA_DIR=..\\_dt\\qa node .pbravot/qa-preparar.mjs`
+- Cuentas sintéticas: `qa.extremo@nogym.test` (52 años, limitaciones knees/lower_back), `qa.intermedio@nogym.test` (30 años, focus chest/shoulders) y `qa.nuevo@nogym.test` (sin perfil). Las contraseñas se regeneran y escriben en `cuentas.json`, nunca se imprimen.
+- Reiniciar datos: ejecutar el preparador; borra únicamente filas de esas cuentas filtradas por `user_id` y recrea sus perfiles/resultados.
+- Excepción aprobada por Pablo el 2026-11-21: no existe base de pruebas; Fase E usa la base Supabase compartida con cuentas sintéticas. `guardas: []` y `QA_EXCEPCION_PRODUCCION=pablo-2026-11-21`.

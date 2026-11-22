@@ -5,6 +5,7 @@ export interface SessionExercise {
   reps?: string;
   rpe?: number;
   rest_seconds?: number;
+  work_seconds?: number;
   notes_es?: string;
   notes_en?: string;
   bilateral?: boolean;
@@ -17,6 +18,8 @@ export interface SessionData {
   warmup: SessionExercise[];
   main: SessionExercise[];
   cooldown: SessionExercise[];
+  finisher?: SessionExercise[];
+  cardio?: SessionExercise[];
   rationale_es: string;
   rationale_en: string;
   science_refs: string[];

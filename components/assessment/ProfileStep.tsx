@@ -1,7 +1,8 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import { ArrowRight } from 'lucide-react';
-import { TRAINING_HISTORY, type TrainingHistory } from '@/lib/assessment/validate';
+import { TRAINING_HISTORY, type FocusArea, type TrainingHistory } from '@/lib/assessment/validate';
+import { FocusAreas } from './FocusAreas';
 
 interface Props {
   age: string;
@@ -18,6 +19,10 @@ interface Props {
   setDays: (v: string) => void;
   trainingHistory: TrainingHistory | null;
   setTrainingHistory: (v: TrainingHistory) => void;
+  focusAreas: FocusArea[];
+  setFocusAreas: (v: FocusArea[]) => void;
+  focusNotes: string;
+  setFocusNotes: (v: string) => void;
   onNext: () => void;
 }
 
@@ -88,6 +93,13 @@ export function ProfileStep(p: Props) {
           ))}
         </select>
       </div>
+
+      <FocusAreas
+        value={p.focusAreas}
+        onChange={p.setFocusAreas}
+        notes={p.focusNotes}
+        onNotesChange={p.setFocusNotes}
+      />
 
       <div className="space-y-xs">
         <div className="flex justify-between items-center">

@@ -5,6 +5,7 @@ import { type Database } from '@/lib/supabase/types';
 import { validateProfileV2 } from '@/lib/assessment/validate';
 import type {
   CardioPreference,
+  FocusArea,
   HealthLimitation,
   TrainingHistory,
 } from '@/lib/assessment/validate';
@@ -26,6 +27,8 @@ interface ProfileData {
   limitations_notes?: string | null;
   cardio_preference?: CardioPreference | null;
   timezone?: string | null;
+  focus_areas?: FocusArea[];
+  focus_notes?: string | null;
 }
 
 export async function saveProfile(data: ProfileData) {
@@ -55,7 +58,9 @@ export async function saveProfile(data: ProfileData) {
     data.health_limitations !== undefined ||
     data.limitations_notes !== undefined ||
     data.cardio_preference !== undefined ||
-    data.timezone !== undefined;
+    data.timezone !== undefined ||
+    data.focus_areas !== undefined ||
+    data.focus_notes !== undefined;
 
   const profile: ProfileInsert = {
     id: user.id,

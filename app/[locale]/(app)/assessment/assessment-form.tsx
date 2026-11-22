@@ -13,6 +13,7 @@ import type {
   TrainingHistory,
   HealthLimitation,
   CardioPreference,
+  FocusArea,
 } from '@/lib/assessment/validate';
 
 type Step = 'profile' | 'equipment' | 'health' | 'cardio' | 'parq';
@@ -33,6 +34,8 @@ export function AssessmentForm() {
   const [goal, setGoal] = useState('general_fitness');
   const [days, setDays] = useState('3');
   const [trainingHistory, setTrainingHistory] = useState<TrainingHistory | null>(null);
+  const [focusAreas, setFocusAreas] = useState<FocusArea[]>([]);
+  const [focusNotes, setFocusNotes] = useState('');
 
   // equipment
   const [equipment, setEquipment] = useState<string[]>(['bodyweight']);
@@ -78,6 +81,8 @@ export function AssessmentForm() {
       health_limitations: limitations,
       limitations_notes: limitationsNotes.trim() || null,
       cardio_preference: cardio,
+      focus_areas: focusAreas,
+      focus_notes: focusNotes.trim() || null,
     });
 
     if (!result.success) {
@@ -123,6 +128,8 @@ export function AssessmentForm() {
           goal={goal} setGoal={setGoal}
           days={days} setDays={setDays}
           trainingHistory={trainingHistory} setTrainingHistory={setTrainingHistory}
+          focusAreas={focusAreas} setFocusAreas={setFocusAreas}
+          focusNotes={focusNotes} setFocusNotes={setFocusNotes}
           onNext={() => setStep('equipment')}
         />
       )}

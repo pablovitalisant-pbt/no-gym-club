@@ -4,6 +4,7 @@
   "dashboard": true,
   "assessment": true,
   "assessment_v2_ui": false,
+  "assessment_v2_focus_areas": false,
   "ai_session_generation": true,
   "session_log": true,
   "session_runner": true,
@@ -11,5 +12,7 @@
   "calisthenics_catalog": false,
   "weekly_report": true,
   "progress": true,
-  "corpus_overcoming_gravity": false
+  "qa_environment": false,
+  "corpus_overcoming_gravity": false,
+  "training_plan_v2": false
 }

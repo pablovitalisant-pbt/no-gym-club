@@ -17,6 +17,21 @@ export type CardioPreference = (typeof CARDIO_PREFERENCES)[number];
 export const PUSHUP_VARIANTS = ['floor', 'knee', 'incline', 'wall', 'none'] as const;
 export type PushupVariant = (typeof PUSHUP_VARIANTS)[number];
 
+export const FOCUS_AREAS = [
+  'chest',
+  'shoulders',
+  'back',
+  'arms',
+  'legs',
+  'glutes',
+  'core',
+  'skill_pullup',
+  'skill_handstand',
+  'skill_muscleup',
+  'skill_pistol',
+] as const;
+export type FocusArea = (typeof FOCUS_AREAS)[number];
+
 type Result<T> = { ok: true; value: T } | { ok: false; error: string };
 
 export interface ProfileV2 {
@@ -25,6 +40,8 @@ export interface ProfileV2 {
   limitations_notes: string | null;
   cardio_preference: CardioPreference;
   timezone: string | null;
+  focus_areas: FocusArea[];
+  focus_notes: string | null;
 }
 
 export const TEST_METRICS = [
@@ -96,6 +113,30 @@ export function validateProfileV2(input: unknown): Result<ProfileV2> {
     return { ok: false, error: 'timezone must be text' };
   }
 
+  const rawFocus = src.focus_areas ?? [];
+  if (!Array.isArray(rawFocus)) {
+    return { ok: false, error: 'focus_areas must be an array' };
+  }
+  const focus = rawFocus as unknown[];
+  if (focus.some((f) => !FOCUS_AREAS.includes(f as FocusArea))) {
+    return { ok: false, error: 'unknown focus area' };
+  }
+  if (focus.length > 3) {
+    return { ok: false, error: 'too many focus areas' };
+  }
+  if (new Set(focus).size !== focus.length) {
+    return { ok: false, error: 'duplicate focus area' };
+  }
+
+  const rawFocusNotes = src.focus_notes;
+  if (
+    rawFocusNotes !== undefined &&
+    rawFocusNotes !== null &&
+    (typeof rawFocusNotes !== 'string' || rawFocusNotes.length > 300)
+  ) {
+    return { ok: false, error: 'focus_notes must be text up to 300 chars' };
+  }
+
   return {
     ok: true,
     value: {
@@ -104,6 +145,8 @@ export function validateProfileV2(input: unknown): Result<ProfileV2> {
       limitations_notes: (rawNotes as string | null) ?? null,
       cardio_preference: rawCardio as CardioPreference,
       timezone: (rawTz as string | null) ?? null,
+      focus_areas: focus as FocusArea[],
+      focus_notes: (rawFocusNotes as string | null) ?? null,
     },
   };
 }

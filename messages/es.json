@@ -197,7 +197,22 @@
       "past": "Entrené hace tiempo",
       "pastSub": "Estuve inactivo un tiempo",
       "active": "Entreno actualmente",
-      "activeSub": "Vengo entrenando seguido"
+      "activeSub": "Vengo entrenando seguido",
+      "focusTitle": "¿Tenés alguna meta particular?",
+      "focusHint": "Elegí hasta 3 zonas o habilidades (opcional).",
+      "focus_chest": "Pecho",
+      "focus_shoulders": "Hombros",
+      "focus_back": "Espalda",
+      "focus_arms": "Brazos",
+      "focus_legs": "Piernas",
+      "focus_glutes": "Glúteos",
+      "focus_core": "Core",
+      "focus_skill_pullup": "Dominada",
+      "focus_skill_handstand": "Handstand",
+      "focus_skill_muscleup": "Muscle-up",
+      "focus_skill_pistol": "Pistol squat",
+      "focusNotes": "Algo más que quieras contarnos",
+      "focusNotesPlaceholder": "Ej.: quiero mi primera dominada estricta"
     },
     "equipment": {
       "title": "Equipamiento disponible",

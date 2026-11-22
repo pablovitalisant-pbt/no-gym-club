@@ -25,6 +25,8 @@ const profileMock = {
   limitations_notes: null,
   cardio_preference: 'none' as const,
   timezone: null,
+  focus_areas: [],
+  focus_notes: null,
   created_at: '2026-01-01T00:00:00.000Z',
   updated_at: '2026-01-01T00:00:00.000Z',
 };
