@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { getFlag } from '@/lib/flags';
 import { Dumbbell } from 'lucide-react';
+import { resolveExerciseMedia } from '@/lib/exercises/resolve-media';
 import type { Database } from '@/lib/supabase/types';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
@@ -106,6 +107,7 @@ export default async function ExercisesPage({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter md:gap-md">
         {(exercises || []).map((ex: ExerciseRow) => {
           const name = locale === 'en' ? ex.name_en : ex.name_es;
+          const media = resolveExerciseMedia(ex);
           return (
             <a
               key={ex.id}
@@ -119,9 +121,9 @@ export default async function ExercisesPage({
                   </span>
                 </div>
                 <div className="w-full aspect-video bg-surface-700 mb-sm overflow-hidden relative border border-outline-variant">
-                  {ex.gif_url ? (
+                  {media.src ? (
                     <>
-                      <img src={ex.gif_url} alt={name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" loading="lazy" />
+                      <img src={media.src} alt={name} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300" loading="lazy" />
                       <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent" />
                     </>
                   ) : (

@@ -7,6 +7,7 @@
   "session_log": true,
   "session_runner": true,
   "exercises_catalog": true,
+  "calisthenics_catalog": false,
   "weekly_report": true,
   "progress": true
 }

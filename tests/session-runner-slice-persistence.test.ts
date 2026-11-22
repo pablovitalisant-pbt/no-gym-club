@@ -116,6 +116,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'session_log',
       'session_runner',
       'exercises_catalog',
+      'calisthenics_catalog',
       'weekly_report',
       'progress',
     ]);

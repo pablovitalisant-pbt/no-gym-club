@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { createClient } from '@/lib/supabase/server';
 import { Dumbbell } from 'lucide-react';
+import { resolveExerciseMedia } from '@/lib/exercises/resolve-media';
 import type { Database } from '@/lib/supabase/types';
 
 type ExerciseRow = Database['public']['Tables']['exercises']['Row'];
@@ -39,6 +40,7 @@ export default async function ExerciseDetailPage({
   const instructions = locale === 'en' && exercise.instructions_en?.length
     ? exercise.instructions_en
     : exercise.instructions_es;
+  const media = resolveExerciseMedia(exercise);
   return (
     <div className="max-w-2xl mx-auto space-y-lg">
       {/* Back link */}
@@ -51,8 +53,8 @@ export default async function ExerciseDetailPage({
 
       {/* Image */}
       <div className="aspect-video bg-surface-800 border border-outline-variant overflow-hidden flex items-center justify-center">
-        {exercise.gif_url ? (
-          <img src={exercise.gif_url} alt={name} className="w-full h-full object-contain" />
+        {media.src ? (
+          <img src={media.src} alt={name} className="w-full h-full object-contain" />
         ) : (
           <span className="text-4xl">💪</span>
         )}

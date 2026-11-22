@@ -102,3 +102,64 @@ Primeros 6 meses: escala pequeña (validación). DeepSeek pay-per-token escala s
 | `session/[id]/actions.ts` — `mergeLogData()` | Toda escritura a `log_data` (columna JSON de `workout_sessions`) debe pasar por `mergeLogData()` (SELECT + spread + UPDATE). Durante el set de sub-slices de corrección del session runner (2026-07-07) se encontraron y corrigieron dos bugs reales en este archivo: (1) `saveSessionTimes()` hacía overwrite directo de `log_data` sin merge, pisando `exerciseLog` si corría después; (2) `saveExerciseReps()` optimista mandaba solo la entrada nueva (`[entry]`) en vez del ref acumulado completo, causando pérdida silenciosa de entradas previas si la sesión no llegaba a `state === 'done'`. Cualquier función nueva que escriba `log_data` debe reusar `mergeLogData()` y mandar listas completas (nunca deltas) desde un ref local autoritativo. | No agregar un `.update({ log_data: ... })` directo en ningún archivo nuevo — siempre pasar por `mergeLogData()`. No mandar arrays parciales/delta a funciones que reemplazan una key de `log_data` completa. |
 | Suite de tests — flakiness intermitente | Detectado durante UI-6 (2026-07-08): corriendo `npx vitest run` varias veces seguidas sin tocar código, falla un test distinto en cada corrida (`dashboard-guard.test.ts` una vez, `session-generate-smoke.test.ts` otra), nunca el mismo dos veces. No está ligado a ningún slice — es infraestructura de test (probablemente condición de carrera en la paralelización de Vitest). | Antes de asumir que un test roto es culpa de un cambio nuevo, correr la suite 2-3 veces para descartar flakiness preexistente. Pendiente: investigar en un ponytail audit — candidatos: mocks compartidos entre archivos de test, orden de ejecución no determinista, recursos (env vars, fs) compartidos sin aislar. |
 | Timezone de usuario — no manejado en ningún lado | La app entera calcula fechas/días en base a `completed_at` (UTC, vía `toISOString()`) sin conocer el timezone real del usuario. Confirmado concretamente en `getWeeklyDayMarkers()` (UI-8, `lib/progress/report-helpers.ts`): una sesión completada tarde en la noche en un timezone detrás de UTC (ej. Chile, UTC-3) puede quedar atribuida al día equivocado en el panel de consistencia. No es un bug de un slice específico — es una limitación de diseño de toda la app, nunca se capturó el timezone del usuario en ningún formulario ni se guardó en el perfil. | No asumir que fechas calculadas de `completed_at` reflejan el día calendario real del usuario. Si se resuelve, hacerlo una vez a nivel de perfil de usuario (capturar timezone en el assessment o detectarlo del browser), no parche por parche en cada función que use fechas. |
+
+---
+
+## 10. Versión 2 — Programas por fases (aprobado por Pablo 2026-11-21)
+
+> Reemplaza los ítems 3 y 6 del MVP (sesión diaria generada por IA / adaptación diaria). Todo lo demás del PRD sigue vigente salvo que esta sección diga lo contrario.
+
+### 10.1 Por qué
+
+Generar una sesión distinta cada día impide la sobrecarga progresiva: el usuario nunca repite un ejercicio el tiempo suficiente para progresar en él. La práctica estándar es el mesociclo (~4–6 semanas con la misma selección de ejercicios, progresando volumen/intensidad) y cambiar al terminarlo. Modelo de referencia: la app `pablovitalisant-pbt/calistenia` (la que Pablo usa con buenos resultados) y programas tipo Beachbody (Beast Body, Insanity). Fuente bibliográfica principal: *Overcoming Gravity* (Steven Low, 2.ª ed.), capítulos 5–7, 10, 12, 13 y 17–20.
+
+### 10.2 Comportamiento
+
+1. **Se genera un programa, no una sesión.** Programa de 12 semanas = 3 fases de 4 semanas. Cada fase tiene una plantilla semanal (días de entrenamiento según `available_days_per_week` + días de descanso) que se repite igual las 4 semanas.
+2. **Generación fase por fase.** La fase 1 se genera al completar el assessment. La fase N+1 se genera al cerrar la fase N, usando los logs reales (reps por serie, RPE) de esa fase. Personalización por bloques de 4 semanas, no por día.
+3. **Puntero al día actual, no a la fecha.** El usuario avanza con "Completar día". Si falta un día, no pierde nada. Puede navegar ‹ › entre días y abrir un calendario con los 84 días (completados, actual, descanso).
+4. **Cada día del plan** tiene calentamiento, bloque principal, finisher opcional, cardio opcional y vuelta a la calma; cada ejercicio con series, objetivo (reps o tiempo) y descanso. Mismo formato que consume el session runner.
+5. **Registro por serie** (reps/segundos reales) durante la sesión; RPE al final.
+6. **La generación diaria por IA se retira** (ruta `generate-session` y botón "Generar" del dashboard) detrás de feature flag.
+
+### 10.3 Assessment v2 — todo tipo de usuario
+
+- Caso extremo obligatorio: persona de 50+ años, obesidad, nunca entrenó. El assessment debe capturar historial de entrenamiento (nunca / hace años / activo), limitaciones articulares o de salud declaradas, y capacidad real mediante tests con regresiones (push-up en pared/inclinada, sentarse-pararse de una silla, plancha en rodillas, caminata). Ningún test asume que el usuario puede hacer un push-up o una dominada.
+- El generador debe poder prescribir desde el nivel más bajo (regresiones extremas, caminata) hasta avanzado, apoyado en el corpus (población, principiante no entrenado).
+- **Cardio opcional:** el assessment pregunta si el usuario quiere cardio y con qué intensidad (ninguno / suave / moderado / intenso). El plan lo incluye según la respuesta, respetando la condición del usuario.
+
+### 10.4 Modo "de corrido" (tipo Beachbody)
+
+Un botón Play inicia la sesión completa y el cronómetro avanza solo: trabajo → descanso → siguiente ejercicio, sin taps intermedios, hasta terminar. Pausa y Stop siempre disponibles. Cada ejercicio del plan tiene una duración de trabajo usable por este modo (los de reps llevan ventana de trabajo). El registro de reps en este modo es opcional al final. El modo con taps actual se mantiene.
+
+### 10.5 Catálogo — solo calistenia
+
+- El catálogo contiene solo ejercicios de calistenia (peso corporal, barra, suelo, pared, banco/plaza). Los demás (mancuernas, balón, bosu, máquinas, poleas, etc.) se desactivan (`is_active=false`, reversible), no se borran.
+- Los GIFs actuales se retiran (no representan bien los ejercicios): las URLs quedan en null y la UI muestra el placeholder. **No se eliminan las guías visuales: se reemplazarán** por videos cortos propios o generados con IA (backlog posterior). Los archivos en Supabase Storage no se borran sin aprobación de Pablo (acción destructiva).
+
+### 10.6 Backlog v2 (orden)
+
+1. Catálogo solo calistenia + retiro de GIFs (placeholders).
+2. Entorno QA del proyecto (`.pbravot/qa-entorno.json`, cuentas sintéticas incluido el perfil 50+/obesidad/sin entrenamiento).
+3. Assessment v2 (historial, limitaciones, tests con regresiones, cardio opcional).
+4. Corpus: principios de *Overcoming Gravity* parafraseados (población, principiante, mesociclos, progresión, cardio) + modelo de datos del plan (`training_plans.plan_data`, `workout_sessions.plan_id` + índice de día).
+5. Generador de fase (DeepSeek + RAG) → fase 1 al terminar el assessment.
+6. Dashboard con puntero al día actual + calendario de 84 días.
+7. Session runner alimentado por el día del plan.
+8. Generación de la fase siguiente con los logs de la fase cerrada.
+9. Modo "de corrido".
+10. Retiro de la generación diaria + limpieza.
+11. (Después) Videos cortos de ejercicios.
+
+### 10.7 Flujos críticos y criterios de aceptación v2
+
+| ID | Rol | Dado | Cuando | Entonces (lo que el usuario VE) | Riesgo |
+|----|-----|------|--------|-------------------------------|--------|
+| R1 | Usuario | catálogo depurado | abre /exercises | solo ejercicios de calistenia; ninguno con "dumbbell", "exercise ball", "bosu", "cable"; cada tarjeta con placeholder visual | medio |
+| R2 | Usuario 50+, obeso, sin entrenamiento | assessment v2 | completa el assessment | puede responder todos los tests (con regresiones) sin quedar bloqueado; ve su programa de fase 1 con ejercicios de nivel muy bajo | alto |
+| R3 | Usuario | assessment completo | entra al dashboard | ve "Semana 1 · Día 1", el tipo de día y sus ejercicios; botones ‹ › y calendario | alto |
+| R4 | Usuario | día actual | completa el día | el puntero pasa al día siguiente; el calendario marca el día como completado | alto |
+| R5 | Usuario | semana 2 | abre un día equivalente de la semana 1 | ve los mismos ejercicios que la semana 1 (misma fase) | alto |
+| R6 | Usuario | fin de la fase 1 | completa el día 28 | se genera la fase 2 y la ve en el día 29 | alto |
+| R7 | Usuario | cardio elegido en assessment | ve sus días | el cardio aparece con la intensidad elegida; si eligió "ninguno", no aparece | medio |
+| R8 | Usuario | día con ejercicios | pulsa Play en modo de corrido | la sesión avanza sola trabajo→descanso→siguiente hasta el final; Pausa y Stop funcionan | alto |

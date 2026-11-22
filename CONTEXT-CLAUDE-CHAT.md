@@ -1,247 +1,31 @@
 # CONTEXT-CLAUDE-CHAT.md — No Gym Club
 
-Contexto para el Director Técnico (Claude chat). Snapshot de las decisiones de la Sesión 0 y estado del proyecto.
+Contexto para el Director Técnico. Versión compacta (2026-11-21). El historial de slices v1 (Slice 1a … UI-8, Bugs #1–#8) está en git (`git show ab2ba60:CONTEXT-CLAUDE-CHAT.md`) y en BUGS.md.
 
----
+## Proyecto
 
-## Resumen del proyecto
+App de calistenia ("La calle es mi gimnasio"), bilingüe ES/EN, multi-tenant. **Pivote v2 (2026-11-21):** de "sesión diaria generada por IA" a **programa de 12 semanas en 3 fases de 4**, generado fase por fase y personalizado con los logs. Detalle y backlog: PRD.md §10. Referencia funcional: repo `pablovitalisant-pbt/calistenia` (app que Pablo usa). Fuente bibliográfica: *Overcoming Gravity* (Steven Low) — se usa parafraseado en el corpus, nunca texto literal.
 
-App web SaaS de entrenamiento adaptativo. Concepto: **"La calle es mi gimnasio"**. Funciona como un entrenador personal que genera la sesión de cada día en base al historial completo del usuario, anclado a un corpus verificable de ciencia del deporte. Multi-tenant, bilingüe ES/EN.
+## Stack
 
-Identidad: manifiesto No Gym Club. Disciplina sobre motivación. Anti-fitness-moda.
+Next.js 14 App Router + TS + Tailwind · Supabase (Auth, Postgres+RLS, Storage, pgvector) · DeepSeek `deepseek-v4-flash` (thinking activo, maxTokens 8192, ver Bug #4) · Embeddings NVIDIA NIM `nv-embedqa-e5-v5` (1024d) · next-intl · Vercel.
 
----
+Diseño: fondo #0a0a0a, superficies #111/#1a1a1a, acento #e8570a, texto #f5f5f5/#888, borde #2a2a2a, Inter, lucide-react.
 
-## Decisiones de stack (Sesión 0)
+## Operación (Modo PowerShell)
 
-- Next.js 14 (App Router) + TypeScript + Tailwind
-- Supabase: Auth + PostgreSQL (RLS) + Storage
-- DeepSeek V4 Flash (`deepseek-v4-flash`) vía SDK `openai`
-- **RAG:** pgvector (extensión Supabase, vector(1024)). Embeddings via NVIDIA NIM `nvidia/nv-embedqa-e5-v5` (endpoint `https://integrate.api.nvidia.com/v1`). Migración 0004: ajuste 1536→1024 dims + función search_corpus actualizada.
-- Vercel para deploy
-- i18n bilingüe ES/EN desde el inicio
+- Prompts y logs en `..\_dt\` (fuera del repo). Base del Programador: `_dt\prompts\_base.md`.
+- Lanzar Programador: `& C:\Users\pablo\Documents\no-gym-club\_dt\prog.ps1 -Name <n> [-Fase A|BCD|DEBUG] -Detach`.
+  - `auto`: **claude-deep** en horario económico de DeepSeek; **Codex** (`gpt-reserve`, low) en horario caro (01:00–04:00 y 06:00–10:00 UTC, lun–vie; fines de semana y feriados chinos son económicos). Regla de Pablo 2026-11-21.
+  - Se pueden usar en paralelo: deep programa el slice N mientras Codex hace QA/verificación del N-1.
+- **Ahorro de tokens (regla de Pablo):** prompts cortos que apuntan a archivos, contratos acotados, reportes ≤8 líneas, verificación con salida resumida; el DT lee `git diff --stat` antes de abrir diffs.
+- Consultas/actualizaciones de datos: scripts Node en `_dt\scripts\` con la service role key de `.env.local` (ejecutar con cwd = repo). No hay Supabase CLI ni psql instalados; DDL pendiente de definir vía conexión Postgres (`supabase_pass`).
+- **No hay base de datos de prueba:** local y producción usan el mismo proyecto Supabase. Todo cambio de datos con respaldo previo en `_dt\backups\`.
+- Commits: solo el DT, desde PowerShell de Windows (en el shell Linux de la sesión git no puede borrar locks).
 
-### Por qué DeepSeek y no Gemini
+## Estado
 
-Gemini 2.0 Flash quedó deprecado (1 jun 2026). El free tier de Gemini tiene tope diario por proyecto que revienta al escalar y usa los prompts para entrenar. DeepSeek es pay-per-token (centavos al mes en MVP), tiene caché automático de prefijos (system prompt + corpus cacheados), endpoint compatible OpenAI, y Pablo ya lo domina.
-
-### Estrategia de datos del catálogo
-
-- Base: **free-exercise-db** (dominio público, 800+ ejercicios JSON) → import único a Supabase.
-- GIFs: WorkoutX (free) / sample ExerciseDB, solo para los ~60-80 ejercicios de calle relevantes.
-- Video propio: movimientos clave en Supabase Storage.
-- En producción NO se depende de ninguna API externa de ejercicios.
-
----
-
-## Modelo de funcionamiento (núcleo)
-
-1. **Entrenador diario:** genera la sesión de hoy desde el historial (sesión anterior, grupo muscular previo, RPE, fallos, días desde última sesión, edad).
-2. **Detraining:** uso libre. La condición decae con la inactividad. MVP usa "días desde última sesión" como input simple; modelo fino es post-MVP.
-3. **Motor de sesión con tap:** Play → set → tap → cronómetro de descanso → aviso. Se registra el descanso real.
-4. **Tres ciclos de evaluación:** diario (genera sesión), semanal (reporte + ajuste), mensual (re-assessment). Solo el diario está en el MVP.
-5. **Inteligencia anclada:** RAG sobre pgvector (Supabase). La IA no improvisa de memoria. Edad y grupo muscular como variables duras. Screening PAR-Q de seguridad antes de prescribir intensidad.
-
----
-
-## Equipamiento oficial
-
-`bodyweight`, `bar`, `ground`, `wall`, `dumbbell`
-
----
-
-## Sistema de diseño
-
-- Fondo: #0a0a0a (casi negro)
-- Superficie: #111111, #1a1a1a
-- Acento: #e8570a (naranja, energía de calle)
-- Texto: #f5f5f5 / #888888
-- Borde: #2a2a2a
-- Tipografía: Inter
-- Iconos: lucide-react
-
----
-
-## Estado del proyecto
-
-- **Fase actual:** Slice 4c-corpus completado (2026-07-02). Próximo: Slice 4c-ai (integración DeepSeek + RAG).
-- **Contador de slices desde último ponytail audit:** 5
-- **Ponytail audit:** ejecutado 2026-06-30 post-Slice 2b. Próximo: al terminar Slice 4c-ai (contador 6 — ya pasó el umbral de 4, ejecutar antes de seguir a Slice 5).
-- **Próximo paso:** Pablo dice "siguiente slice" → Slice 4c-ai.
-
-### Slice 1a — Setup base (completado 2026-06-30)
-
-Archivos creados:
-- `package.json`, `tsconfig.json`, `next.config.mjs`, `tailwind.config.ts`, `postcss.config.mjs`
-- `app/globals.css`, `.env.local.example`, `vitest.config.ts`, `tests/smoke.test.ts`
-
-Archivos modificados:
-- `.gitignore` — expandido con entradas de tooling
-
-### Slice 1b — i18n setup + root layout (completado 2026-06-30)
-
-Archivos creados:
-- `i18n/config.ts` — locales `['es', 'en']`, default `es`
-- `i18n/request.ts` — carga de mensajes por locale para next-intl
-- `middleware.ts` — middleware de next-intl, matcher de exclusión estándar
-- `messages/es.json` — metadata ES
-- `messages/en.json` — metadata EN (keys simétricas con ES)
-- `app/[locale]/layout.tsx` — root layout con Inter + NextIntlClientProvider
-- `app/[locale]/page.tsx` — placeholder de una línea (reemplazado en Slice 1c)
-- `tests/i18n-smoke.test.ts` — 4 tests (config, mensajes, middleware, matcher)
-
-Archivos modificados:
-- `next.config.mjs` — plugin next-intl reactivado (cierra marcador `ponytail:` de Slice 1a)
-
-### Slice 1c — Landing page (manifiesto) (completado 2026-06-30)
-
-Archivos creados:
-- `lib/flags.ts` — `getFlag(key)` lee `config/feature-flags.json`, sync
-- `components/ui/Button.tsx` — variantes `primary`/`ghost`, soporta `as="button"|"a"`
-- `tests/landing-smoke.test.ts` — 8 tests (getFlag ×4, Button export, keys simétricas, feature-flags.json válido, hydration guard)
-
-Archivos modificados:
-- `app/[locale]/page.tsx` — placeholder → landing completa, gateada por `getFlag('landing_page')`
-- `messages/es.json` — keys `landing.*` agregadas
-- `messages/en.json` — keys `landing.*` (simétricas)
-- `config/feature-flags.json` — `{ "landing_page": false }` (sin BOM)
-
-> **Nota:** CTA es `<Button as="button">` sin href. Slice 2 lo migra a `<Link href="/signup">` cuando la ruta exista.
-
-### Slice 2a — Supabase infra (completado 2026-06-30)
-
-Archivos creados:
-- `lib/supabase/server.ts` — `createClient()` server-side (cookies de `next/headers`)
-- `lib/supabase/client.ts` — `createClient()` browser-side (`createBrowserClient`)
-- `lib/supabase/middleware.ts` — `updateSession(request)` refresca token sin redirigir
-- `tests/supabase-infra.test.ts` — 6 tests (server/client/middleware exports, matcher guard)
-
-Archivos modificados:
-- `middleware.ts` — encadenado: updateSession → intlMiddleware → merge cookies
-
-> **Confirmado:** `config.matcher` es idéntico al de Slice 1b: `['/((?!api|_next|.*\\..*).*)']`.
-> **Corrección Fase D Slice 2b:** `createServerClient` lanza si env vars son empty strings. Agregado guard en `updateSession`: sin credenciales → `NextResponse.next()` sin crashear.
-
-### Slice 2b — Auth pages (completado 2026-06-30)
-
-Archivos creados:
-- `app/[locale]/(auth)/layout.tsx` — Server Component, lee `getFlag('auth')`, centrado dark
-- `app/[locale]/(auth)/login/page.tsx` — Client Component, signInWithPassword
-- `app/[locale]/(auth)/signup/page.tsx` — Client Component, signUp + confirm password
-- `app/api/auth/callback/route.ts` — GET handler, exchangeCodeForSession → `/dashboard`
-- `tests/auth-smoke.test.ts` — 6 tests (2 hydration guards, callback, keys, flag)
-
-Archivos modificados:
-- `messages/es.json` + `messages/en.json` — keys `auth.*` (9 keys, simétricas)
-- `config/feature-flags.json` — `{ landing_page: false, auth: false }`
-- `lib/supabase/middleware.ts` — guard env vars vacías
-
-> **Nota:** login/signup son Client Components (`'use client'`). Layout de `(auth)` es Server Component.
-> Callback redirige a `/dashboard` sin locale — next-intl lo resuelve.
-
-### Slice 2c — Auth guard + dashboard + CTA migration (completado 2026-06-30)
-
-Archivos creados:
-- `app/[locale]/(app)/layout.tsx` — Server Component, shell mínimo (header + contenido)
-- `app/[locale]/(app)/dashboard/page.tsx` — Server Component, gateado por flag `dashboard`
-- `i18n/navigation.ts` — `createSharedPathnamesNavigation` → `{ Link, redirect }`
-- `tests/dashboard-guard.test.ts` — 7 tests (guard selectividad, CTA Link, Button intacto, flag, keys, layout SSG, page exists)
-
-Archivos modificados:
-- `middleware.ts` — auth guard: verifica `getUser()` en rutas `/(app)`, redirect `/login`
-- `app/[locale]/page.tsx` — CTA: `<Button>` → `<Link href="/signup">` de `@/i18n/navigation`
-- `messages/es.json` + `en.json` — keys `dashboard.fallback`
-- `config/feature-flags.json` — `"dashboard": false`
-
-> **Nota scope creep:** `i18n/navigation.ts` no estaba en el contrato. Apareció en Fase C porque next-intl v3 exporta `Link` vía factory `createSharedPathnamesNavigation`, no como import directo. Archivo necesario, bajo impacto (5 líneas).
-
-### Slice 3a — Schema documentation + types (completado 2026-06-30)
-
-Archivos creados:
-- `supabase/migrations/0001_initial_schema.sql` — 6 tablas + enums + RLS + trigger
-- `supabase/migrations/0002_fix_function_search_path.sql` — fix security definer
-- `supabase/schema.sql` — referencia completa
-- `lib/supabase/types.ts` — Database interface (Row/Insert/Update para 6 tablas)
-- `tests/schema-smoke.test.ts` — 7 tests
-
-Archivos modificados:
-- `config/feature-flags.json` — `schema_types: false`
-- `tests/landing-smoke.test.ts` — fix race condition: writeFlags mergea (scope creep #5)
-
-> **Contexto:** schema aplicado via MCP por el Director Tecnico. Este slice documenta.
-> **Lineas:** 592 (DDL documentation-heavy).
-
-### Slice 3b — Seed catalog (completado 2026-06-30)
-
-Archivos creados:
-- `supabase/seed.sql` — 33 ejercicios de calle (7 categorias x 3 niveles, 5 equipamientos)
-- `tests/seed-smoke.test.ts` — 7 tests
-
-Archivos modificados: ninguno (seed standalone).
-
-> **Nota:** seed se aplica via MCP. Ejercicios 100% calle. URLs placeholder.
-
----
-
-### Slice 4a — Assessment: perfil + equipamiento + PAR-Q (completado 2026-06-30)
-
-Archivos creados:
-- `app/[locale]/(app)/assessment/page.tsx` — Client Component, multi-step form (perfil → equipamiento → PAR-Q)
-- `app/[locale]/(app)/assessment/actions.ts` — Server Action, saveProfile (INSERT a profiles)
-- `tests/assessment-smoke.test.ts` — 9 tests
-
-Archivos modificados:
-- `middleware.ts` — PROTECTED_PATHS = ['/dashboard', '/assessment']
-- `app/[locale]/(app)/layout.tsx` — lee getFlag('assessment'), gatea acceso
-- `messages/es.json` + `en.json` — keys assessment.* (profile, equipment, parq)
-- `config/feature-flags.json` — `assessment: false`
-
-> **Nota:** primer INSERT real a la DB. PAR-Q bloqueante: si algún SÍ → redirect ?parq=blocked.
-> **Lineas:** 365 + 140 test = 505 (form JSX domina).
-
-### Slice 4c-corpus — Sport science corpus + embeddings (completado 2026-07-02)
-
-Archivos creados:
-- `supabase/migrations/0003_pgvector.sql` — extensión pgvector + tabla `sport_science_corpus` (vector(1024))
-- `supabase/migrations/0004_adjust_embeddings_1024.sql` — ajuste dimensión 1536→1024 + función `search_corpus()`
-- `scripts/seed-corpus-json.ts` — script de generación de embeddings via NVIDIA NIM + inserción SQL
-- `supabase/corpus.json` — 50 documentos fuente (markdown, 8 categorías)
-- `supabase/seed-corpus-embeddings-clean.sql` — SQL con embeddings generados (1024d)
-
-Archivos modificados:
-- `CLAUDE.md` — RAG: ChromaDB → pgvector, embeddings NVIDIA NIM, variable `NVIDIA_API_KEY`
-
-> **Corpus:** 50 documentos en 8 categorías: progressive_overload (8), bodyweight_training (7), recovery (7), hypertrophy (6), periodization (6), rpe_autoregulation (6), endurance (5), safety_screening (5).
-> **Embeddings:** NVIDIA NIM `nvidia/nv-embedqa-e5-v5`, 1024 dimensiones, endpoint `https://integrate.api.nvidia.com/v1`.
-> **Búsqueda:** `search_corpus(query_embedding, match_threshold, match_count)` — cosine similarity via pgvector `<=>`.
-> **Nota:** La API key de NVIDIA tiene fecha de expiración (~90 días desde emisión). Monitorear en PRD.
-
----
-
-## Backlog de slices (MVP)
-
-1. ~~Setup base~~ → dividido en:
-   - **1a. Setup base + configs** ✅ (2026-06-30)
-   - **1b. i18n setup + root layout** ✅ (2026-06-30)
-   - **1c. Landing page (manifiesto)** ✅ (2026-06-30)
-2. Auth + onboarding → dividido en:
-   - **2a. Supabase infra (clients + middleware)** ✅ (2026-06-30)
-   - **2b. Auth pages (login, signup, callback)** ✅ (2026-06-30)
-   - **2c. Auth guard (app) + migración CTA + dashboard placeholder** ✅ (2026-06-30)
-3. Schema DB + RLS + import del catalogo → dividido en:
-   - **3a. Schema documentation + types** ✅ (2026-06-30)
-   - **3b. Seed catalog (33 ejercicios de calle)** ✅ (2026-06-30)
-4. Assessment → dividido en:
-   - **4a. Perfil + equipamiento + PAR-Q** ✅ (2026-06-30)
-   - **4b. Test físico guiado** (postergado — el corpus y la generación de sesión tienen más valor)
-   - **4c-corpus. Sport science corpus + embeddings** ✅ (2026-07-02)
-   - **4c-ai. Integración DeepSeek + RAG → primera sesión** ← próximo
-5. ~~Setup pgvector + corpus inicial~~ → absorbido en 4c-corpus ✅
-6. Generación de sesión diaria por IA (DeepSeek + RAG) → en progreso como 4c-ai
-7. Assessment: test físico guiado
-8. Motor de sesión con tap timer
-9. Log de sesión + RPE
-10. Adaptación diaria (la sesión usa el log anterior)
-11. Catálogo de ejercicios con media (vista + detalle)
-
-El orden y la granularidad se ajustan en Fase A de cada slice.
+- **Fase actual:** v2, slice 1 (catálogo solo calistenia + retiro de GIFs).
+- Catálogo al 2026-11-21: 616 ejercicios activos, 616 con gif_url, 292 con `dumbbell`.
+- Archivos sin commitear heredados de v1: `scripts/import-exercisedb-bodyweight.ts`, `scripts/seed-corpus-json.ts`, `supabase/corpus.json`, `supabase/seed-corpus-embeddings-clean.sql`.
+- **Contador de slices desde último ponytail audit:** 0 (v2 arranca; el último audit registrado fue 2026-06-30 → correr antes del primer deploy v2).
