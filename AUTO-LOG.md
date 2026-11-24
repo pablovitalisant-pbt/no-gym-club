@@ -94,3 +94,7 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 - QA (Fase E): PASA 5/5. El DT al reproducir QA-01 encontro un defecto que la QA no marco: boton shadcn con radius 6px y peso 500 (diseno cuadrado y en negrita). Fix: rounded-none en la base del button shadcn y font-bold en login/signup. DT re-midio: radius 0, peso 700, bg 232,87,10, texto 10,10,10, alto 56 (login y signup)
 - Desvios del Programador: ninguno
 - QA metricas: FP 0, ESC 1 (radio/peso del boton se escapo a la QA), ACIERTOS 0, costo USD 0.78
+
+## 2026-11-24 - Release: v2-27 (componentes shadcn en login, signup y evaluacion)
+- Aprobado por Pablo (10:42). Push c08e5f4..f9bdb2d, deploy Vercel. Sin variables de entorno nuevas; verificar.ps1 verde (742/742, build 0)
+- Humo manual del DT en produccion (375 px): login boton bg 232,87,10, texto 10,10,10, alto 56, radio 0, peso 700; campos con borde 1px y alto 74; signup igual con 3 campos; landing carga; 0 recursos con error. Evaluacion en produccion no verificada (requiere sesion; cubierta en QA local)
