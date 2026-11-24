@@ -95,6 +95,7 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Causa raiz**: `components/ui/Button.tsx` arma `className` (base + variante + props.className) y despues hace `{...buttonProps}`, que todavia trae `props.className` y lo pisa. Todo `<Button className=...>` pierde base y variante.
 - **Alcance**: ~70 usos con `className` en app/ y components/; todas esas pantallas se aprobaron con este comportamiento. Arreglarlo en el componente cambia de golpe el aspecto de toda la app (la variante por defecto pone `bg-accent`).
 - **Solucion**: v2-24 corrige solo login y signup con boton nativo local. El componente se resuelve en el slice de shadcn (Button con merge de clases), migrando pantalla por pantalla con QA visual. Hasta entonces, NO usar `className` en `<Button>` esperando conservar el estilo base.
+- **Solucion aplicada (v2-26)**: `Button.tsx` arma `className` con `cn(base, variante, props.className)` y ya no re-esparce `className` al `<button>`/`<a>` (un solo atributo class). En `lib/utils.ts`, `cn` usa `extendTailwindMerge` con los 9 fontSize de `theme.extend.fontSize` registrados como grupo `font-size`, para que `text-body-lg` no borre `text-surface-900`. Cubierto por `tests/v2-26-button-classname.test.tsx`.
 
 ## Bug #13: Pendientes menores de UI vistos en la QA de v2-24 (backlog)
 - **Fecha**: 2026-11-24

@@ -46,6 +46,12 @@ function nextButton(html: string): string {
   return html.slice(html.lastIndexOf('<button', i), html.indexOf('</button>', i));
 }
 
+// v2-26: el className base incluye variantes `disabled:`; el atributo es lo que importa.
+function nextButtonIsDisabled(html: string): boolean {
+  const tag = nextButton(html).split('>')[0];
+  return /\sdisabled(=|\s|$)/.test(tag);
+}
+
 describe('rangos del perfil (P-20261122-0006-1)', () => {
   it('inProfileRange aplica edad 14-100', () => {
     expect(inProfileRange('age', '13')).toBe(false);
@@ -85,13 +91,13 @@ describe('paso de perfil — peso 1000 (EXP-1)', () => {
   it('muestra el error de rango bajo el peso y deshabilita Siguiente', () => {
     const html = renderProfile({ weight: '1000' });
     expect(html).toContain('Valor entre 30 y 250');
-    expect(nextButton(html)).toContain('disabled');
+    expect(nextButtonIsDisabled(html)).toBe(true);
   });
 
   it('con datos validos no muestra error y habilita Siguiente', () => {
     const html = renderProfile();
     expect(html).not.toContain('Valor entre');
-    expect(nextButton(html)).not.toContain('disabled');
+    expect(nextButtonIsDisabled(html)).toBe(false);
   });
 
   it('muestra contador en focus_notes', () => {
