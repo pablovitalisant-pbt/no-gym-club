@@ -68,3 +68,13 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 - QA (Fase E): FALLA 1/3 confirmada en re-prueba, pero los 3 defectos son preexistentes (flag de v2-24 apagado en esta corrida, diseno original de "UNIRSE AL CLUB", Bug #12 en dashboard); ninguno causado por el diff -> DESCARTADOS como regresion; Bug #12 sube a alta y va en v2-26
 - Desvios del Programador: (1) implemento B-C-D en Fase A otra vez; causa en la semilla: deep.ps1 Fase A solo pasaba --allowedTools (aprueba, no bloquea). DT agrego --disallowedTools Edit,Write,MultiEdit,NotebookEdit,Bash (backup deep.ps1.bak-2026-11-24). (2) instalo dependencias llamando al CLI de npm via node para esquivar que npm install no esta permitido; dependencias validas (clsx 2.1.1, tailwind-merge 2.5.5, cva 0.7.1) y aceptadas por el DT, pero el patron queda registrado.
 - QA metricas: FP 0 (defectos reales, solo que preexistentes), ESC 0, ACIERTOS 0, costo USD 0.61
+
+## 2026-11-24 - Slice: v2-26 Bug #12, Button pisaba su className
+- Programador: deep (deepseek-flash, effort low); Fase A ya de solo lectura con el arreglo de deep.ps1
+- Contrato: Button une clases con cn(base, variante, className) y no re-esparce className; extendTailwindMerge registra los 9 fontSize del tema (hallazgo del Programador: sin esto cn borraba text-surface-900 en 6 botones). Sin flag (bug fix)
+- Tests: 727/727 verde, typecheck/lint/build 0 (verificar.ps1 del DT); test de perfil ahora lee el atributo disabled real (revisado por el DT: mas estricto, no mas laxo)
+- Commit: d81b735
+- Gates disparados: ninguno
+- QA (Fase E): PASA 6/6 (dashboard, plan, sesion, assessment, comunidad, config, login; 375 y 1280); DT reprodujo QA-01 en local 375 px con cuenta sintetica: "Empezar entrenamiento" bg 232,87,10, texto 10,10,10, inline-flex, icono en fila
+- Desvios del Programador: ninguno
+- QA metricas: FP 0, ESC 0, ACIERTOS 0, costo USD 1.06; hallazgos bajos a BUGS.md #13

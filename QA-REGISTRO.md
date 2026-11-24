@@ -52,3 +52,9 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 - [x] P-20261124-0740-1 (alta) FALLA: QA-01 — Elementos encimados y bloque vacío en la landing -> DESCARTADO no es regresion de v2-25 (diff solo agrega tokens): superposicion = comportamiento con landing_hero_mobile_bar apagado, corregido en v2-24 tras el flag; "UNIRSE AL CLUB" oscuro es el diseno original; tarjeta vacia sin asset ya conocida
 - [x] P-20261124-0740-2 (alta) FALLA: QA-02 — Botones principales del dashboard sin estilo -> DESCARTADO no es regresion de v2-25: preexistente en produccion, BUGS.md #12 (Button.tsx pisa className); se corrige en v2-26
 - [x] P-20261124-0740-3 (baja) HALLAZGO: EXP-1 — Catálogo de ejercicios sin imágenes -> DESCARTADO conocido: GIFs del catalogo con placeholder por decision de Pablo (CONTEXT 2026-11-22, videos en backlog)
+
+## 2026-11-24 08:00 - v2-26 - commit d81b735 - PASA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-26
+- [x] P-20261124-0800-1 (baja) HALLAZGO: EXP-1 — Inconsistencia de peso tipográfico en botones naranjos grandes -> BACKLOG BUGS.md #13 (los className de cada llamado fijan pesos distintos; unificar al migrar a shadcn)
+- [x] P-20261124-0800-2 (baja) HALLAZGO: EXP-2 — Tema claro: texto de botones naranjos -> DESCARTADO sin defecto: el tema claro usa text-surface-900 = blanco por diseno de tokens (v2-20); legible
+- [x] P-20261124-0800-3 (baja) HALLAZGO: EXP-3 — Cabecera pegajosa tapa el indicador de paso en la evaluación -> BACKLOG BUGS.md #13 (preexistente: al cambiar de paso no hace scroll al indicador)
