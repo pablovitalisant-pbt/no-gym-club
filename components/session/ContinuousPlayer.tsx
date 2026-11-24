@@ -1,11 +1,24 @@
 'use client';
 
+import { useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Pause, Play, SkipForward, Square } from 'lucide-react';
-import CircularTimer from './CircularTimer';
 import type { FlatExercise } from '@/lib/session/flatten';
 import { useContinuousPlayer } from '@/lib/session/useContinuousPlayer';
 import { displayExerciseName } from '@/lib/exercises/display-name';
+import {
+  buildRepEntries,
+  initialRepInputs,
+  repsKeyForSegment,
+  repsTargets,
+  repsTopOfRange,
+} from '@/lib/session/continuous-view';
+import { saveExerciseReps } from '@/app/[locale]/(session)/session/[id]/actions';
+import ReadyScreen from './player/ReadyScreen';
+import WorkScreen from './player/WorkScreen';
+import RepsScreen from './player/RepsScreen';
+import RestScreen from './player/RestScreen';
+import PlayerControls from './player/PlayerControls';
+import ModeToggle from './player/ModeToggle';
 
 interface Props {
   sessionId: string;
@@ -16,90 +29,111 @@ interface Props {
 
 export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, onComplete }: Props) {
   const t = useTranslations('session');
-  const p = useContinuousPlayer({ sessionId, exercises, audioEnabled, onComplete });
+  const targets = repsTargets(exercises);
+
+  const handleComplete = useCallback(
+    (reps: Record<string, string>) => {
+      // Lista completa: mergeLogData reemplaza el ejercicio entero, nunca un delta.
+      const entries = buildRepEntries(targets, initialRepInputs(targets), reps);
+      saveExerciseReps(sessionId, entries).catch(() => {});
+      onComplete();
+    },
+    [sessionId, onComplete, targets],
+  );
+
+  const p = useContinuousPlayer({ sessionId, exercises, audioEnabled, onComplete: handleComplete });
 
   if (!p.info || !p.segment) return <div className="flex-grow bg-background" />;
 
-  const { info } = p;
-  const phaseLabel =
-    info.phase === 'ready' ? t('getReady') : info.phase === 'work' ? t('work') : t('rest');
+  const { info, segment } = p;
+  const name = displayExerciseName(info.exerciseName);
+  const nextName = info.nextLabel ? displayExerciseName(info.nextLabel) : null;
+  const repsEntry = segment.kind === 'reps' ? segment : null;
+  const repsKey = repsEntry ? repsKeyForSegment(repsEntry) : null;
+  const prescribed = exercises[repsEntry?.exerciseIndex ?? -1]?.reps ?? '';
+  const repsValue = repsKey ? (p.reps[repsKey] ?? repsTopOfRange(prescribed)) : '';
 
   return (
-    <div className="flex-grow flex flex-col items-center px-margin-mobile py-md text-center">
-      <p className="font-label-bold text-label-sm uppercase tracking-widest text-primary-container mb-1">
-        {phaseLabel}
-      </p>
-      <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-        {displayExerciseName(info.exerciseName)}
-      </h2>
-      {info.phase === 'work' && info.sets > 0 && (
-        <p className="font-label-sm text-label-sm text-on-surface-variant mt-1">
-          {t('setOf', { current: info.set, total: info.sets })}
-          {info.side && ` · ${t('side', { n: info.side === 'left' ? 1 : 2 })}`}
-        </p>
+    <div className="flex-grow flex flex-col min-h-0">
+      {info.phase === 'ready' && (
+        <ReadyScreen exerciseName={name} remaining={p.remaining} nextLabel={nextName} />
+      )}
+      {info.phase === 'work' && (
+        <WorkScreen
+          exerciseName={name}
+          set={info.set}
+          sets={info.sets}
+          side={info.side}
+          remaining={p.remaining}
+          progress={info.progress}
+          waiting={p.waiting}
+          onContinue={p.onAdvance}
+        />
+      )}
+      {info.phase === 'reps' && repsKey && (
+        <RepsScreen
+          exerciseName={name}
+          set={info.set}
+          sets={info.sets}
+          side={info.side}
+          prescribed={prescribed}
+          value={repsValue}
+          onChange={(value) => p.onRecordReps(repsKey, value)}
+          onDone={() => {
+            p.onRecordReps(repsKey, repsValue);
+            p.onAdvance();
+          }}
+        />
+      )}
+      {info.phase === 'rest' && (
+        <RestScreen
+          remaining={p.remaining}
+          nextLabel={nextName}
+          set={info.set}
+          sets={info.sets}
+          manual={p.mode === 'manual'}
+          waiting={p.waiting}
+          onAddSeconds={() => p.extendRest(15)}
+          onSkip={p.onSkip}
+          onContinue={p.onAdvance}
+        />
       )}
 
-      <div className="relative flex items-center justify-center my-sm">
-        <CircularTimer remaining={p.remaining} total={p.segment.seconds} size={320} />
-        <p className="absolute font-display-lg text-[96px] leading-none text-primary countdown-glow tabular-nums translate-y-8">
-          {p.remaining}
-        </p>
-      </div>
-
-      <div className="w-full max-w-sm h-2 bg-surface-800 brutalist-border overflow-hidden mb-sm">
-        <div className="h-full bg-primary-container" style={{ width: `${info.progress * 100}%` }} />
-      </div>
-      {info.nextLabel && (
-        <p className="font-body-md text-body-md text-on-surface-variant mb-sm">
-          {t('nextExercise')}: <span className="text-on-surface font-medium">{displayExerciseName(info.nextLabel)}</span>
-        </p>
-      )}
-
-      <div className="flex-grow" />
-
-      <div className="flex items-center gap-3 w-full max-w-sm">
-        <button
-          onClick={p.running ? p.onPause : p.onResume}
-          className="flex-1 h-14 brutalist-border bg-surface-800 flex items-center justify-center gap-2 uppercase font-label-bold text-on-surface"
-        >
-          {p.running ? <Pause size={20} /> : <Play size={20} />}
-          {p.running ? t('pause') : t('resume')}
-        </button>
-        <button
-          onClick={p.onSkip}
-          className="h-14 px-5 brutalist-border bg-surface-800 flex items-center justify-center uppercase font-label-bold text-on-surface"
-          aria-label={t('skip')}
-        >
-          <SkipForward size={20} />
-        </button>
-        <button
-          onClick={() => p.setConfirmStop(true)}
-          className="h-14 px-5 brutalist-border bg-surface-800 flex items-center justify-center uppercase font-label-bold text-red-400"
-          aria-label={t('stop')}
-        >
-          <Square size={18} />
-        </button>
-      </div>
-
-      {p.confirmStop && (
-        <div className="mt-md w-full max-w-sm brutalist-border bg-surface-800 p-sm space-y-2">
-          <p className="font-body-md text-body-md text-on-surface">{t('stopConfirm')}</p>
-          <div className="flex gap-2">
-            <button
-              onClick={p.stop}
-              className="flex-1 h-12 brutalist-border bg-red-600 text-white uppercase font-label-bold"
-            >
-              {t('stopConfirmYes')}
-            </button>
-            <button
-              onClick={() => p.setConfirmStop(false)}
-              className="flex-1 h-12 brutalist-border bg-surface-900 text-on-surface uppercase font-label-bold"
-            >
-              {t('cancel')}
-            </button>
-          </div>
+      <div className="bg-background px-margin-mobile py-sm space-y-2 border-t-2 border-outline-variant">
+        <div className="flex items-center justify-between gap-2">
+          <ModeToggle mode={p.mode} onChange={p.onSetMode} />
+          {info.phase === 'rest' && (
+            <span className="font-body-md text-body-md text-on-surface-variant tabular-nums">
+              {p.remaining}s
+            </span>
+          )}
         </div>
-      )}
+        <PlayerControls
+          running={p.running}
+          onPauseToggle={p.running ? p.onPause : p.onResume}
+          onSkip={p.onSkip}
+          onStopRequest={() => p.setConfirmStop(true)}
+        />
+        {p.confirmStop && (
+          <div className="border-2 border-error bg-surface-900 p-sm space-y-2">
+            <p className="font-body-md text-body-md text-on-surface">{t('stopConfirm')}</p>
+            <div className="flex gap-2">
+              <button
+                onClick={p.stop}
+                className="flex-1 min-h-[64px] border-2 border-error bg-error text-on-error font-label-bold text-label-bold uppercase"
+              >
+                {t('stopConfirmYes')}
+              </button>
+              <button
+                onClick={() => p.setConfirmStop(false)}
+                className="flex-1 min-h-[64px] border-2 border-control-bg bg-control-bg text-control-fg font-label-bold text-label-bold uppercase"
+              >
+                {t('cancel')}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

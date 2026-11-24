@@ -16,7 +16,7 @@ import { flattenSession, type SessionSection } from '@/lib/session/flatten';
 import { startOptions, resumeRunnerState } from '@/lib/session/continuous-view';
 import { buildTimeline } from '@/lib/session/continuous';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
-import { playBeep } from '@/lib/audio';
+import { playDone, playTick, playTransition } from '@/lib/audio';
 import { useAudioPreference } from '@/lib/useAudioPreference';
 import {
   saveSnapshot,
@@ -118,7 +118,7 @@ export default function SessionRunner({
             timerRef.current = null;
             restEndsAtRef.current = null;
             recordActualRest();
-            if (audioRef.current) playBeep();
+            if (audioRef.current) playTransition();
             setState('active');
             setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
           }
@@ -126,7 +126,10 @@ export default function SessionRunner({
       } else {
         restEndsAtRef.current = null;
         setRestSeconds(0);
-        if (audioRef.current) playBeep();
+        if (audioRef.current) {
+          if (snapshot.index >= allExercises.length - 1) playDone();
+          else playTransition();
+        }
         if (snapshot.index >= allExercises.length - 1) setState('done');
         else {
           setState('active');
@@ -139,6 +142,7 @@ export default function SessionRunner({
       const remaining = Math.max(0, Math.round((snapshot.timingEndsAt - Date.now()) / 1000));
       if (remaining > 0) {
         setTimingSeconds(remaining);
+        if (audioRef.current && remaining <= 3 && remaining >= 1) playTick();
         timerRef.current = setInterval(() => {
           const rem = timingEndsAtRef.current
             ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
@@ -149,7 +153,7 @@ export default function SessionRunner({
             timerRef.current = null;
             if (restoreEx?.bilateral && snapshot.currentSide === 1) {
               // Switch to side 2 with new timer
-              if (audioRef.current) playBeep();
+              if (audioRef.current) playTransition();
               timingEndsAtRef.current = Date.now() + (restoreEx.duration_seconds ?? 0) * 1000;
               sideRef.current = 2;
               setSide(2);
@@ -163,7 +167,10 @@ export default function SessionRunner({
                   clearInterval(timerRef.current);
                   timerRef.current = null;
                   timingEndsAtRef.current = null;
-                  if (audioRef.current) playBeep();
+                  if (audioRef.current) {
+                    if (snapshot.index >= allExercises.length - 1) playDone();
+                    else playTransition();
+                  }
                   if (snapshot.index >= allExercises.length - 1) setState('done');
                   else { setState('active'); setIndex((i) => i + 1); }
                 }
@@ -177,7 +184,10 @@ export default function SessionRunner({
               return;
             }
             timingEndsAtRef.current = null;
-            if (audioRef.current) playBeep();
+            if (audioRef.current) {
+              if (snapshot.index >= allExercises.length - 1) playDone();
+              else playTransition();
+            }
             if (snapshot.index >= allExercises.length - 1) setState('done');
             else { setState('active'); setIndex((i) => i + 1); }
           }
@@ -187,7 +197,7 @@ export default function SessionRunner({
         setTimingSeconds(0);
         if (restoreEx?.bilateral && snapshot.currentSide === 1) {
           // Side 1 expired while away — switch to side 2 immediately
-          if (audioRef.current) playBeep();
+          if (audioRef.current) playTransition();
           timingEndsAtRef.current = Date.now() + (restoreEx.duration_seconds ?? 0) * 1000;
           sideRef.current = 2;
           setSide(2);
@@ -201,7 +211,10 @@ export default function SessionRunner({
               clearInterval(timerRef.current);
               timerRef.current = null;
               timingEndsAtRef.current = null;
-              if (audioRef.current) playBeep();
+              if (audioRef.current) {
+                if (snapshot.index >= allExercises.length - 1) playDone();
+                else playTransition();
+              }
               if (snapshot.index >= allExercises.length - 1) setState('done');
               else { setState('active'); setIndex((i) => i + 1); }
             }
@@ -213,7 +226,10 @@ export default function SessionRunner({
             exerciseLog: exerciseLogRef.current, updatedAt: Date.now(),
           });
         } else {
-          if (audioRef.current) playBeep();
+          if (audioRef.current) {
+            if (snapshot.index >= allExercises.length - 1) playDone();
+            else playTransition();
+          }
           if (snapshot.index >= allExercises.length - 1) setState('done');
           else { setState('active'); setIndex((i) => i + 1); }
         }
@@ -291,7 +307,7 @@ export default function SessionRunner({
           timerRef.current = null;
           restEndsAtRef.current = null;
           recordActualRest();
-          if (audioRef.current) playBeep();
+          if (audioRef.current) playTransition();
           // Auto-advance to next exercise
           setState('active');
           setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
@@ -443,12 +459,13 @@ export default function SessionRunner({
         ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
         : 0;
       setTimingSeconds(remaining);
+      if (audioRef.current && remaining <= 3 && remaining >= 1) playTick();
       if (remaining <= 0) {
         if (timerRef.current) clearInterval(timerRef.current);
         timerRef.current = null;
         if (current?.bilateral && sideRef.current === 1) {
           // Side 1 done — switch to side 2 with new timer
-          if (audioRef.current) playBeep();
+          if (audioRef.current) playTransition();
           timingEndsAtRef.current = Date.now() + (current.duration_seconds ?? 0) * 1000;
           sideRef.current = 2;
           setSide(2);
@@ -462,7 +479,7 @@ export default function SessionRunner({
               clearInterval(timerRef.current);
               timerRef.current = null;
               timingEndsAtRef.current = null;
-              if (audioRef.current) playBeep();
+              if (audioRef.current) playDone();
               handleDone();
             }
           }, 1000);
@@ -481,7 +498,7 @@ export default function SessionRunner({
           return;
         }
         timingEndsAtRef.current = null;
-        if (audioRef.current) playBeep();
+        if (audioRef.current) playDone();
         handleDone();
       }
     }, 1000);

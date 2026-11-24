@@ -115,6 +115,3 @@ export function playTransition(): void {
 export function playDone(): void {
   play('done');
 }
-
-/** Alias legacy (llamadores existentes) — mismo comportamiento que transition. */
-export const playBeep = playTransition;

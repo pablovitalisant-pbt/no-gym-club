@@ -36,6 +36,14 @@ const config: Config = {
         'on-error': 'rgb(var(--c-on-error) / <alpha-value>)',
         'on-error-container': 'rgb(var(--c-on-error-container) / <alpha-value>)',
         success: 'rgb(var(--c-success) / <alpha-value>)',
+        rest: {
+          bg: 'rgb(var(--c-rest-bg) / <alpha-value>)',
+          fg: 'rgb(var(--c-rest-fg) / <alpha-value>)',
+        },
+        control: {
+          bg: 'rgb(var(--c-control-bg) / <alpha-value>)',
+          fg: 'rgb(var(--c-control-fg) / <alpha-value>)',
+        },
         // Tokens de shadcn/ui (mismos colores que la paleta de arriba)
         foreground: 'rgb(var(--c-foreground) / <alpha-value>)',
         card: 'rgb(var(--c-card) / <alpha-value>)',

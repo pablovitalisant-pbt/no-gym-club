@@ -24,10 +24,10 @@ describe('Slice 1 — cronómetro + alarma para ejercicios por tiempo', () => {
     expect(runner).toContain('startTimer');
   });
 
-  // ─── Riesgo 3: playBeep se llama al terminar countdown ───
-  it('Llama playBeep() cuando el timer llega a 0', () => {
-    expect(runner).toContain('playBeep');
-    // Debe haber playBeep y handleDone en el mismo bloque (auto-advance)
+  // ─── Riesgo 3: la alarma suena al terminar el countdown ───
+  it('Llama playTransition() cuando el timer llega a 0', () => {
+    expect(runner).toContain('playTransition');
+    // Debe haber playTransition y handleDone en el mismo bloque (auto-advance)
     expect(runner).toContain('handleDone');
   });
 
@@ -37,11 +37,11 @@ describe('Slice 1 — cronómetro + alarma para ejercicios por tiempo', () => {
     // Verificar que handleDone existe y se usa desde timing
     expect(runner).toContain('handleDone');
     // El timer no debe tener su propia lógica de avance duplicada
-    const playBeepIdx = runner.indexOf('playBeep');
+    const alarmIdx = runner.indexOf('playTransition');
     const handleDoneIdx = runner.indexOf('handleDone');
-    // handleDone aparece al menos una vez después de playBeep (dentro del callback)
+    // handleDone aparece al menos una vez después de la alarma (dentro del callback)
     // Esta aserción es débil —requiere que el archivo tenga ambos, lo cual pasa
-    expect(playBeepIdx >= 0).toBe(true);
+    expect(alarmIdx >= 0).toBe(true);
     expect(handleDoneIdx >= 0).toBe(true);
   });
 

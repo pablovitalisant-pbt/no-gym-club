@@ -291,7 +291,18 @@
     "summaryIntro": "Log your reps (optional)",
     "saveReps": "Save reps",
     "omit": "Skip",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "modeAuto": "Auto",
+    "modeManual": "Manual",
+    "restTitle": "Rest",
+    "nextUp": "Next up",
+    "repsDone": "Set done",
+    "repsLabel": "Reps",
+    "repsMinus": "Remove one rep",
+    "repsPlus": "Add one rep",
+    "addSeconds": "+15 s",
+    "continue": "Continue",
+    "objective": "Target"
   },
   "assessment": {
     "fallback": "Assessment — coming soon",

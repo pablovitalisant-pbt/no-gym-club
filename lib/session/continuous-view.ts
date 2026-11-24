@@ -115,7 +115,15 @@ export function repsSlotKeys(target: RepsTarget): string[] {
   return keys;
 }
 
-function topOfRange(reps: string): string {
+/** Clave de reps del segmento en curso; bilateral usa serie*2 (izq) y serie*2+1 (der). */
+export function repsKeyForSegment(segment: Pick<Segment, 'exerciseIndex' | 'set' | 'side'>): string {
+  const set = segment.set;
+  const slot =
+    segment.side === 'left' ? set * 2 : segment.side === 'right' ? set * 2 + 1 : set;
+  return `${segment.exerciseIndex}:${slot}`;
+}
+
+export function repsTopOfRange(reps: string): string {
   const nums = reps.match(/\d+/g);
   return nums ? String(Math.max(...nums.map(Number))) : reps;
 }
@@ -124,7 +132,7 @@ function topOfRange(reps: string): string {
 export function repsDefaults(exercises: SessionExercise[]): Record<string, string> {
   const defaults: Record<string, string> = {};
   for (const target of repsTargets(exercises)) {
-    const top = topOfRange(target.reps);
+    const top = repsTopOfRange(target.reps);
     for (const key of repsSlotKeys(target)) defaults[key] = top;
   }
   return defaults;

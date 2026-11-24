@@ -291,7 +291,18 @@
     "summaryIntro": "Registra tus reps (opcional)",
     "saveReps": "Guardar reps",
     "omit": "Omitir",
-    "saving": "Guardando..."
+    "saving": "Guardando...",
+    "modeAuto": "Auto",
+    "modeManual": "Manual",
+    "restTitle": "Descanso",
+    "nextUp": "Sigue",
+    "repsDone": "Serie hecha",
+    "repsLabel": "Reps",
+    "repsMinus": "Quitar una repetición",
+    "repsPlus": "Agregar una repetición",
+    "addSeconds": "+15 s",
+    "continue": "Continuar",
+    "objective": "Objetivo"
   },
   "assessment": {
     "fallback": "Assessment — próximamente",

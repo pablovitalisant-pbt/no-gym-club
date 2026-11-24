@@ -22,10 +22,11 @@ describe('Slice 4 — toggle de audio on/off', () => {
     expect(runner).toContain('useAudioPreference');
   });
 
-  it('playBeep gateado con audioRef.current (no siempre suena)', () => {
-    // Debe haber al menos un `if (audioRef.current) playBeep()`
-    const gatePattern = 'audioRef.current) playBeep';
-    expect(runner).toContain(gatePattern);
+  it('alarmas gateadas con audioRef.current (no siempre suenan)', () => {
+    // Tick 3-2-1 gateado por audioRef y por el rango del countdown.
+    const gatePattern =
+      /if \(audioRef\.current && remaining <= 3 && remaining >= 1\) playTick\(\);/;
+    expect(runner).toMatch(gatePattern);
   });
 
   it('Toggle button visible en estados activos', () => {

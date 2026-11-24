@@ -133,6 +133,11 @@ export function advance(
   return { ...state, index: next, remaining: timeline[next].seconds, updatedAt: now };
 }
 
+/** Suma segundos al descanso actual (ej. "+15 s"), incluso si ya estaba esperando. */
+export function extend(state: ContinuousState, seconds: number, now: number): ContinuousState {
+  return { ...state, remaining: Math.max(0, state.remaining) + seconds, updatedAt: now };
+}
+
 /** Cambia auto/manual en medio de la sesión; al pasar a auto avanza lo ya vencido. */
 export function setMode(state: ContinuousState, mode: RunMode, now: number): ContinuousState {
   const frozen = freeze(state, now, state.running);

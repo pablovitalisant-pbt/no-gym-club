@@ -32,6 +32,11 @@
     --c-on-error: 255 255 255;
     --c-on-error-container: 255 218 214;
     --c-success: 74 222 128;
+    /* Reproductor v3-04: descanso a pantalla completa y controles solidos */
+    --c-rest-bg: 6 38 58;
+    --c-rest-fg: 240 249 255;
+    --c-control-bg: 245 245 245;
+    --c-control-fg: 10 10 10;
     /* Tokens de shadcn/ui mapeados a la paleta existente (mismos colores) */
     --c-foreground: 245 245 245;
     --c-card: 17 17 17;
@@ -77,6 +82,11 @@
     --c-on-error: 255 255 255;
     --c-on-error-container: 127 29 29;
     --c-success: 22 163 74;
+    /* Reproductor v3-04: descanso a pantalla completa y controles solidos */
+    --c-rest-bg: 204 231 255;
+    --c-rest-fg: 8 30 45;
+    --c-control-bg: 17 17 17;
+    --c-control-fg: 250 250 250;
     /* Tokens de shadcn/ui mapeados a la paleta existente (mismos colores) */
     --c-foreground: 17 17 17;
     --c-card: 255 255 255;
@@ -176,5 +186,21 @@
   }
   100% {
     transform: translateX(300%);
+  }
+}
+
+/* v3-04: aviso de descanso terminado (parpadeo respeta reduced-motion) */
+@keyframes rest-alert {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0.25; }
+}
+
+.rest-blink {
+  animation: rest-alert 1s steps(1, end) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rest-blink {
+    animation: none;
   }
 }
