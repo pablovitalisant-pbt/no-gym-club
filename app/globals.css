@@ -10,6 +10,7 @@
     color-scheme: dark;
     --c-accent: 232 87 10;
     --c-border: 42 42 42;
+    --c-text-outline: 150 150 150;
     --c-text-primary: 245 245 245;
     --c-text-muted: 136 136 136;
     --c-surface: 17 17 17;
@@ -37,6 +38,7 @@
     color-scheme: light;
     --c-accent: 194 65 12;
     --c-border: 212 212 208;
+    --c-text-outline: 100 100 100;
     --c-text-primary: 17 17 17;
     --c-text-muted: 85 85 85;
     --c-surface: 255 255 255;
@@ -89,7 +91,7 @@
   }
 
   .text-outline {
-    -webkit-text-stroke: 1px rgb(var(--c-border));
+    -webkit-text-stroke: 1px rgb(var(--c-text-outline));
     color: transparent;
   }
 

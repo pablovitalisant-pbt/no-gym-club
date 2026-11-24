@@ -37,6 +37,7 @@
   },
   "auth": {
     "email": "Email",
+    "emailPlaceholder": "you@example.com",
     "password": "Password",
     "confirmPassword": "Confirm password",
     "login": "Log in",

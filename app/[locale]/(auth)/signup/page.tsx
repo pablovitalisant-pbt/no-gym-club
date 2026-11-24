@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Button } from '@/components/ui/Button';
 import { AtSign, Lock, ArrowRight } from 'lucide-react';
 
 export default function SignupPage() {
@@ -62,7 +61,7 @@ export default function SignupPage() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             className={inputCls}
-            placeholder="OPERATOR@NOGYMCLUB.COM"
+            placeholder={t('emailPlaceholder')}
           />
         </div>
       </div>
@@ -112,14 +111,15 @@ export default function SignupPage() {
 
       {/* Submit */}
       <div className="pt-base space-y-sm">
-        <Button
+        {/* ponytail: boton nativo local — Button.tsx pisa su className (bug fuera de este slice) */}
+        <button
           type="submit"
           disabled={loading}
-          iconRight={ArrowRight}
-          className="w-full uppercase font-headline-md text-headline-md !py-md active:scale-[0.98]"
+          className="inline-flex w-full items-center justify-center gap-2 min-h-[56px] px-6 py-3 bg-accent text-surface-900 font-headline-md text-headline-md uppercase transition-colors hover:bg-accent/90 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {loading ? '...' : t('signupButton')}
-        </Button>
+          <ArrowRight size={20} />
+        </button>
 
         <div className="flex flex-col items-center gap-sm mt-md">
           <Link

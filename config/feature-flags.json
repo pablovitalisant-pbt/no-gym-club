@@ -20,5 +20,6 @@
   "theme_switcher": true,
   "profile_settings": true,
   "community": true,
-  "community_chat": true
+  "community_chat": true,
+  "landing_hero_mobile_bar": false
 }

@@ -37,6 +37,7 @@
   },
   "auth": {
     "email": "Correo electrónico",
+    "emailPlaceholder": "tu@correo.com",
     "password": "Contraseña",
     "confirmPassword": "Confirmar contraseña",
     "login": "Iniciar sesión",

@@ -22,6 +22,8 @@ export default async function Page({
   const t = await getTranslations({ locale, namespace: 'landing' });
   const tAuth = await getTranslations({ locale, namespace: 'auth' });
   const showLanding = getFlag('landing_page');
+  // En movil la barra de stats va en el flujo (debajo de los botones); absolute solo desde md
+  const heroBarFlow = getFlag('landing_hero_mobile_bar');
 
   if (!showLanding) {
     return (
@@ -89,7 +91,7 @@ export default async function Page({
           </div>
 
           {/* Stats Bar */}
-          <div className="absolute bottom-0 left-0 w-full brutalist-border grid grid-cols-2 md:grid-cols-4 divide-x divide-outline bg-background/80 backdrop-blur-md">
+          <div className={`${heroBarFlow ? 'static md:absolute md:bottom-0' : 'absolute bottom-0'} left-0 w-full brutalist-border grid grid-cols-2 md:grid-cols-4 divide-x divide-outline bg-background/80 backdrop-blur-md`}>
             <div className="p-md text-center">
               <p className="font-mono-data text-headline-md text-primary">1</p>
               <p className="font-label-sm text-label-sm uppercase text-on-surface-variant">{t('members')}</p>
