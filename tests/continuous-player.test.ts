@@ -41,7 +41,7 @@ describe('CO-2 segmento actual y siguiente desde el motor', () => {
   it('work con serie y total de series', () => {
     const v = segmentView(timeline, exercises, 3, 20);
     expect(v).toMatchObject({
-      phase: 'work',
+      phase: 'reps',
       exerciseName: 'Sentadillas',
       set: 2,
       sets: 2,
@@ -60,7 +60,7 @@ describe('CO-2 segmento actual y siguiente desde el motor', () => {
   it('bilateral expone el lado', () => {
     const idx = timeline.findIndex((s) => s.side === 'right');
     expect(segmentView(timeline, exercises, idx, 10)).toMatchObject({
-      phase: 'work',
+      phase: 'reps',
       exerciseName: 'Zancadas',
       side: 'right',
     });

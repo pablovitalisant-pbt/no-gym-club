@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@supabase/ssr';
 import createIntlMiddleware from 'next-intl/middleware';
-import { updateSession } from '@/lib/supabase/middleware';
+import { updateSession, copyCookies } from '@/lib/supabase/middleware';
 import { locales, defaultLocale } from '@/i18n/config';
 
 const intlMiddleware = createIntlMiddleware({
@@ -9,6 +9,14 @@ const intlMiddleware = createIntlMiddleware({
   locales: [...locales],
   localePrefix: 'always',
 });
+
+export const PROTECTED_PATHS = ['/dashboard', '/assessment', '/session', '/exercises', '/weekly-report', '/progress', '/settings', '/community'];
+
+export function isProtectedPath(pathname: string, locale: string) {
+  return PROTECTED_PATHS.some(
+    (path) => pathname.startsWith(`/${locale}${path}`),
+  );
+}
 
 export default async function middleware(request: NextRequest) {
   // 1. Refrescar sesion de Supabase — mantiene cookies de auth vivas
@@ -18,10 +26,7 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const locale = pathname.split('/')[1] || defaultLocale;
 
-  const PROTECTED_PATHS = ['/dashboard', '/assessment', '/session', '/exercises', '/weekly-report', '/progress', '/settings'];
-  const isProtected = PROTECTED_PATHS.some(
-    (path) => pathname.startsWith(`/${locale}${path}`),
-  );
+  const isProtected = isProtectedPath(pathname, locale);
 
   if (isProtected) {
     // ponytail: sin credenciales, redirigir a login (mismo patron que updateSession)
@@ -76,10 +81,8 @@ export default async function middleware(request: NextRequest) {
   // 4. Enrutar por locale — next-intl maneja /es /en
   const response = intlMiddleware(request);
 
-  // 5. Copiar cookies de sesion al response de i18n
-  supabaseResponse.cookies.getAll().forEach(({ name, value }) => {
-    response.cookies.set(name, value);
-  });
+  // 5. Copiar cookies de sesion al response de i18n (con sus opciones: maxAge, path...)
+  copyCookies(supabaseResponse, response);
 
   return response;
 }

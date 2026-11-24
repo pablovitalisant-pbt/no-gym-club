@@ -112,9 +112,9 @@ describe('Slice v2-15 — dashboard claro: qué hacer', () => {
   });
 
   it('duración estimada calculada con buildTimeline y redondeada a minutos', () => {
-    // ready 10 + jacks 30 + flexiones 30 + rest 60 + flexiones 30 = 160 s → 3 min
-    expect(estimateSessionMinutes(session)).toBe(3);
-    expect(render()).toContain('~3 min');
+    // v3-03: reps sin cronómetro suman 0 s → ready 10 + jacks 30 + rest 60 = 100 s → 2 min
+    expect(estimateSessionMinutes(session)).toBe(2);
+    expect(render()).toContain('~2 min');
     expect(render()).toContain('2 ejercicios');
   });
 

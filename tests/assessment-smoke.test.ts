@@ -49,9 +49,14 @@ describe('Slice 4a — assessment profile + PAR-Q', () => {
 
   it('middleware.ts conserva la fusion de cookies updateSession -> intlMiddleware', () => {
     const raw = readFileSync(resolve(root, 'middleware.ts'), 'utf-8');
-    // la logica de merge de cookies no debe haber sido removida
-    expect(raw).toContain('cookies.getAll()');
-    expect(raw).toContain('cookies.set');
+    const lib = readFileSync(
+      resolve(root, 'lib/supabase/middleware.ts'),
+      'utf-8',
+    );
+    // la logica de merge de cookies vive en copyCookies (lib) y se invoca en middleware
+    expect(lib).toContain('cookies.getAll()');
+    expect(lib).toContain('cookies.set');
+    expect(raw).toContain('copyCookies(supabaseResponse, response)');
     expect(raw).toContain('intlMiddleware(request)');
   });
 

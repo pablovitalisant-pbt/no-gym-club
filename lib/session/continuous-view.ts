@@ -102,6 +102,34 @@ export function initialRepInputs(targets: RepsTarget[]): Record<number, string[]
   );
 }
 
+/** Claves de reps de un ejercicio: `${index}:${slot}`; bilateral = serie*2+lado. */
+export function repsSlotKeys(target: RepsTarget): string[] {
+  const keys: string[] = [];
+  for (let set = 1; set <= target.sets; set++) {
+    if (target.bilateral) {
+      keys.push(`${target.index}:${set * 2}`, `${target.index}:${set * 2 + 1}`);
+    } else {
+      keys.push(`${target.index}:${set}`);
+    }
+  }
+  return keys;
+}
+
+function topOfRange(reps: string): string {
+  const nums = reps.match(/\d+/g);
+  return nums ? String(Math.max(...nums.map(Number))) : reps;
+}
+
+/** Valores iniciales de reps del snapshot, con el tope del rango prescrito. */
+export function repsDefaults(exercises: SessionExercise[]): Record<string, string> {
+  const defaults: Record<string, string> = {};
+  for (const target of repsTargets(exercises)) {
+    const top = topOfRange(target.reps);
+    for (const key of repsSlotKeys(target)) defaults[key] = top;
+  }
+  return defaults;
+}
+
 export interface FinalRepEntry {
   exercise: string;
   prescribedSets: number;
@@ -114,12 +142,15 @@ export interface FinalRepEntry {
 export function buildRepEntries(
   targets: RepsTarget[],
   inputs: Record<number, string[]>,
+  recorded?: Record<string, string>,
 ): FinalRepEntry[] {
   return targets.map((t) => ({
     exercise: t.exercise,
     prescribedSets: t.sets,
     prescribedReps: t.reps,
-    actualReps: inputs[t.index] ?? Array<string>(t.slots).fill(t.reps),
+    actualReps: repsSlotKeys(t).map(
+      (key, slot) => recorded?.[key] ?? inputs[t.index]?.[slot] ?? t.reps,
+    ),
     bilateral: t.bilateral,
   }));
 }

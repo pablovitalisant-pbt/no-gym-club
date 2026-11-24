@@ -23,9 +23,9 @@ describe('buildTimeline', () => {
     const tl = buildTimeline(mixed);
     expect(tl.map((s) => [s.kind, s.exerciseIndex, s.set, s.side, s.seconds])).toEqual([
       ['ready', 0, 0, undefined, 10],
-      ['work', 0, 1, undefined, 36],
+      ['reps', 0, 1, undefined, 0],
       ['rest', 0, 1, undefined, 30],
-      ['work', 0, 2, undefined, 36],
+      ['reps', 0, 2, undefined, 0],
       ['rest', 0, 2, undefined, 30],
       ['work', 1, 1, undefined, 45],
       ['rest', 1, 1, undefined, 15],
@@ -48,16 +48,21 @@ describe('buildTimeline', () => {
 
   it('no crea rest si falta o es 0', () => {
     const tl = buildTimeline([{ exercise: 'Flexiones', sets: 2, reps: '5' }]);
-    expect(tl.map((s) => s.kind)).toEqual(['ready', 'work', 'work']);
+    expect(tl.map((s) => s.kind)).toEqual(['ready', 'reps', 'reps']);
   });
 
   it('totalSeconds suma la línea de tiempo', () => {
-    expect(totalSeconds(buildTimeline(mixed))).toBe(322);
+    expect(totalSeconds(buildTimeline(mixed))).toBe(250);
   });
 });
 
 describe('motor de corrido', () => {
   const tl = buildTimeline([{ exercise: 'Flexiones', sets: 2, reps: '5', rest_seconds: 20 }]);
+  // Solo cronometrado: el catch-up en auto atraviesa estos segmentos.
+  const timedTl = buildTimeline([
+    { exercise: 'Plancha', duration_seconds: 20, sets: 1 },
+    { exercise: 'Estiramiento', duration_seconds: 30, sets: 1 },
+  ]);
 
   it('pausa congela el restante y resume continúa', () => {
     const s = start(0);
@@ -72,21 +77,21 @@ describe('motor de corrido', () => {
     const s = start(0);
     expect(tick(s, tl, 2000).index).toBe(0);
     const skipped = skip(s, 2000);
-    expect(tick(skipped, tl, 2000)).toMatchObject({ index: 1, remaining: 20, done: false });
+    expect(tick(skipped, tl, 2000)).toMatchObject({ index: 1, remaining: 0, waiting: true });
   });
 
-  it('catch-up de 5 min avanza todos los segmentos vencidos', () => {
+  it('catch-up de 5 min avanza todos los segmentos cronometrados vencidos', () => {
     const s = start(0);
-    const result = tick(s, tl, 300000);
+    const result = tick(s, timedTl, 300000);
     expect(result.done).toBe(true);
-    expect(result.index).toBe(tl.length);
+    expect(result.index).toBe(timedTl.length);
     expect(result.remaining).toBe(0);
   });
 
   it('done solo al terminar el último segmento', () => {
     const s = start(0);
-    expect(tick(s, tl, 69000).done).toBe(false);
-    expect(tick(s, tl, 70000).done).toBe(true);
+    expect(tick(s, timedTl, 59000).done).toBe(false);
+    expect(tick(s, timedTl, 60000).done).toBe(true);
   });
 
   it('no exporta helpers de snapshot sin uso en produccion', async () => {

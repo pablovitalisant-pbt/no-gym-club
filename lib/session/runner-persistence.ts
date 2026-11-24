@@ -82,7 +82,18 @@ export function saveContinuousSnapshot(snapshot: ContinuousRunnerSnapshot): void
 }
 
 export function loadContinuousSnapshot(sessionId: string): ContinuousRunnerSnapshot | null {
-  return loadWithPrefix<ContinuousRunnerSnapshot>(CONTINUOUS_PREFIX, sessionId);
+  const snapshot = loadWithPrefix<ContinuousRunnerSnapshot>(CONTINUOUS_PREFIX, sessionId);
+  if (!snapshot) return null;
+  // Snapshots previos a v3-03 no traen mode/reps.
+  const { state } = snapshot;
+  return {
+    ...snapshot,
+    state: {
+      ...state,
+      mode: state.mode === 'manual' ? 'manual' : 'auto',
+      reps: state.reps ?? {},
+    },
+  };
 }
 
 export function clearContinuousSnapshot(sessionId: string): void {

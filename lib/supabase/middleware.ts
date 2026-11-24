@@ -3,6 +3,15 @@ import { type NextRequest, NextResponse } from 'next/server';
 
 type CookieToSet = { name: string; value: string; options: CookieOptions };
 
+// Copia cookies con sus opciones completas (path/maxAge/sameSite/...) — sin
+// esto, la sesion de Supabase se degrada a cookie de sesion y muere al cerrar
+// el navegador. from/to son los cookie stores de NextResponse.
+type CookieStore = Pick<NextResponse['cookies'], 'getAll'>;
+
+export function copyCookies(from: { cookies: CookieStore }, to: NextResponse) {
+  from.cookies.getAll().forEach((cookie) => to.cookies.set(cookie));
+}
+
 export async function updateSession(request: NextRequest) {
   // ponytail: sin credenciales, no hacer nada — NextResponse.next sin tocar cookies
   if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
