@@ -133,7 +133,7 @@ export default function LoginPage() {
           <Button
             type="submit"
             disabled={loading}
-            className="h-14 w-full gap-2 bg-accent text-surface-900 font-headline-md text-headline-md uppercase"
+            className="h-14 w-full gap-2 bg-accent text-surface-900 font-bold font-headline-md text-headline-md uppercase"
           >
             {loading ? '...' : t('loginButton')}
             <ArrowRight size={20} />

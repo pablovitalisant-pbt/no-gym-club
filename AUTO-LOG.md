@@ -84,3 +84,13 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 - Senal 3: verificar.ps1 verde (727/727, build 0); sin variables de entorno nuevas desde b1b7662; Fase E de flujos criticos cubierta por v2-24b y v2-26 (dashboard, plan, sesion, assessment, comunidad, config, login). Ponytail audit NO corrido en este release (pendiente).
 - Commit: 93b7113, push a main (b1b7662..93b7113), deploy Vercel
 - Humo de produccion: qa-prod.ps1 RECHAZADO (humoProd sin configurar); humo manual del DT en paginas publicas: hero 375 sin solape (barra static), 1280 sin solape (link 792-811, barra 845), CLUB stroke 150, Entrar bg 232,87,10 texto 10,10,10 alto 56, placeholders es/en ok, sin recursos con error. Dashboard en produccion no verificado (requiere sesion; cubierto en QA local v2-26)
+
+## 2026-11-24 - Slice: v2-27 login, signup y evaluacion con componentes shadcn/ui
+- Programador: deep (deepseek-flash, effort low); Fase A de solo lectura (intento pasar a B y quedo bloqueado, correcto)
+- Contrato: Input, Label y Progress en components/shadcn sin Radix ni dependencias; login/signup con Button+Input+Label de shadcn y evaluacion con Progress, tras flag shadcn_ui (UiFlagProvider en (auth)/layout)
+- Tests: 742/742 verde, typecheck/lint/build 0 (verificar.ps1 del DT)
+- Commit: 59ffa0b + fix (ver abajo)
+- Gates disparados: ninguno; push pendiente de OK de Pablo
+- QA (Fase E): PASA 5/5. El DT al reproducir QA-01 encontro un defecto que la QA no marco: boton shadcn con radius 6px y peso 500 (diseno cuadrado y en negrita). Fix: rounded-none en la base del button shadcn y font-bold en login/signup. DT re-midio: radius 0, peso 700, bg 232,87,10, texto 10,10,10, alto 56 (login y signup)
+- Desvios del Programador: ninguno
+- QA metricas: FP 0, ESC 1 (radio/peso del boton se escapo a la QA), ACIERTOS 0, costo USD 0.78

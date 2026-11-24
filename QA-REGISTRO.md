@@ -58,3 +58,8 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 - [x] P-20261124-0800-1 (baja) HALLAZGO: EXP-1 — Inconsistencia de peso tipográfico en botones naranjos grandes -> BACKLOG BUGS.md #13 (los className de cada llamado fijan pesos distintos; unificar al migrar a shadcn)
 - [x] P-20261124-0800-2 (baja) HALLAZGO: EXP-2 — Tema claro: texto de botones naranjos -> DESCARTADO sin defecto: el tema claro usa text-surface-900 = blanco por diseno de tokens (v2-20); legible
 - [x] P-20261124-0800-3 (baja) HALLAZGO: EXP-3 — Cabecera pegajosa tapa el indicador de paso en la evaluación -> BACKLOG BUGS.md #13 (preexistente: al cambiar de paso no hace scroll al indicador)
+
+## 2026-11-24 10:28 - v2-27 - commit 59ffa0b - PASA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-27
+- [x] P-20261124-1028-1 (media) HALLAZGO: EXP-1 — Login a 320 px con correo y contraseña muy largos: sin desborde -> DESCARTADO sin defecto: el agente lo marco informativo (sin desborde); el error en ingles ya esta en BUGS.md #13
+- [x] P-20261124-1028-2 (media) HALLAZGO: EXP-2 — Signup a 320 px -> DESCARTADO sin defecto: informativo, sin desborde visible

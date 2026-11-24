@@ -101,7 +101,7 @@ describe('v2-27 — login/signup con shadcn_ui encendido', () => {
     expect(btn).toContain('text-surface-900');
     expect(btn).toContain('uppercase');
     expect(btn).toContain('h-14');
-    expect(btn).toContain('rounded-md');
+    expect(btn).toContain('rounded-none');
     expect(btn).not.toContain('hover:bg-accent');
   });
 
@@ -176,6 +176,29 @@ describe('v2-27 — Progress accesible', () => {
 
     const off = renderToStaticMarkup(<AssessmentForm />);
     expect(off).not.toContain('role="progressbar"');
+  });
+});
+
+describe('v2-27-fix — boton cuadrado y en negrita', () => {
+  it('la base de Button no trae rounded-md (diseno cuadrado)', () => {
+    const html = renderToStaticMarkup(<Button>Entrar</Button>);
+    const cls = html.match(/class="([^"]*)"/)?.[1] ?? '';
+    expect(cls).not.toContain('rounded-md');
+    expect(cls).toContain('rounded-none');
+  });
+
+  it.each([
+    ['login', LoginPage],
+    ['signup', SignupPage],
+  ])('submit de %s con flag on: font-bold y sin font-medium', (_name, Page) => {
+    const html = renderToStaticMarkup(
+      <UiFlagProvider value={true}>
+        <Page />
+      </UiFlagProvider>,
+    );
+    const btn = html.match(/<button[^>]*type="submit"[^>]*class="([^"]*)"/)?.[1] ?? '';
+    expect(btn).toContain('font-bold');
+    expect(btn).not.toContain('font-medium');
   });
 });
 
