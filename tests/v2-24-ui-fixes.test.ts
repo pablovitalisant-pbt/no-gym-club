@@ -48,9 +48,9 @@ describe('v2-24 — barra de estadisticas del hero en movil', () => {
     expect(landing).toMatch(/heroBarFlow \? 'md:pb-32' : ''/);
   });
 
-  it('flag landing_hero_mobile_bar existe y esta en false', () => {
+  it('flag landing_hero_mobile_bar existe y es booleano', () => {
     expect(flags).toHaveProperty('landing_hero_mobile_bar');
-    expect(flags.landing_hero_mobile_bar).toBe(false);
+    expect(typeof flags.landing_hero_mobile_bar).toBe('boolean');
   });
 });
 

@@ -148,8 +148,9 @@ describe('v2-25 — base shadcn/ui sin cambio visual', () => {
     expect(colors.accent).toBe('rgb(var(--c-accent) / <alpha-value>)');
   });
 
-  it('el flag shadcn_ui existe y esta en false', () => {
-    expect(flags.shadcn_ui).toBe(false);
+  it('el flag shadcn_ui existe y es booleano', () => {
+    expect(flags).toHaveProperty('shadcn_ui');
+    expect(typeof flags.shadcn_ui).toBe('boolean');
   });
 });
 

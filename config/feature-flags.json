@@ -21,6 +21,6 @@
   "profile_settings": true,
   "community": true,
   "community_chat": true,
-  "landing_hero_mobile_bar": false,
-  "shadcn_ui": false
+  "landing_hero_mobile_bar": true,
+  "shadcn_ui": true
 }
