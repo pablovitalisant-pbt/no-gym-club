@@ -36,9 +36,13 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 
 ## 2026-11-24 07:15 - v2-24 - commit 45e401b - FALLA
 - Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-24
-- [ ] P-20261124-0715-1 (media) FALLA: QA-02 — "INICIAR SESIÓN →" se encima sobre la barra de estadísticas en escritorio
+- [x] P-20261124-0715-1 (media) FALLA: QA-02 — "INICIAR SESIÓN →" se encima sobre la barra de estadísticas en escritorio -> ARREGLADO 6ad04a5 (re-QA v2-24b PASA; DT reprodujo en 1280/768/375)
 - [x] P-20261124-0715-2 (baja) HALLAZGO: EXP-1 — A 320 px, "DISPONIBILIDAD" toca el borde de su celda -> BACKLOG BUGS.md #13 (preexistente: padding de la celda, se ve y no se corta)
-- [ ] P-20261124-0715-3 (media) HALLAZGO: EXP-2 — A 768 px, "INICIAR SESIÓN →" se encima sobre COMODIDAD y DISPONIBILIDAD
+- [x] P-20261124-0715-3 (media) HALLAZGO: EXP-2 — A 768 px, "INICIAR SESIÓN →" se encima sobre COMODIDAD y DISPONIBILIDAD -> ARREGLADO 6ad04a5 (misma causa que P-20261124-0715-1)
 - [x] P-20261124-0715-4 (baja) HALLAZGO: EXP-3 — Mensaje de error de login en inglés crudo -> BACKLOG BUGS.md #13 (preexistente: authError.message de Supabase sin traducir)
 - [x] P-20261124-0715-5 (baja) HALLAZGO: EXP-4 — Pie de login y signup se corta en dos líneas en 375 px -> BACKLOG BUGS.md #13 (preexistente, decorativo)
 - [x] P-20261124-0715-6 (media) CONSOLA: Failed to load resource: the server responded with a status of 400 () (/auth/v1/token) -> DESCARTADO esperado: es la contrasena incorrecta pedida en QA-05
+
+## 2026-11-24 07:28 - v2-24b - commit 6ad04a5 - PASA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-24b
+- Sin pendientes nuevos.

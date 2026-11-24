@@ -48,3 +48,13 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 | 2026-11-22 | v2-23b UI de solicitudes (estados en perfil, /community/requests, badge) | deep (USD 2.44) | 693 tests, build 0 | (este commit) | detras de community_chat (false) hasta el chat |
 | 2026-11-22 | v2-23c chat 1:1 en tiempo real (lista de chats, sala con realtime, envio optimista, sin links clickeables) | deep (USD 2.49) | 701 tests, build 0 | (este commit) | flag community_chat encendido por DT |
 | 2026-11-22 | verificacion realtime con cuentas QA | DT | mensaje de intermedio llega a extremo por postgres_changes con filtro por conexion (RLS aplicada); la 1a prueba fallo por insertar en el mismo instante del SUBSCRIBED | - | |
+
+## 2026-11-24 - Slice: v2-24 correcciones de UI en landing y login/signup
+- Programador: deep (deepseek-flash, effort low); Codex sin cupo hasta 08:58
+- Contrato: barra de stats del hero en el flujo en movil (flag landing_hero_mobile_bar=false), token --c-text-outline para "CLUB", boton submit nativo en login/signup, placeholder de correo por i18n; Button.tsx fuera de alcance (Bug #12)
+- Tests: 711/711 verde, typecheck/lint/build 0 (verificar.ps1 del DT, dos veces)
+- Commit: 45e401b + 6ad04a5 (fix QA-02)
+- Gates disparados: ninguno; deploy pendiente de UAT de Pablo (Senal 3)
+- QA (Fase E): v2-24 FALLA 7/8 (QA-02: link "Iniciar sesion" bajo la barra desde md, confirmado en re-prueba) -> fix md:pb-32 -> v2-24b PASA 4/4; DT reprodujo en 1280, 768 y 375 px sin superposicion
+- Desvios del Programador: en Fase A (solo lectura) implemento B-C-D sin esperar aprobacion del contrato; el DT reviso el diff completo y lo acepto por estar dentro del alcance
+- QA metricas: FP 0, ESC 0, ACIERTOS 1 (QA-02), costo USD 1.00 (0.74 + 0.27); hallazgos menores a BUGS.md #13; mejoras de QA aplicadas: ninguna
