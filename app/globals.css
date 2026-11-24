@@ -32,6 +32,23 @@
     --c-on-error: 255 255 255;
     --c-on-error-container: 255 218 214;
     --c-success: 74 222 128;
+    /* Tokens de shadcn/ui mapeados a la paleta existente (mismos colores) */
+    --c-foreground: 245 245 245;
+    --c-card: 17 17 17;
+    --c-card-foreground: 245 245 245;
+    --c-popover: 17 17 17;
+    --c-popover-foreground: 245 245 245;
+    --c-primary-foreground: 255 255 255;
+    --c-secondary: 26 26 26;
+    --c-secondary-foreground: 245 245 245;
+    --c-muted: 26 26 26;
+    --c-muted-foreground: 136 136 136;
+    --c-accent-foreground: 245 245 245;
+    --c-destructive: 255 68 68;
+    --c-destructive-foreground: 255 255 255;
+    --c-input: 42 42 42;
+    --c-ring: 232 87 10;
+    --radius: 0rem;
   }
 
   :root[data-theme="light"] {
@@ -60,6 +77,22 @@
     --c-on-error: 255 255 255;
     --c-on-error-container: 127 29 29;
     --c-success: 22 163 74;
+    /* Tokens de shadcn/ui mapeados a la paleta existente (mismos colores) */
+    --c-foreground: 17 17 17;
+    --c-card: 255 255 255;
+    --c-card-foreground: 17 17 17;
+    --c-popover: 255 255 255;
+    --c-popover-foreground: 17 17 17;
+    --c-primary-foreground: 255 255 255;
+    --c-secondary: 239 239 236;
+    --c-secondary-foreground: 17 17 17;
+    --c-muted: 239 239 236;
+    --c-muted-foreground: 85 85 85;
+    --c-accent-foreground: 17 17 17;
+    --c-destructive: 185 28 28;
+    --c-destructive-foreground: 255 255 255;
+    --c-input: 212 212 208;
+    --c-ring: 194 65 12;
   }
 
   body {

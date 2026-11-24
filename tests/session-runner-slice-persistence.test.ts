@@ -130,6 +130,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
       'community',
       'community_chat',
       'landing_hero_mobile_bar',
+      'shadcn_ui',
     ]);
   });
 

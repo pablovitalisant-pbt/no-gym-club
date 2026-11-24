@@ -36,7 +36,25 @@ const config: Config = {
         'on-error': 'rgb(var(--c-on-error) / <alpha-value>)',
         'on-error-container': 'rgb(var(--c-on-error-container) / <alpha-value>)',
         success: 'rgb(var(--c-success) / <alpha-value>)',
+        // Tokens de shadcn/ui (mismos colores que la paleta de arriba)
+        foreground: 'rgb(var(--c-foreground) / <alpha-value>)',
+        card: 'rgb(var(--c-card) / <alpha-value>)',
+        'card-foreground': 'rgb(var(--c-card-foreground) / <alpha-value>)',
+        popover: 'rgb(var(--c-popover) / <alpha-value>)',
+        'popover-foreground': 'rgb(var(--c-popover-foreground) / <alpha-value>)',
+        'primary-foreground': 'rgb(var(--c-primary-foreground) / <alpha-value>)',
+        secondary: 'rgb(var(--c-secondary) / <alpha-value>)',
+        'secondary-foreground': 'rgb(var(--c-secondary-foreground) / <alpha-value>)',
+        muted: 'rgb(var(--c-muted) / <alpha-value>)',
+        'muted-foreground': 'rgb(var(--c-muted-foreground) / <alpha-value>)',
+        'accent-foreground': 'rgb(var(--c-accent-foreground) / <alpha-value>)',
+        destructive: 'rgb(var(--c-destructive) / <alpha-value>)',
+        'destructive-foreground': 'rgb(var(--c-destructive-foreground) / <alpha-value>)',
+        input: 'rgb(var(--c-input) / <alpha-value>)',
+        ring: 'rgb(var(--c-ring) / <alpha-value>)',
       },
+      // --radius queda disponible para futuros componentes shadcn; no se remapea
+      // rounded-lg/sm/md para no alterar el radius visible de pantallas existentes.
       spacing: {
         'margin-desktop': '40px',
         'margin-mobile': '16px',
