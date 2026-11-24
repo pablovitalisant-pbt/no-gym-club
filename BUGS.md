@@ -86,3 +86,19 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - **Evidencia**: reproducido local con qa.intermedio (7 dias -> 6 de entrenamiento): log 'DeepSeek output truncated: max_tokens reached before completion' a los 79 s; en prod 500. Con 4 dias cabia en 16384.
 - **Solucion**: maxTokens 49152 (doc oficial: hasta 384K de salida), notas <=140 y rationale <=600 caracteres, modelo deepseek-flash. Verificado local: 200 en 92 s, plantilla push/pull/legs x2 + descanso.
 
+
+## Bug #12: Button.tsx pisa su propio className (botones sin estilo base)
+- **Fecha**: 2026-11-24
+- **Clasificacion**: A = visual, visible en produccion desde Slice 1c
+- **Sintoma**: el boton "Entrar" del login se ve como texto suelto: fondo transparente, sin fila texto+flecha.
+- **Evidencia**: en produccion (375 px) el submit del login mide `background-color: rgba(0,0,0,0)` y `display: inline-block`, con `--c-accent` definido y la regla `bg-accent` presente en el CSS. `git log -L` muestra el patron desde bc0d4ec (Slice 1c).
+- **Causa raiz**: `components/ui/Button.tsx` arma `className` (base + variante + props.className) y despues hace `{...buttonProps}`, que todavia trae `props.className` y lo pisa. Todo `<Button className=...>` pierde base y variante.
+- **Alcance**: ~70 usos con `className` en app/ y components/; todas esas pantallas se aprobaron con este comportamiento. Arreglarlo en el componente cambia de golpe el aspecto de toda la app (la variante por defecto pone `bg-accent`).
+- **Solucion**: v2-24 corrige solo login y signup con boton nativo local. El componente se resuelve en el slice de shadcn (Button con merge de clases), migrando pantalla por pantalla con QA visual. Hasta entonces, NO usar `className` en `<Button>` esperando conservar el estilo base.
+
+## Bug #13: Pendientes menores de UI vistos en la QA de v2-24 (backlog)
+- **Fecha**: 2026-11-24
+- **Clasificacion**: A = visual / textos, preexistentes, baja severidad
+- 1. Login: el error de Supabase se muestra crudo en ingles ("Invalid login credentials") en la interfaz en espanol. Mapear `authError` a claves i18n.
+- 2. Hero a 320 px: "DISPONIBILIDAD" llega al borde de su celda (padding de la barra de stats).
+- 3. Pie "MANUAL V4.01 — AUTH MODULE" de login/signup se parte en dos lineas a 375 px.

@@ -44,6 +44,10 @@ describe('v2-24 — barra de estadisticas del hero en movil', () => {
     expect(landing).not.toMatch(/className="absolute bottom-0 left-0 w-full brutalist-border/);
   });
 
+  it('con el flag encendido el hero reserva espacio para la barra absoluta desde md', () => {
+    expect(landing).toMatch(/heroBarFlow \? 'md:pb-32' : ''/);
+  });
+
   it('flag landing_hero_mobile_bar existe y esta en false', () => {
     expect(flags).toHaveProperty('landing_hero_mobile_bar');
     expect(flags.landing_hero_mobile_bar).toBe(false);

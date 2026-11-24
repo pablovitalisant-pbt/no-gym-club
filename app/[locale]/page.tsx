@@ -44,7 +44,7 @@ export default async function Page({
 
       <main className="relative pt-16 min-h-screen flex flex-col items-center">
         {/* Hero Section */}
-        <section className="relative w-full min-h-[795px] flex flex-col items-center justify-center text-center px-margin-mobile overflow-hidden">
+        <section className={`relative w-full min-h-[795px] flex flex-col items-center justify-center text-center px-margin-mobile overflow-hidden ${heroBarFlow ? 'md:pb-32' : ''}`}>
           <div className="scanline"></div>
           <div className="z-10 max-w-5xl space-y-xl">
             <div className="space-y-sm">
