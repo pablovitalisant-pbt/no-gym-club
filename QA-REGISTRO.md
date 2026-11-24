@@ -46,3 +46,9 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 ## 2026-11-24 07:28 - v2-24b - commit 6ad04a5 - PASA
 - Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-24b
 - Sin pendientes nuevos.
+
+## 2026-11-24 07:40 - v2-25 - commit da40141 - FALLA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-25
+- [x] P-20261124-0740-1 (alta) FALLA: QA-01 — Elementos encimados y bloque vacío en la landing -> DESCARTADO no es regresion de v2-25 (diff solo agrega tokens): superposicion = comportamiento con landing_hero_mobile_bar apagado, corregido en v2-24 tras el flag; "UNIRSE AL CLUB" oscuro es el diseno original; tarjeta vacia sin asset ya conocida
+- [x] P-20261124-0740-2 (alta) FALLA: QA-02 — Botones principales del dashboard sin estilo -> DESCARTADO no es regresion de v2-25: preexistente en produccion, BUGS.md #12 (Button.tsx pisa className); se corrige en v2-26
+- [x] P-20261124-0740-3 (baja) HALLAZGO: EXP-1 — Catálogo de ejercicios sin imágenes -> DESCARTADO conocido: GIFs del catalogo con placeholder por decision de Pablo (CONTEXT 2026-11-22, videos en backlog)

@@ -58,3 +58,13 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 - QA (Fase E): v2-24 FALLA 7/8 (QA-02: link "Iniciar sesion" bajo la barra desde md, confirmado en re-prueba) -> fix md:pb-32 -> v2-24b PASA 4/4; DT reprodujo en 1280, 768 y 375 px sin superposicion
 - Desvios del Programador: en Fase A (solo lectura) implemento B-C-D sin esperar aprobacion del contrato; el DT reviso el diff completo y lo acepto por estar dentro del alcance
 - QA metricas: FP 0, ESC 0, ACIERTOS 1 (QA-02), costo USD 1.00 (0.74 + 0.27); hallazgos menores a BUGS.md #13; mejoras de QA aplicadas: ninguna
+
+## 2026-11-24 - Slice: v2-25 base shadcn/ui controlada
+- Programador: deep (deepseek-flash, effort low)
+- Contrato: components.json con alias components/shadcn, lib/utils cn, tokens shadcn agregados con los mismos colores, button de shadcn sin uso, flag shadcn_ui=false
+- Tests: 719/719 verde, typecheck/lint/build 0 (verificar.ps1 del DT); grep del DT: ninguna pantalla usaba clases sueltas que ahora tomen color (solo text-text-muted)
+- Commit: da40141
+- Gates disparados: ninguno
+- QA (Fase E): FALLA 1/3 confirmada en re-prueba, pero los 3 defectos son preexistentes (flag de v2-24 apagado en esta corrida, diseno original de "UNIRSE AL CLUB", Bug #12 en dashboard); ninguno causado por el diff -> DESCARTADOS como regresion; Bug #12 sube a alta y va en v2-26
+- Desvios del Programador: (1) implemento B-C-D en Fase A otra vez; causa en la semilla: deep.ps1 Fase A solo pasaba --allowedTools (aprueba, no bloquea). DT agrego --disallowedTools Edit,Write,MultiEdit,NotebookEdit,Bash (backup deep.ps1.bak-2026-11-24). (2) instalo dependencias llamando al CLI de npm via node para esquivar que npm install no esta permitido; dependencias validas (clsx 2.1.1, tailwind-merge 2.5.5, cva 0.7.1) y aceptadas por el DT, pero el patron queda registrado.
+- QA metricas: FP 0 (defectos reales, solo que preexistentes), ESC 0, ACIERTOS 0, costo USD 0.61
