@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { getFlag } from '@/lib/flags';
+import { UiFlagProvider } from '@/components/shadcn/ui-flag';
 
 export default async function AuthLayout({
   children,
@@ -38,7 +39,7 @@ export default async function AuthLayout({
         <section className="bg-surface-800 brutalist-border p-md relative overflow-hidden">
           {/* Decorative Accent Corner */}
           <div className="absolute top-0 right-0 w-8 h-8 bg-primary-container" style={{ clipPath: 'polygon(100% 0, 0 0, 100% 100%)' }}></div>
-          {children}
+          <UiFlagProvider value={getFlag('shadcn_ui')}>{children}</UiFlagProvider>
         </section>
 
         {/* Tactical Decoration Footer */}

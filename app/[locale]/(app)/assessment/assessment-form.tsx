@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { saveProfile } from './actions';
+import { Progress } from '@/components/shadcn/progress';
 import { ProfileStep } from '@/components/assessment/ProfileStep';
 import { EquipmentStep } from '@/components/assessment/EquipmentStep';
 import { HealthStep } from '@/components/assessment/HealthStep';
@@ -18,7 +19,7 @@ import type {
 
 type Step = 'profile' | 'equipment' | 'health' | 'cardio' | 'parq';
 
-export function AssessmentForm({ stepIndicator = true }: { stepIndicator?: boolean }) {
+export function AssessmentForm({ stepIndicator = true, shadcnUi = false }: { stepIndicator?: boolean; shadcnUi?: boolean }) {
   const t = useTranslations('assessment');
   const router = useRouter();
 
@@ -115,14 +116,18 @@ export function AssessmentForm({ stepIndicator = true }: { stepIndicator?: boole
               {t(`${step}.title`)}
             </span>
           </div>
-          <div className="flex gap-1" aria-hidden="true">
-            {steps.map((s, i) => (
-              <div
-                key={s}
-                className={`h-2 flex-1 ${i <= steps.indexOf(step) ? 'bg-accent' : 'bg-outline'}`}
-              />
-            ))}
-          </div>
+          {shadcnUi ? (
+            <Progress value={steps.indexOf(step) + 1} max={steps.length} />
+          ) : (
+            <div className="flex gap-1" aria-hidden="true">
+              {steps.map((s, i) => (
+                <div
+                  key={s}
+                  className={`h-2 flex-1 ${i <= steps.indexOf(step) ? 'bg-accent' : 'bg-outline'}`}
+                />
+              ))}
+            </div>
+          )}
         </nav>
       ) : (
         <nav className="mb-lg border-b border-outline flex justify-between items-end">

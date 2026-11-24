@@ -6,10 +6,15 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { AtSign, Lock, ArrowRight } from 'lucide-react';
+import { useUiFlag } from '@/components/shadcn/ui-flag';
+import { Input } from '@/components/shadcn/input';
+import { Label } from '@/components/shadcn/label';
+import { Button } from '@/components/shadcn/button';
 
 export default function SignupPage() {
   const t = useTranslations('auth');
   const router = useRouter();
+  const shadcn = useUiFlag();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -49,59 +54,116 @@ export default function SignupPage() {
       <h2 className="font-headline-md text-headline-md text-on-surface uppercase mb-base">{t('signup')}</h2>
       {/* Email Field */}
       <div className="space-y-xs">
-        <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="email">
-          {t('email')}
-        </label>
-        <div className="relative">
-          <AtSign size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
-          <input
-            id="email"
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className={inputCls}
-            placeholder={t('emailPlaceholder')}
-          />
-        </div>
+        {shadcn ? (
+          <>
+            <Label htmlFor="email">{t('email')}</Label>
+            <div className="relative">
+              <AtSign size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
+              <Input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder={t('emailPlaceholder')}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="email">
+              {t('email')}
+            </label>
+            <div className="relative">
+              <AtSign size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
+              <input
+                id="email"
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={inputCls}
+                placeholder={t('emailPlaceholder')}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Password Field */}
       <div className="space-y-xs">
-        <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="password">
-          {t('password')}
-        </label>
-        <div className="relative">
-          <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
-          <input
-            id="password"
-            type="password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className={inputCls}
-            placeholder="********"
-          />
-        </div>
+        {shadcn ? (
+          <>
+            <Label htmlFor="password">{t('password')}</Label>
+            <div className="relative">
+              <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
+              <Input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="********"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="password">
+              {t('password')}
+            </label>
+            <div className="relative">
+              <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
+              <input
+                id="password"
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className={inputCls}
+                placeholder="********"
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Confirm Password Field */}
       <div className="space-y-xs">
-        <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="confirmPassword">
-          {t('confirmPassword')}
-        </label>
-        <div className="relative">
-          <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
-          <input
-            id="confirmPassword"
-            type="password"
-            required
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            className={inputCls}
-            placeholder="********"
-          />
-        </div>
+        {shadcn ? (
+          <>
+            <Label htmlFor="confirmPassword">{t('confirmPassword')}</Label>
+            <div className="relative">
+              <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
+              <Input
+                id="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="********"
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <label className="block font-label-bold text-label-bold text-on-surface uppercase" htmlFor="confirmPassword">
+              {t('confirmPassword')}
+            </label>
+            <div className="relative">
+              <Lock size={20} className="absolute left-sm top-1/2 -translate-y-1/2 text-on-surface-variant" />
+              <input
+                id="confirmPassword"
+                type="password"
+                required
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className={inputCls}
+                placeholder="********"
+              />
+            </div>
+          </>
+        )}
       </div>
 
       {/* Error */}
@@ -112,14 +174,25 @@ export default function SignupPage() {
       {/* Submit */}
       <div className="pt-base space-y-sm">
         {/* ponytail: boton nativo local — Button.tsx pisa su className (bug fuera de este slice) */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="inline-flex w-full items-center justify-center gap-2 min-h-[56px] px-6 py-3 bg-accent text-surface-900 font-headline-md text-headline-md uppercase transition-colors hover:bg-accent/90 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {loading ? '...' : t('signupButton')}
-          <ArrowRight size={20} />
-        </button>
+        {shadcn ? (
+          <Button
+            type="submit"
+            disabled={loading}
+            className="h-14 w-full gap-2 bg-accent text-surface-900 font-headline-md text-headline-md uppercase"
+          >
+            {loading ? '...' : t('signupButton')}
+            <ArrowRight size={20} />
+          </Button>
+        ) : (
+          <button
+            type="submit"
+            disabled={loading}
+            className="inline-flex w-full items-center justify-center gap-2 min-h-[56px] px-6 py-3 bg-accent text-surface-900 font-headline-md text-headline-md uppercase transition-colors hover:bg-accent/90 active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-accent disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {loading ? '...' : t('signupButton')}
+            <ArrowRight size={20} />
+          </button>
+        )}
 
         <div className="flex flex-col items-center gap-sm mt-md">
           <Link
