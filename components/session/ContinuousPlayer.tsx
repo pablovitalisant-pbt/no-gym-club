@@ -24,7 +24,7 @@ interface Props {
   sessionId: string;
   exercises: FlatExercise[];
   audioEnabled: boolean;
-  onComplete: () => void;
+  onComplete: (reps: Record<string, string>) => void;
 }
 
 export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, onComplete }: Props) {
@@ -36,7 +36,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
       // Lista completa: mergeLogData reemplaza el ejercicio entero, nunca un delta.
       const entries = buildRepEntries(targets, initialRepInputs(targets), reps);
       saveExerciseReps(sessionId, entries).catch(() => {});
-      onComplete();
+      onComplete(reps);
     },
     [sessionId, onComplete, targets],
   );

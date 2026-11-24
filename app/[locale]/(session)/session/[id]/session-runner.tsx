@@ -1,20 +1,25 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
 import { Volume2, VolumeX, Check, Dumbbell } from 'lucide-react';
+import BackButton from '@/components/ui/BackButton';
 import LogForm from '@/components/session/LogForm';
 import CircularTimer from '@/components/session/CircularTimer';
 import ContinuousPlayer from '@/components/session/ContinuousPlayer';
 import ContinuousSummary from '@/components/session/ContinuousSummary';
+import SessionDoneScreen from '@/components/session/SessionDoneScreen';
+import ModeToggle from '@/components/session/player/ModeToggle';
 import { greetingText } from '@/lib/settings/greeting';
 import type { SessionData } from '@/lib/types/session';
 import { displayExerciseName } from '@/lib/exercises/display-name';
 import { flattenSession, type SessionSection } from '@/lib/session/flatten';
 import { startOptions, resumeRunnerState } from '@/lib/session/continuous-view';
-import { buildTimeline } from '@/lib/session/continuous';
+import { buildTimeline, type RunMode } from '@/lib/session/continuous';
+import { resolveSessionEntry, snapshotForEntry } from '@/lib/session/entry';
+import { loadRunMode, saveRunMode } from '@/lib/session/run-mode';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playDone, playTick, playTransition } from '@/lib/audio';
 import { useAudioPreference } from '@/lib/useAudioPreference';
@@ -33,7 +38,8 @@ type RunnerState =
   | 'rest'
   | 'continuous'
   | 'summary'
-  | 'done';
+  | 'done'
+  | 'saved';
 
 const SECTION_BADGES: Record<SessionSection, string> = {
   warmup: 'bg-green-500/20 text-green-500 border-green-500/40',
@@ -50,13 +56,18 @@ export default function SessionRunner({
   session,
   continuousEnabled = false,
   displayName = null,
+  planDayIndex = null,
+  serverRow = { completed_at: null, rpe: null },
 }: {
   sessionId: string;
   session: SessionData;
   continuousEnabled?: boolean;
   displayName?: string | null;
+  planDayIndex?: number | null;
+  serverRow?: { completed_at: string | null; rpe: number | null };
 }) {
   const t = useTranslations('session');
+  const locale = useLocale();
   const router = useRouter();
   const allExercises = flattenSession(session);
 
@@ -66,7 +77,11 @@ export default function SessionRunner({
   const [timingSeconds, setTimingSeconds] = useState(0);
   const [repsInputs, setRepsInputs] = useState<string[]>([]);
   const [imageError, setImageError] = useState(false);
+  const [recordedReps, setRecordedReps] = useState<Record<string, string> | null>(null);
+  const [savedRpe, setSavedRpe] = useState<number | null>(null);
+  const [idleMode, setIdleMode] = useState<RunMode>(() => loadRunMode());
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const recordedRepsRef = useRef<Record<string, string> | null>(null);
   const restStartRef = useRef<number>(0);
   const restInfoRef = useRef<{
     exerciseIndex: number;
@@ -93,6 +108,38 @@ export default function SessionRunner({
   // Restore snapshot on mount (page refresh / back navigation)
   useEffect(() => {
     const snapshot = loadSnapshot(sessionId);
+    const continuous = continuousEnabled ? loadContinuousSnapshot(sessionId) : null;
+    const continuousDone =
+      continuous != null &&
+      resumeRunnerState(continuous, buildTimeline(allExercises), Date.now()) === 'summary';
+    const entry = resolveSessionEntry(
+      serverRow,
+      snapshotForEntry(snapshot, continuous, continuousDone),
+    );
+    if (entry === 'done') {
+      setSavedRpe(serverRow.rpe);
+      setState('saved');
+      return;
+    }
+    if (entry === 'summary') {
+      const recorded = snapshot?.recordedReps ?? null;
+      recordedRepsRef.current = recorded;
+      setRecordedReps(recorded);
+      setState('summary');
+      return;
+    }
+    if (entry === 'rpe') {
+      if (snapshot?.recordedReps) {
+        recordedRepsRef.current = snapshot.recordedReps;
+        setRecordedReps(snapshot.recordedReps);
+      }
+      setState('done');
+      return;
+    }
+    if (entry === 'continuous') {
+      setState('continuous');
+      return;
+    }
     if (!snapshot) return;
     restTimesRef.current = snapshot.restTimes;
     exerciseLogRef.current = snapshot.exerciseLog;
@@ -238,16 +285,6 @@ export default function SessionRunner({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Reanudar el modo de corrido tras recargar (el snapshot continuo solo lo leía
-  // useContinuousPlayer, que no se monta si el runner queda en 'idle').
-  useEffect(() => {
-    if (!continuousEnabled) return;
-    const snapshot = loadContinuousSnapshot(sessionId);
-    if (!snapshot) return;
-    setState(resumeRunnerState(snapshot, buildTimeline(allExercises), Date.now()));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // Cleanup timer on unmount
   useEffect(() => {
     return () => {
@@ -268,7 +305,28 @@ export default function SessionRunner({
       );
       clearSnapshot(sessionId);
     }
-  }, [state, sessionId]);
+    // El RPE aún no se guardó: persistir la etapa para reanudar acá tras recargar.
+    if (state === 'done') {
+      saveSnapshot({
+        sessionId,
+        state: 'done',
+        index,
+        restEndsAt: null,
+        timingEndsAt: null,
+        restInfo: restInfoRef.current,
+        restTimes: restTimesRef.current,
+        exerciseLog: exerciseLogRef.current,
+        updatedAt: Date.now(),
+        stage: 'rpe',
+        recordedReps: recordedRepsRef.current ?? undefined,
+      });
+    }
+  }, [state, sessionId, index]);
+
+  // Refrescar para que la pantalla de guardado lea la sesión completada.
+  useEffect(() => {
+    if (state === 'saved') router.refresh();
+  }, [state, router]);
 
   const current = allExercises[index];
   const isLast = index >= allExercises.length - 1;
@@ -526,7 +584,7 @@ export default function SessionRunner({
   return (
     <div className="max-w-lg mx-auto relative overflow-hidden min-h-screen bg-background flex flex-col">
       {/* Audio toggle — visible in active states */}
-      {state !== 'idle' && state !== 'done' && (
+      {state !== 'idle' && state !== 'done' && state !== 'saved' && state !== 'summary' && (
         <button
           onClick={toggleAudio}
           className="absolute top-4 right-4 z-50 bg-surface-800 brutalist-border px-3 py-2 flex items-center gap-2 text-on-surface-variant hover:text-on-surface transition-colors text-xs"
@@ -539,29 +597,46 @@ export default function SessionRunner({
 
       {/* Idle: Start screen */}
       {state === 'idle' && (
-        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile py-16 space-y-6">
-          <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-            {session.title_es}
-          </h1>
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            {allExercises.length} {t('exercise')}s · {t('warmup')} ({session.warmup.length}) ·{' '}
-            {t('main')} ({session.main.length}) · {t('cooldown')} ({session.cooldown.length})
-          </p>
-          {startOptions(continuousEnabled).map((option) => (
-            <Button
-              key={option}
-              onClick={() => setState(option === 'continuous' ? 'continuous' : 'active')}
-              className="w-full max-w-xs !py-4 !text-body-md uppercase"
+        <div className="flex-grow flex flex-col">
+          <div className="px-margin-mobile pt-4">
+            <BackButton
+              fallbackHref={`/${locale}/dashboard`}
+              className="inline-flex items-center min-h-[44px] text-base font-bold text-on-surface"
             >
-              {t(
-                option === 'continuous'
-                  ? 'continuousStart'
-                  : continuousEnabled
-                    ? 'stepByStep'
-                    : 'start',
-              )}
-            </Button>
-          ))}
+              ← {t('backToPanel')}
+            </BackButton>
+          </div>
+          <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile pb-16 space-y-6">
+            <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
+              {session.title_es}
+            </h1>
+            <p className="font-body-md text-body-md text-on-surface-variant">
+              {allExercises.length} {t('exercise')}s · {t('warmup')} ({session.warmup.length}) ·{' '}
+              {t('main')} ({session.main.length}) · {t('cooldown')} ({session.cooldown.length})
+            </p>
+            {startOptions(continuousEnabled).map((option) => (
+              <Button
+                key={option}
+                onClick={() => setState(option === 'continuous' ? 'continuous' : 'active')}
+                className="w-full max-w-xs !py-4 !text-body-md uppercase"
+              >
+                {t(
+                  option === 'continuous'
+                    ? 'continuousStart'
+                    : continuousEnabled
+                      ? 'stepByStep'
+                      : 'start',
+                )}
+              </Button>
+            ))}
+            <ModeToggle
+              mode={idleMode}
+              onChange={(m) => {
+                setIdleMode(m);
+                saveRunMode(m);
+              }}
+            />
+          </div>
         </div>
       )}
 
@@ -571,7 +646,25 @@ export default function SessionRunner({
           sessionId={sessionId}
           exercises={allExercises}
           audioEnabled={audioEnabled}
-          onComplete={() => setState('summary')}
+          onComplete={(reps) => {
+            recordedRepsRef.current = reps;
+            setRecordedReps(reps);
+            setState('summary');
+            const base = loadSnapshot(sessionId);
+            saveSnapshot({
+              sessionId,
+              state: 'summary',
+              index: base?.index ?? index,
+              restEndsAt: null,
+              timingEndsAt: null,
+              restInfo: restInfoRef.current,
+              restTimes: base?.restTimes ?? restTimesRef.current,
+              exerciseLog: base?.exerciseLog ?? exerciseLogRef.current,
+              updatedAt: Date.now(),
+              stage: 'summary',
+              recordedReps: reps,
+            });
+          }}
         />
       )}
 
@@ -581,6 +674,7 @@ export default function SessionRunner({
           sessionId={sessionId}
           exercises={allExercises}
           displayName={displayName}
+          recorded={recordedReps}
           onDone={() => setState('done')}
         />
       )}
@@ -792,23 +886,27 @@ export default function SessionRunner({
         </div>
       )}
 
-      {/* Done: Complete */}
+      {/* Done: RPE */}
       {state === 'done' && (
-        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile space-y-6">
-          <p className="font-headline-md text-headline-md text-green-500 uppercase">
+        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile py-8 space-y-6">
+          <p className="text-2xl font-bold break-words text-on-surface">
             {greetingText(t('completeGreeting'), displayName) ?? t('complete')}
           </p>
           <LogForm
             sessionId={sessionId}
             session={session}
-            onSaved={() => {
-              setTimeout(() => {
-                router.push('/dashboard');
-                router.refresh();
-              }, 1500);
+            onSaved={(value) => {
+              clearSnapshot(sessionId);
+              setSavedRpe(value);
+              setState('saved');
             }}
           />
         </div>
+      )}
+
+      {/* Saved: Sesión guardada */}
+      {state === 'saved' && (
+        <SessionDoneScreen session={session} rpe={savedRpe} planDayIndex={planDayIndex} />
       )}
     </div>
   );

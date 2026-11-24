@@ -22,5 +22,6 @@
   "community": true,
   "community_chat": true,
   "landing_hero_mobile_bar": true,
-  "shadcn_ui": true
+  "shadcn_ui": true,
+  "session_done_screen": false
 }

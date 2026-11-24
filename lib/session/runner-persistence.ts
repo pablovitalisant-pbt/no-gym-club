@@ -26,6 +26,9 @@ export interface RunnerSnapshot {
     prescribedReps: string;
     actualReps: string[];
   }>;
+  /** Etapa de cierre persistida hasta guardar el RPE. */
+  stage?: 'summary' | 'rpe';
+  recordedReps?: Record<string, string>;
   updatedAt: number;
 }
 

@@ -7,24 +7,24 @@ import { saveSessionLog } from './actions';
 import type { SessionData } from '@/lib/types/session';
 
 const RPE_DESCRIPTORS = [
-  { value: 1, key: 'rpeVeryEasy', color: 'bg-green-700 hover:bg-green-600' },
-  { value: 2, key: 'rpeVeryEasy', color: 'bg-green-700 hover:bg-green-600' },
-  { value: 3, key: 'rpeEasy', color: 'bg-green-600 hover:bg-green-500' },
-  { value: 4, key: 'rpeEasy', color: 'bg-green-600 hover:bg-green-500' },
-  { value: 5, key: 'rpeModerate', color: 'bg-yellow-600 hover:bg-yellow-500' },
-  { value: 6, key: 'rpeModerate', color: 'bg-yellow-600 hover:bg-yellow-500' },
-  { value: 7, key: 'rpeHard', color: 'bg-orange-600 hover:bg-orange-500' },
-  { value: 8, key: 'rpeHard', color: 'bg-orange-600 hover:bg-orange-500' },
-  { value: 9, key: 'rpeVeryHard', color: 'bg-red-700 hover:bg-red-600' },
-  { value: 10, key: 'rpeMaximal', color: 'bg-red-800 hover:bg-red-700' },
+  { value: 1, key: 'rpeVeryEasy' },
+  { value: 2, key: 'rpeVeryEasy' },
+  { value: 3, key: 'rpeEasy' },
+  { value: 4, key: 'rpeEasy' },
+  { value: 5, key: 'rpeModerate' },
+  { value: 6, key: 'rpeModerate' },
+  { value: 7, key: 'rpeHard' },
+  { value: 8, key: 'rpeHard' },
+  { value: 9, key: 'rpeVeryHard' },
+  { value: 10, key: 'rpeMaximal' },
 ];
 
-type FormState = 'idle' | 'saving' | 'saved' | 'error';
+type FormState = 'idle' | 'saving' | 'error';
 
 interface LogFormProps {
   sessionId: string;
   session: SessionData;
-  onSaved: () => void;
+  onSaved: (rpe: number) => void;
 }
 
 export default function LogForm({ sessionId, session, onSaved }: LogFormProps) {
@@ -40,11 +40,7 @@ export default function LogForm({ sessionId, session, onSaved }: LogFormProps) {
     setFormState('saving');
     setErrorMsg('');
 
-    const result = await saveSessionLog(
-      sessionId,
-      rpe,
-      notes || undefined,
-    );
+    const result = await saveSessionLog(sessionId, rpe, notes || undefined);
 
     if (!result.success) {
       setErrorMsg(result.error || 'Unknown error');
@@ -52,79 +48,59 @@ export default function LogForm({ sessionId, session, onSaved }: LogFormProps) {
       return;
     }
 
-    setFormState('saved');
-    onSaved();
+    onSaved(rpe);
   }
 
-  if (formState === 'saved') {
-    return (
-      <div className="border-t border-border pt-6 mt-6 text-center">
-        <p className="text-green-400 text-sm font-medium">
-          {t('saved')}
-        </p>
-      </div>
-    );
-  }
+  const selected = rpe == null ? null : RPE_DESCRIPTORS.find((d) => d.value === rpe)!;
 
   return (
-    <div className="border-t border-border pt-6 mt-6 space-y-5">
-      <h3 className="text-sm font-semibold text-text-primary">
-        {t('logTitle')}
-      </h3>
+    <div className="w-full max-w-sm space-y-5 text-on-surface">
+      <h3 className="text-lg font-bold text-on-surface">{t('logTitle')}</h3>
 
-      {/* RPE selector */}
+      {/* RPE: rejilla 5x2, números grandes */}
       <div>
-        <p className="text-xs text-text-muted mb-2">{t('rpeLabel')}</p>
-        <div className="flex gap-1 flex-wrap">
-          {RPE_DESCRIPTORS.map((d) => {
-            const firstInGroup = RPE_DESCRIPTORS.find(
-              (x) => x.key === d.key,
-            )!;
-            const showLabel = firstInGroup.value === d.value;
-            return (
-              <button
-                key={d.value}
-                type="button"
-                onClick={() => setRpe(d.value)}
-                className={`w-9 h-9 text-xs font-semibold rounded transition-all
-                  ${rpe === d.value ? `${d.color} text-white ring-2 ring-white/30 scale-110` : 'bg-surface-800 text-text-muted hover:bg-surface-700'}
-                `}
-                title={showLabel ? t(d.key) : undefined}
-                aria-label={`RPE ${d.value}${showLabel ? ` — ${t(d.key)}` : ''}`}
-              >
-                {d.value}
-              </button>
-            );
-          })}
+        <p className="text-base text-on-surface mb-2">{t('rpeLabel')}</p>
+        <div className="grid grid-cols-5 gap-2">
+          {RPE_DESCRIPTORS.map((d) => (
+            <button
+              key={d.value}
+              type="button"
+              onClick={() => setRpe(d.value)}
+              aria-pressed={rpe === d.value}
+              aria-label={`RPE ${d.value} — ${t(d.key)}`}
+              className={`min-h-[56px] border-2 text-xl font-bold transition-colors ${
+                rpe === d.value
+                  ? 'border-control-bg bg-control-bg text-control-fg'
+                  : 'border-outline-variant bg-surface-800 text-on-surface hover:border-control-bg'
+              }`}
+            >
+              {d.value}
+            </button>
+          ))}
         </div>
-        {rpe != null && (
-          <p className="text-xs text-accent mt-1">
-            {t(RPE_DESCRIPTORS.find((d) => d.value === rpe)!.key)}
-          </p>
-        )}
+        <p className="mt-2 min-h-6 text-base font-bold text-on-surface" aria-live="polite">
+          {selected ? t(selected.key) : ''}
+        </p>
       </div>
 
       {/* Notes */}
       <div>
-        <p className="text-xs text-text-muted mb-1">{t('notesLabel')}</p>
+        <p className="text-base text-on-surface mb-1">{t('notesLabel')}</p>
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={3}
-          className="w-full bg-surface-800 border border-border rounded px-3 py-2 text-sm text-text-primary placeholder-text-muted focus:outline-none focus:border-accent resize-none"
+          className="w-full border-2 border-outline-variant bg-surface-800 px-3 py-2 text-base text-on-surface placeholder:text-on-surface/60 focus:outline-none focus:border-control-bg resize-none"
           placeholder={t('notesLabel')}
         />
       </div>
 
-      {/* Error */}
-      {formState === 'error' && (
-        <p className="text-red-400 text-sm">{errorMsg}</p>
-      )}
+      {formState === 'error' && <p className="text-base text-error">{errorMsg}</p>}
 
-      {/* Save button */}
       <Button
         onClick={handleSave}
         disabled={rpe == null || formState === 'saving'}
+        className="w-full !min-h-[56px] !text-lg"
       >
         {formState === 'saving' ? t('saving') : t('save')}
       </Button>

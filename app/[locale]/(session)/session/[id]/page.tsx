@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import { getFlag } from '@/lib/flags';
 import { resolveExerciseGif } from '@/lib/exercises/resolve-media';
 import SessionRunner from './session-runner';
+import SessionDoneScreen from '@/components/session/SessionDoneScreen';
 import type { SessionData, SessionExercise } from '@/lib/types/session';
 
 export default async function SessionPage({
@@ -36,7 +37,7 @@ export default async function SessionPage({
 
   const { data: session, error } = await supabase
     .from('workout_sessions')
-    .select('id, session_data')
+    .select('id, session_data, completed_at, rpe, plan_day_index')
     .eq('id', id)
     .eq('user_id', user.id)
     .single();
@@ -72,19 +73,33 @@ export default async function SessionPage({
     }));
   }
 
+  const enriched: SessionData = {
+    ...sessionData,
+    warmup: enrich(sessionData.warmup),
+    main: enrich(sessionData.main),
+    finisher: sessionData.finisher ? enrich(sessionData.finisher) : undefined,
+    cardio: sessionData.cardio ? enrich(sessionData.cardio) : undefined,
+    cooldown: enrich(sessionData.cooldown),
+  };
+
+  if (getFlag('session_done_screen') && session.completed_at != null) {
+    return (
+      <SessionDoneScreen
+        session={enriched}
+        rpe={session.rpe ?? null}
+        planDayIndex={session.plan_day_index ?? null}
+      />
+    );
+  }
+
   return (
     <SessionRunner
       sessionId={session.id}
       continuousEnabled={getFlag('continuous_session_mode')}
       displayName={profile?.display_name ?? null}
-      session={{
-        ...sessionData,
-        warmup: enrich(sessionData.warmup),
-        main: enrich(sessionData.main),
-        finisher: sessionData.finisher ? enrich(sessionData.finisher) : undefined,
-        cardio: sessionData.cardio ? enrich(sessionData.cardio) : undefined,
-        cooldown: enrich(sessionData.cooldown),
-      }}
+      planDayIndex={session.plan_day_index ?? null}
+      serverRow={{ completed_at: session.completed_at ?? null, rpe: session.rpe ?? null }}
+      session={enriched}
     />
   );
 }

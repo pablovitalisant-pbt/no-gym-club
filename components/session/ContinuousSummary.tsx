@@ -2,9 +2,13 @@
 
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { Button } from '@/components/ui/Button';
 import type { FlatExercise } from '@/lib/session/flatten';
-import { repsTargets, initialRepInputs, buildRepEntries } from '@/lib/session/continuous-view';
+import {
+  repsTargets,
+  repsSlotKeys,
+  initialRepInputs,
+  buildRepEntries,
+} from '@/lib/session/continuous-view';
 import { saveExerciseReps } from '@/app/[locale]/(session)/session/[id]/actions';
 import { displayExerciseName } from '@/lib/exercises/display-name';
 import { greetingText } from '@/lib/settings/greeting';
@@ -14,14 +18,37 @@ interface Props {
   exercises: FlatExercise[];
   onDone: () => void;
   displayName?: string | null;
+  /** Reps registradas durante el corrido, para prellenar las cajas. */
+  recorded?: Record<string, string> | null;
 }
 
-/** Pantalla final del modo de corrido: reps opcionales y luego el LogForm de RPE. */
-export default function ContinuousSummary({ sessionId, exercises, onDone, displayName = null }: Props) {
+function inputsFrom(
+  targets: ReturnType<typeof repsTargets>,
+  recorded?: Record<string, string> | null,
+): Record<number, string[]> {
+  const base = initialRepInputs(targets);
+  if (!recorded) return base;
+  return Object.fromEntries(
+    targets.map((target) => [
+      target.index,
+      repsSlotKeys(target).map((key, slot) => recorded[key] ?? base[target.index]?.[slot] ?? target.reps),
+    ]),
+  );
+}
+
+/** Cierre del modo de corrido: reps por serie editables y luego el RPE. */
+export default function ContinuousSummary({
+  sessionId,
+  exercises,
+  onDone,
+  displayName = null,
+  recorded = null,
+}: Props) {
   const t = useTranslations('session');
   const targets = repsTargets(exercises);
-  const [inputs, setInputs] = useState(() => initialRepInputs(targets));
+  const [inputs, setInputs] = useState(() => inputsFrom(targets, recorded));
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
   async function handleSave() {
     setSaving(true);
@@ -29,34 +56,40 @@ export default function ContinuousSummary({ sessionId, exercises, onDone, displa
     // Lista completa: mergeLogData reemplaza el ejercicio entero, nunca un delta.
     await saveExerciseReps(sessionId, entries).catch(() => {});
     setSaving(false);
-    onDone();
+    setSaved(true);
+    setTimeout(onDone, 1500);
   }
 
-  return (
-    <div className="flex-grow flex flex-col items-center text-center px-margin-mobile py-10 space-y-md">
-      <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-green-500 uppercase">
-        {greetingText(t('summaryGreeting'), displayName) ?? t('summaryTitle')}
-      </h2>
-      <p className="font-body-md text-body-md text-on-surface-variant">{t('summaryIntro')}</p>
+  const greeting = greetingText(t('summaryGreeting'), displayName);
 
-      <div className="w-full max-w-sm space-y-md">
+  return (
+    <div className="flex-grow flex flex-col px-margin-mobile py-8 space-y-md text-on-surface bg-background">
+      <h2 className="text-3xl font-bold break-words text-on-surface">{t('summaryTitle')}</h2>
+      {greeting && <p className="text-lg text-on-surface">{greeting}</p>}
+      <p className="text-base text-on-surface">{t('summaryIntro')}</p>
+
+      <div className="w-full max-w-sm mx-auto space-y-md">
         {targets.map((target) => (
-          <div key={target.index} className="brutalist-border bg-surface-800 p-sm">
-            <p className="font-label-bold text-label-sm uppercase text-on-surface mb-2">
-              {displayExerciseName(target.exercise)}
+          <div key={target.index} className="border-2 border-outline-variant bg-card rounded-xl p-4">
+            <p className="text-xl font-bold text-on-surface">{displayExerciseName(target.exercise)}</p>
+            <p className="font-mono text-base text-on-surface mb-3">
+              {target.sets} x {target.reps}
             </p>
-            <div className="flex flex-wrap justify-center gap-2">
+            <div className="flex flex-wrap gap-2">
               {(inputs[target.index] ?? []).map((value, slot) => {
                 const setN = target.bilateral ? Math.floor(slot / 2) + 1 : slot + 1;
                 const sideN = target.bilateral ? (slot % 2 === 0 ? 1 : 2) : null;
                 return (
-                  <label key={slot} className="flex flex-col items-center gap-1 text-on-surface-variant">
-                    <span className="font-label-sm text-label-sm">
-                      {sideN ? `${t('side', { n: sideN })} · ` : ''}
-                      {t('setLabel', { n: setN })}
+                  <label key={slot} className="flex flex-col items-center gap-1">
+                    <span className="text-sm font-bold text-on-surface">
+                      S{setN}
+                      {sideN ? `·${sideN}` : ''}
                     </span>
                     <input
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      placeholder="0"
                       value={value}
                       onChange={(e) =>
                         setInputs((prev) => ({
@@ -66,7 +99,7 @@ export default function ContinuousSummary({ sessionId, exercises, onDone, displa
                           ),
                         }))
                       }
-                      className="w-20 bg-surface-900 brutalist-border border-2 border-outline text-center font-mono-data text-on-surface !py-2 focus:border-primary-container outline-none"
+                      className="min-w-[64px] min-h-[56px] w-[64px] border-2 border-outline-variant bg-surface-900 text-center text-[22px] font-bold text-on-surface outline-none focus:border-control-bg"
                     />
                   </label>
                 );
@@ -76,14 +109,14 @@ export default function ContinuousSummary({ sessionId, exercises, onDone, displa
         ))}
       </div>
 
-      <div className="w-full max-w-sm flex flex-col gap-3">
-        <Button onClick={handleSave} disabled={saving} className="w-full uppercase">
-          {saving ? t('saving') : t('saveReps')}
-        </Button>
-        <Button variant="ghost" onClick={onDone} disabled={saving} className="w-full uppercase">
-          {t('omit')}
-        </Button>
-      </div>
+      <button
+        type="button"
+        onClick={handleSave}
+        disabled={saving || saved}
+        className="w-full max-w-sm mx-auto min-h-[56px] border-2 border-control-bg bg-control-bg text-control-fg text-lg font-bold uppercase disabled:opacity-70"
+      >
+        {saving ? t('saving') : saved ? t('summarySaved') : t('summarySave')}
+      </button>
     </div>
   );
 }
