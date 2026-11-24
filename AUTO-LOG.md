@@ -78,3 +78,9 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 - QA (Fase E): PASA 6/6 (dashboard, plan, sesion, assessment, comunidad, config, login; 375 y 1280); DT reprodujo QA-01 en local 375 px con cuenta sintetica: "Empezar entrenamiento" bg 232,87,10, texto 10,10,10, inline-flex, icono en fila
 - Desvios del Programador: ninguno
 - QA metricas: FP 0, ESC 0, ACIERTOS 0, costo USD 1.06; hallazgos bajos a BUGS.md #13
+
+## 2026-11-24 - Release: v2-24 + v2-25 + v2-26
+- Aprobado por Pablo (09:56): flags landing_hero_mobile_bar y shadcn_ui en true; tests de flags a "existe y es booleano" (Programador deep)
+- Senal 3: verificar.ps1 verde (727/727, build 0); sin variables de entorno nuevas desde b1b7662; Fase E de flujos criticos cubierta por v2-24b y v2-26 (dashboard, plan, sesion, assessment, comunidad, config, login). Ponytail audit NO corrido en este release (pendiente).
+- Commit: 93b7113, push a main (b1b7662..93b7113), deploy Vercel
+- Humo de produccion: qa-prod.ps1 RECHAZADO (humoProd sin configurar); humo manual del DT en paginas publicas: hero 375 sin solape (barra static), 1280 sin solape (link 792-811, barra 845), CLUB stroke 150, Entrar bg 232,87,10 texto 10,10,10 alto 56, placeholders es/en ok, sin recursos con error. Dashboard en produccion no verificado (requiere sesion; cubierto en QA local v2-26)

@@ -41,3 +41,9 @@ Diseño: fondo #0a0a0a, superficies #111/#1a1a1a, acento #e8570a, texto #f5f5f5/
 - Cuentas QA extremo/intermedio tienen perfil público en Santiago (Ñuñoa/Providencia) para pruebas de comunidad.
 - Costo DeepSeek de la sesión ≈ USD 95.
 - Pendientes técnicos: borrar pipeline v1 de generación diaria; refactor session-runner (~800 L) y assessment-form; timezone del usuario; trigger de integridad plan_id; advisors Supabase (search_* ejecutables por anon, vector en public, leaked password protection); humoProd en qa-entorno.json; umbrales de nivel (qa.intermedio queda beginner).
+
+## Estado 2026-11-24 10:15
+
+- En produccion (deploy 93b7113): v2-24 (hero movil, CLUB legible, boton Entrar/registro, placeholder i18n), v2-25 (base shadcn/ui en components/shadcn, lib/utils cn con extendTailwindMerge), v2-26 (Bug #12: Button une clases con cn; botones del dashboard ya con estilo). Flags landing_hero_mobile_bar y shadcn_ui en true.
+- deep.ps1 (semilla): Fase A ahora bloquea Edit/Write/MultiEdit/NotebookEdit/Bash (respaldo deep.ps1.bak-2026-11-24).
+- Pendientes: ponytail audit (contador +3); humoProd en qa-entorno.json; BUGS.md #13 (error de login en ingles, peso de letra de botones, cabecera que tapa el paso en assessment, padding 320 px, pie de auth); componentes de 21st.dev (heatmap, temporizador, stepper) sobre la base shadcn; imagen de las tarjetas del bento.
