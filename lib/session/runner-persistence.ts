@@ -38,7 +38,11 @@ interface StoredSnapshot {
 }
 
 function saveWithPrefix<T extends StoredSnapshot>(prefix: string, snapshot: T): void {
-  localStorage.setItem(prefix + snapshot.sessionId, JSON.stringify(snapshot));
+  try {
+    localStorage.setItem(prefix + snapshot.sessionId, JSON.stringify(snapshot));
+  } catch {
+    // Sin storage (modo privado o cuota llena): la sesión sigue en memoria.
+  }
 }
 
 function loadWithPrefix<T extends StoredSnapshot>(

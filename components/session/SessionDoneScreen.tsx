@@ -39,12 +39,14 @@ export default function SessionDoneScreen({ session, rpe, planDayIndex = null }:
         >
           {t('backToPanel')}
         </Link>
-        <Link
-          href="/dashboard"
-          className="flex items-center justify-center w-full min-h-[56px] border-2 border-outline-variant text-on-surface text-lg font-bold uppercase"
-        >
-          {t('viewCalendar')}
-        </Link>
+        {planDayIndex != null && (
+          <Link
+            href={`/dashboard?day=${planDayIndex}`}
+            className="flex items-center justify-center w-full min-h-[56px] border-2 border-outline-variant text-on-surface text-lg font-bold uppercase"
+          >
+            {t('viewCalendar')}
+          </Link>
+        )}
       </div>
     </div>
   );

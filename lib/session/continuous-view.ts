@@ -115,6 +115,23 @@ export function initialRepInputs(targets: RepsTarget[]): Record<number, string[]
   );
 }
 
+/** Inputs del resumen: prellena con las reps registradas en el corrido. */
+export function inputsFrom(
+  targets: RepsTarget[],
+  recorded?: Record<string, string> | null,
+): Record<number, string[]> {
+  const base = initialRepInputs(targets);
+  if (!recorded) return base;
+  return Object.fromEntries(
+    targets.map((target) => [
+      target.index,
+      repsSlotKeys(target).map(
+        (key, slot) => recorded[key] ?? base[target.index]?.[slot] ?? target.reps,
+      ),
+    ]),
+  );
+}
+
 /** Claves de reps de un ejercicio: `${index}:${slot}`; bilateral = serie*2+lado. */
 export function repsSlotKeys(target: RepsTarget): string[] {
   const keys: string[] = [];

@@ -5,9 +5,8 @@ import { useTranslations } from 'next-intl';
 import type { FlatExercise } from '@/lib/session/flatten';
 import {
   repsTargets,
-  repsSlotKeys,
-  initialRepInputs,
   buildRepEntries,
+  inputsFrom,
 } from '@/lib/session/continuous-view';
 import { saveExerciseReps } from '@/app/[locale]/(session)/session/[id]/actions';
 import { displayExerciseName } from '@/lib/exercises/display-name';
@@ -20,20 +19,6 @@ interface Props {
   displayName?: string | null;
   /** Reps registradas durante el corrido, para prellenar las cajas. */
   recorded?: Record<string, string> | null;
-}
-
-function inputsFrom(
-  targets: ReturnType<typeof repsTargets>,
-  recorded?: Record<string, string> | null,
-): Record<number, string[]> {
-  const base = initialRepInputs(targets);
-  if (!recorded) return base;
-  return Object.fromEntries(
-    targets.map((target) => [
-      target.index,
-      repsSlotKeys(target).map((key, slot) => recorded[key] ?? base[target.index]?.[slot] ?? target.reps),
-    ]),
-  );
 }
 
 /** Cierre del modo de corrido: reps por serie editables y luego el RPE. */
@@ -49,15 +34,26 @@ export default function ContinuousSummary({
   const [inputs, setInputs] = useState(() => inputsFrom(targets, recorded));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   async function handleSave() {
     setSaving(true);
+    setSaveError(false);
     const entries = buildRepEntries(targets, inputs);
     // Lista completa: mergeLogData reemplaza el ejercicio entero, nunca un delta.
-    await saveExerciseReps(sessionId, entries).catch(() => {});
-    setSaving(false);
-    setSaved(true);
-    setTimeout(onDone, 1500);
+    try {
+      const res = await saveExerciseReps(sessionId, entries);
+      if (!res.success) {
+        setSaveError(true);
+        return; // conserva los inputs para reintentar
+      }
+      setSaved(true);
+      setTimeout(onDone, 1500);
+    } catch {
+      setSaveError(true); // red caida: la action rechaza; permite reintentar
+    } finally {
+      setSaving(false);
+    }
   }
 
   const greeting = greetingText(t.raw('summaryGreeting'), displayName);
@@ -108,6 +104,12 @@ export default function ContinuousSummary({
           </div>
         ))}
       </div>
+
+      {saveError && (
+        <p role="alert" className="text-base font-bold text-error text-center">
+          {t('summarySaveError')}
+        </p>
+      )}
 
       <button
         type="button"

@@ -288,7 +288,7 @@ describe('v3-05 · page de sesión lee la DB', () => {
 
   it('el flag nuevo existe y se consume', () => {
     const flags = JSON.parse(src('config/feature-flags.json'));
-    expect(flags.session_done_screen).toBe(false);
+    expect(flags.session_done_screen).toBe(true);
     expect(page).toContain("getFlag('session_done_screen')");
   });
 });

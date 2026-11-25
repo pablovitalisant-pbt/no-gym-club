@@ -6,13 +6,9 @@ import type { FlatExercise } from '@/lib/session/flatten';
 import { useContinuousPlayer } from '@/lib/session/useContinuousPlayer';
 import { displayExerciseName } from '@/lib/exercises/display-name';
 import {
-  buildRepEntries,
-  initialRepInputs,
   repsKeyForSegment,
-  repsTargets,
   repsTopOfRange,
 } from '@/lib/session/continuous-view';
-import { saveExerciseReps } from '@/app/[locale]/(session)/session/[id]/actions';
 import ReadyScreen from './player/ReadyScreen';
 import WorkScreen from './player/WorkScreen';
 import RepsScreen from './player/RepsScreen';
@@ -29,16 +25,11 @@ interface Props {
 
 export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, onComplete }: Props) {
   const t = useTranslations('session');
-  const targets = repsTargets(exercises);
 
+  // El resumen es la única vía de guardado del corrido: guarda las reps finales.
   const handleComplete = useCallback(
-    (reps: Record<string, string>) => {
-      // Lista completa: mergeLogData reemplaza el ejercicio entero, nunca un delta.
-      const entries = buildRepEntries(targets, initialRepInputs(targets), reps);
-      saveExerciseReps(sessionId, entries).catch(() => {});
-      onComplete(reps);
-    },
-    [sessionId, onComplete, targets],
+    (reps: Record<string, string>) => onComplete(reps),
+    [onComplete],
   );
 
   const p = useContinuousPlayer({ sessionId, exercises, audioEnabled, onComplete: handleComplete });

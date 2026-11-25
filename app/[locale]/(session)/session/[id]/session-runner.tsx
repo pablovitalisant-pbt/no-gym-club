@@ -298,12 +298,13 @@ export default function SessionRunner({
       state === 'done' &&
       (restTimesRef.current.length > 0 || exerciseLogRef.current.length > 0)
     ) {
-      saveSessionTimes(
+      void saveSessionTimes(
         sessionId,
         restTimesRef.current,
         exerciseLogRef.current,
-      );
-      clearSnapshot(sessionId);
+      ).then((res) => {
+        if (res.success) clearSnapshot(sessionId);
+      });
     }
     // El RPE aún no se guardó: persistir la etapa para reanudar acá tras recargar.
     if (state === 'done') {
@@ -438,10 +439,13 @@ export default function SessionRunner({
       bilateral: ex.bilateral ?? false,
     };
     exerciseLogRef.current.push(entry);
-    // Optimistic save: fire and forget — manda ref completo, no delta
-    // (mergeLogData reemplaza exerciseLog entero; si mandáramos [entry]
-    //  solo, se perderían las entradas anteriores en DB)
-    saveExerciseReps(sessionId, exerciseLogRef.current).catch(() => {});
+    // Manda ref completo, no delta (mergeLogData reemplaza exerciseLog entero).
+    // Si falla, un reintento; el guardado final vuelve a mandar la lista completa.
+    void saveExerciseReps(sessionId, exerciseLogRef.current)
+      .then((res) => {
+        if (!res.success) return saveExerciseReps(sessionId, exerciseLogRef.current);
+      })
+      .catch(() => {});
     saveSnapshot({
       sessionId,
       state: 'reps',
