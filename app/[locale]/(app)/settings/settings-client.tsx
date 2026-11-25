@@ -153,16 +153,35 @@ export default function SettingsClient(p: Props) {
         <div className="flex items-center gap-md">
           <Avatar url={avatar} name={name} />
           <div className="space-y-xs">
-            <label className="inline-flex items-center justify-center px-6 py-3 min-h-[56px] border-2 border-text-primary text-text-primary font-semibold cursor-pointer">
-              {avatarState === 'saving' ? t('saving') : t('changePhoto')}
-              <input
-                type="file"
-                accept="image/*"
-                capture="environment"
-                className="sr-only"
-                onChange={(e) => handleFile(e.target.files?.[0])}
-              />
-            </label>
+            <div className="flex flex-wrap gap-xs">
+              <label className="inline-flex items-center justify-center px-6 py-3 min-h-[56px] text-base border-2 border-text-primary text-text-primary font-semibold cursor-pointer focus-within:outline focus-within:outline-2 focus-within:outline-offset-2">
+                {avatarState === 'saving' ? t('saving') : t('takePhoto')}
+                <input
+                  type="file"
+                  accept="image/*"
+                  capture="user"
+                  disabled={avatarState === 'saving'}
+                  className="sr-only"
+                  onChange={(e) => {
+                    handleFile(e.target.files?.[0]);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+              <label className="inline-flex items-center justify-center px-6 py-3 min-h-[56px] text-base border-2 border-text-primary text-text-primary font-semibold cursor-pointer focus-within:outline focus-within:outline-2 focus-within:outline-offset-2">
+                {avatarState === 'saving' ? t('saving') : t('chooseFromGallery')}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={avatarState === 'saving'}
+                  className="sr-only"
+                  onChange={(e) => {
+                    handleFile(e.target.files?.[0]);
+                    e.target.value = '';
+                  }}
+                />
+              </label>
+            </div>
             <p className="text-on-surface-variant text-label-sm">{t('photoHint')}</p>
             {avatarState === 'error' && (
               <p className="text-error font-label-sm">{t('imageError')}</p>
