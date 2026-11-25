@@ -133,7 +133,7 @@ describe('v3-06 EXP-3 · saludo sin t() interpolado', () => {
       "t.raw('summaryGreeting')",
     );
     expect(
-      src('app/[locale]/(session)/session/[id]/session-runner.tsx'),
+      src('components/session/runner/RunnerDoneScreen.tsx'),
     ).toContain("t.raw('completeGreeting')");
     expect(src('app/[locale]/(app)/dashboard/page.tsx')).toContain("t.raw('greeting')");
   });

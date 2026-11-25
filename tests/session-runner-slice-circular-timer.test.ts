@@ -13,14 +13,17 @@ describe('Slice CircularTimer — integración en session-runner', () => {
 
   // ─── 1: Importa CircularTimer desde components/session ───
   it('importa CircularTimer desde @/components/session/CircularTimer', () => {
-    expect(runner).toContain('CircularTimer');
-    expect(runner).toContain('@/components/session/CircularTimer');
+    const rest = readFileSync(resolve(root, 'components/session/runner/RunnerRestScreen.tsx'), 'utf-8');
+    expect(rest).toContain('CircularTimer');
+    expect(rest).toContain('@/components/session/CircularTimer');
   });
 
   // ─── 2: Usado en state === rest con restSeconds y prescribedRest ───
   it('se usa en bloque de rest con remaining=restSeconds y total del ref', () => {
-    const restBlockStart = runner.indexOf("{state === 'rest'");
-    const restBlock = runner.slice(restBlockStart, restBlockStart + 800);
+    const restBlock = readFileSync(
+      resolve(root, 'components/session/runner/RunnerRestScreen.tsx'),
+      'utf-8',
+    );
     expect(restBlock).toContain('remaining={restSeconds}');
   });
 

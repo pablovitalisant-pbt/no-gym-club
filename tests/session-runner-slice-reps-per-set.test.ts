@@ -10,6 +10,10 @@ describe('Slice Reps por serie — state + UI + i18n', () => {
     'app/[locale]/(session)/session/[id]/session-runner.tsx',
   );
   const runner = readFileSync(runnerPath, 'utf-8');
+  const repsScreen = readFileSync(
+    resolve(root, 'components/session/runner/RunnerRepsScreen.tsx'),
+    'utf-8',
+  );
   const actionsPath = resolve(
     root,
     'app/[locale]/(session)/session/[id]/actions.ts',
@@ -48,13 +52,13 @@ describe('Slice Reps por serie — state + UI + i18n', () => {
   it('onChange actualiza por índice (map o spread con índice)', () => {
     // Debe actualizar una posición específica, no setear el array entero
     const hasIndexUpdate =
-      runner.includes('setRepsInputs((prev) => prev.map(') ||
-      runner.includes('setRepsInputs((prev) => { const next = [...prev]');
+      repsScreen.includes('setRepsInputs((prev) => prev.map(') ||
+      repsScreen.includes('setRepsInputs((prev) => { const next = [...prev]');
     expect(hasIndexUpdate).toBe(true);
     // No debe haber onChange que reemplace el array con un string
     // (patrón prohibido: onChange={... setRepsInputs(e.target.value)})
     const dangerousPattern = /setRepsInputs\s*\(\s*e\s*\.\s*target\s*\.\s*value\s*\)/;
-    expect(dangerousPattern.test(runner)).toBe(false);
+    expect(dangerousPattern.test(repsScreen)).toBe(false);
   });
 
   // ─── Riesgo 5: handleConfirmReps arma entry.actualReps = repsInputs ───
@@ -95,8 +99,7 @@ describe('Slice Reps por serie — state + UI + i18n', () => {
 
   // ─── Riesgo 9: El render de reps tiene un .map sobre sets ───
   it('el bloque state === reps tiene .map iterando por sets', () => {
-    const repsBlockStart = runner.indexOf("state === 'reps'");
-    const repsBlock = runner.slice(repsBlockStart, repsBlockStart + 1500);
+    const repsBlock = repsScreen;
     expect(repsBlock).toContain('.map(');
     // Debe haber inputs múltiples con un label por serie
     expect(repsBlock).toContain('setLabel');

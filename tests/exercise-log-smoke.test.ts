@@ -57,19 +57,16 @@ describe('Exercise log — per-exercise actuals', () => {
     ).toBe(true);
   });
 
-  // Riesgo 5: LogForm solo se renderiza en session-runner.tsx (done), no en dashboard-client
-  it('LogForm se renderiza solo en session-runner.tsx, no en dashboard-client', () => {
-    const runnerPath = resolve(
-      root,
-      'app/[locale]/(session)/session/[id]/session-runner.tsx',
-    );
+  // Riesgo 5: LogForm solo se renderiza en RunnerDoneScreen (done), no en dashboard-client
+  it('LogForm se renderiza solo en RunnerDoneScreen, no en dashboard-client', () => {
+    const runnerPath = resolve(root, 'components/session/runner/RunnerDoneScreen.tsx');
     const dashboardPath = resolve(
       root,
       'app/[locale]/(app)/dashboard/dashboard-client.tsx',
     );
     const runnerRaw = readFileSync(runnerPath, 'utf-8');
     const dashboardRaw = readFileSync(dashboardPath, 'utf-8');
-    expect(runnerRaw, 'session-runner debe contener LogForm').toContain('<LogForm');
+    expect(runnerRaw, 'RunnerDoneScreen debe contener LogForm').toContain('<LogForm');
     expect(dashboardRaw, 'dashboard-client NO debe contener LogForm').not.toContain('<LogForm');
   });
 

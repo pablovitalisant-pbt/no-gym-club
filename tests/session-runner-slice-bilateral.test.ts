@@ -102,8 +102,10 @@ describe('Slice bilateral — types + runner + persistence + i18n', () => {
 
   // ─── 9: UI reps bilateral renderiza 2×series ───
   it('render de reps bilateral usa ex.sets * 2 o equivalente', () => {
-    const repsBlockStart = runner.indexOf("state === 'reps'");
-    const repsBlock = runner.slice(repsBlockStart, repsBlockStart + 2000);
+    const repsBlock = readFileSync(
+      resolve(root, 'components/session/runner/RunnerRepsScreen.tsx'),
+      'utf-8',
+    );
     // Si bilateral, debe multiplicar sets por 2 (un juego por lado)
     const hasDoubleSets = repsBlock.includes('* 2') || repsBlock.includes('*2');
     const hasBilateralCheck = repsBlock.includes('bilateral');

@@ -8,8 +8,9 @@ import { Volume2, VolumeX, Check } from 'lucide-react';
 import IdleScreen from '@/components/session/runner/IdleScreen';
 import ActiveScreen from '@/components/session/runner/ActiveScreen';
 import TimingScreen from '@/components/session/runner/TimingScreen';
-import LogForm from '@/components/session/LogForm';
-import CircularTimer from '@/components/session/CircularTimer';
+import RunnerRepsScreen from '@/components/session/runner/RunnerRepsScreen';
+import RunnerRestScreen from '@/components/session/runner/RunnerRestScreen';
+import RunnerDoneScreen from '@/components/session/runner/RunnerDoneScreen';
 import ContinuousPlayer from '@/components/session/ContinuousPlayer';
 import ContinuousSummary from '@/components/session/ContinuousSummary';
 import SessionDoneScreen from '@/components/session/SessionDoneScreen';
@@ -546,119 +547,37 @@ export default function SessionRunner({
 
       {/* Reps: Input actual reps for sets/reps exercises */}
       {state === 'reps' && current && (
-        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile space-y-6">
-          <p className="font-label-bold text-label-sm uppercase text-on-surface-variant tracking-widest">
-            {t('repsPrompt')}
-          </p>
-
-          <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-            {displayExerciseName(current.exercise)}
-          </h2>
-
-          <p className="font-body-md text-body-md text-on-surface-variant">
-            {t('prescribed')}: {current.sets} × {current.reps}
-            {current.rpe != null && ` · RPE ${current.rpe}`}
-          </p>
-
-          <div className="flex flex-col items-center gap-4">
-            {Array.from({ length: current.sets ?? 0 }, (_, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <label className="font-label-sm text-label-sm text-on-surface-variant">
-                  {current.bilateral ? `${t('side', { n: 1 })} — ${t('setLabel', { n: i + 1 })}` : t('setLabel', { n: i + 1 })}
-                </label>
-                <input
-                  type="text"
-                  value={repsInputs[i] ?? ''}
-                  onChange={(e) =>
-                    setRepsInputs((prev) => prev.map((v, j) => (j === i ? e.target.value : v)))
-                  }
-                  className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_rgb(var(--c-accent))] outline-none transition-all"
-                  placeholder={current.reps}
-                  autoFocus={i === 0}
-                />
-              </div>
-            ))}
-            {current.bilateral && Array.from({ length: current.sets ?? 0 }, (_, i) => {
-              const idx = (current.sets ?? 0) + i;
-              return (
-                <div key={idx} className="flex flex-col items-center gap-1">
-                  <label className="font-label-sm text-label-sm text-on-surface-variant">
-                    {t('side', { n: 2 })} — {t('setLabel', { n: i + 1 })}
-                  </label>
-                  <input
-                    type="text"
-                    value={repsInputs[idx] ?? ''}
-                    onChange={(e) =>
-                      setRepsInputs((prev) => prev.map((v, j) => (j === idx ? e.target.value : v)))
-                    }
-                    className="w-32 bg-surface-900 brutalist-border border-2 border-outline text-center font-display-lg text-headline-lg text-primary !py-4 focus:border-primary-container focus:shadow-[0_0_0_1px_rgb(var(--c-accent))] outline-none transition-all"
-                    placeholder={current.reps}
-                  />
-                </div>
-              );
-            })}
-          </div>
-
-          <Button onClick={handleConfirmReps} iconRight={Check} className="w-full max-w-xs !py-4 uppercase">
-            {t('confirmReps')}
-          </Button>
-        </div>
+        <RunnerRepsScreen
+          current={current}
+          repsInputs={repsInputs}
+          setRepsInputs={setRepsInputs}
+          onConfirm={handleConfirmReps}
+        />
       )}
 
       {/* Rest: Countdown */}
       {state === 'rest' && (
-        <div className="flex-grow flex flex-col items-center justify-center relative px-margin-mobile w-full space-y-md">
-          <span className="font-label-bold text-label-sm uppercase text-primary-container mb-2 tracking-widest">
-            {t('rest')}
-          </span>
-
-          <div className="relative flex items-center justify-center">
-            <CircularTimer remaining={restSeconds} total={restInfoRef.current.prescribedRest} size={340} />
-            <p className={`absolute font-display-lg text-[100px] leading-none countdown-glow font-extrabold tracking-tighter tabular-nums transition-all translate-y-8 ${restSeconds <= 3 ? 'text-green-500 scale-110' : 'text-primary-container'}`}>
-              {restDisplay}
-            </p>
-          </div>
-
-          {/* Next exercise preview */}
-          {nextEx && (
-            <div className="bg-surface-800 brutalist-border p-4 w-full max-w-sm">
-              <p className="font-label-bold text-label-sm uppercase text-on-surface-variant mb-1">
-                {t('nextExercise')}
-              </p>
-              <h3 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-                {displayExerciseName(nextEx.exercise)}
-              </h3>
-              {nextEx.sets != null && nextEx.reps && (
-                <p className="font-mono-data text-mono-data text-on-surface mt-2">
-                  {nextEx.sets}×{nextEx.reps}
-                  {nextEx.rpe != null && ` · RPE ${nextEx.rpe}`}
-                </p>
-              )}
-            </div>
-          )}
-
-          <Button variant="ghost" onClick={handleSkipRest}>
-            {t('skipRest')}
-          </Button>
-        </div>
+        <RunnerRestScreen
+          restSeconds={restSeconds}
+          prescribedRest={restInfoRef.current.prescribedRest}
+          restDisplay={restDisplay}
+          nextEx={nextEx}
+          onSkip={handleSkipRest}
+        />
       )}
 
       {/* Done: RPE */}
       {state === 'done' && (
-        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile py-8 space-y-6">
-          <p className="text-2xl font-bold break-words text-on-surface">
-            {greetingText(t.raw('completeGreeting'), displayName) ?? t('complete')}
-          </p>
-          <LogForm
-            sessionId={sessionId}
-            session={session}
-            onSaved={(value) => {
-              clearSnapshot(sessionId);
-              setSavedRpe(value);
-              setState('saved');
-            }}
-          />
-        </div>
+        <RunnerDoneScreen
+          displayName={displayName}
+          sessionId={sessionId}
+          session={session}
+          onSaved={(value) => {
+            clearSnapshot(sessionId);
+            setSavedRpe(value);
+            setState('saved');
+          }}
+        />
       )}
 
       {/* Saved: Sesión guardada */}
