@@ -10,6 +10,7 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
     'app/[locale]/(session)/session/[id]/session-runner.tsx',
   );
   const runner = readFileSync(runnerPath, 'utf-8');
+  const advanceSrc = readFileSync(resolve(root, 'lib/session/useRunnerAdvance.ts'), 'utf-8');
 
   // ─── Riesgo 1: El runner importa los helpers de persistence ───
   it('importa saveSnapshot, loadSnapshot, clearSnapshot desde runner-persistence', () => {
@@ -32,7 +33,8 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
   // ─── Riesgo 3: saveSnapshot aparece al menos en 6 puntos estructurales ───
   it('saveSnapshot aparece al menos en 6 puntos (rest, timing, reps advance, handleDone advance, skipRest advance, confirmReps advance)', () => {
     const occurrences = (runner.match(/saveSnap\(/g) || []).length;
-    expect(occurrences).toBeGreaterThanOrEqual(6);
+    // los 3 avances 'active' viven ahora en useRunnerAdvance (advance)
+    expect(occurrences + (runner.match(/advance\(index\)/g) || []).length).toBeGreaterThanOrEqual(6);
   });
 
   // ─── Riesgo 3b: saveSnapshot cubre avance de índice sin timer/reps ───
@@ -44,8 +46,8 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
     // dentro de handleDone. Usa multilinea: saveSnapshot y state: 'active' en el bloque else.
     const elseIdx = block.lastIndexOf('else {');
     const elseBlock = block.slice(elseIdx, block.indexOf('}, [', elseIdx));
-    expect(elseBlock).toContain('saveSnap(');
-    expect(elseBlock).toContain("saveSnap('active', index + 1");
+    expect(elseBlock).toContain('advance(index)');
+    expect(advanceSrc).toContain("saveSnap('active', index + 1");
     // No debe estar en una rama de isLast (esa va a done, no persiste)
     expect(elseBlock).not.toContain('isLast');
   });
@@ -55,8 +57,8 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
     const block = runner.slice(skipRestIdx, skipRestIdx + 2000);
     const elseIdx = block.lastIndexOf('else {');
     const elseBlock = block.slice(elseIdx, elseIdx + 300);
-    expect(elseBlock).toContain('saveSnap(');
-    expect(elseBlock).toContain("saveSnap('active', index + 1");
+    expect(elseBlock).toContain('advance(index)');
+    expect(advanceSrc).toContain("saveSnap('active', index + 1");
   });
 
   it('saveSnapshot en avance de handleConfirmReps (ejercicio sin rest_seconds)', () => {
@@ -64,8 +66,8 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
     const block = runner.slice(confirmRepsIdx, confirmRepsIdx + 2500);
     const elseIdx = block.lastIndexOf('else {');
     const elseBlock = block.slice(elseIdx, elseIdx + 300);
-    expect(elseBlock).toContain('saveSnap(');
-    expect(elseBlock).toContain("saveSnap('active', index + 1");
+    expect(elseBlock).toContain('advance(index)');
+    expect(advanceSrc).toContain("saveSnap('active', index + 1");
   });
 
   it('el hook useRunnerSnapshot persiste vía saveSnapshot de runner-persistence', () => {

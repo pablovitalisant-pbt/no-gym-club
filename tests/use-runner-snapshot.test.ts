@@ -40,7 +40,7 @@ describe('v3-ref-1 · session-runner usa el hook', () => {
     resolve(__dirname, '../app/[locale]/(session)/session/[id]/session-runner.tsx'), 'utf-8');
   it('ya no llama saveSnapshot directo', () => {
     expect(runner).not.toMatch(/\bsaveSnapshot\(/);
-    expect((runner.match(/\bsaveSnap\(/g) || []).length).toBe(11);
+    expect((runner.match(/\bsaveSnap\(/g) || []).length).toBe(8); // 11 - 3 avances movidos a useRunnerAdvance (v3-ref-2)
     expect(runner).toContain('useRunnerSnapshot');
   });
 });

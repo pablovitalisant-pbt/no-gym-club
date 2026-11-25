@@ -23,6 +23,7 @@ import { loadRunMode, saveRunMode } from '@/lib/session/run-mode';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playDone, playTick, playTransition } from '@/lib/audio';
 import { useRunnerSnapshot } from '@/lib/session/useRunnerSnapshot';
+import { useRunnerAdvance } from '@/lib/session/useRunnerAdvance';
 import { useAudioPreference } from '@/lib/useAudioPreference';
 import {
   loadSnapshot,
@@ -101,6 +102,9 @@ export default function SessionRunner({
   const [audioEnabled, toggleAudio] = useAudioPreference();
   const audioRef = useRef(audioEnabled);
   audioRef.current = audioEnabled;
+  const { advance, finishExercise } = useRunnerAdvance({
+    saveSnap, setState, setIndex, playDone, playTransition, audioRef, total: allExercises.length,
+  });
   sideRef.current = side;
 
   // Reset image error on exercise change
@@ -176,15 +180,7 @@ export default function SessionRunner({
       } else {
         restEndsAtRef.current = null;
         setRestSeconds(0);
-        if (audioRef.current) {
-          if (snapshot.index >= allExercises.length - 1) playDone();
-          else playTransition();
-        }
-        if (snapshot.index >= allExercises.length - 1) setState('done');
-        else {
-          setState('active');
-          setIndex((i) => i + 1);
-        }
+        finishExercise(snapshot.index);
       }
     } else if (snapshot.state === 'timing' && snapshot.timingEndsAt != null) {
       const restoreEx = allExercises[snapshot.index];
@@ -217,24 +213,14 @@ export default function SessionRunner({
                   clearInterval(timerRef.current);
                   timerRef.current = null;
                   timingEndsAtRef.current = null;
-                  if (audioRef.current) {
-                    if (snapshot.index >= allExercises.length - 1) playDone();
-                    else playTransition();
-                  }
-                  if (snapshot.index >= allExercises.length - 1) setState('done');
-                  else { setState('active'); setIndex((i) => i + 1); }
+                  finishExercise(snapshot.index);
                 }
               }, 1000);
               saveSnap('timing', snapshot.index, { currentSide: 2 });
               return;
             }
             timingEndsAtRef.current = null;
-            if (audioRef.current) {
-              if (snapshot.index >= allExercises.length - 1) playDone();
-              else playTransition();
-            }
-            if (snapshot.index >= allExercises.length - 1) setState('done');
-            else { setState('active'); setIndex((i) => i + 1); }
+            finishExercise(snapshot.index);
           }
         }, 1000);
       } else {
@@ -256,22 +242,12 @@ export default function SessionRunner({
               clearInterval(timerRef.current);
               timerRef.current = null;
               timingEndsAtRef.current = null;
-              if (audioRef.current) {
-                if (snapshot.index >= allExercises.length - 1) playDone();
-                else playTransition();
-              }
-              if (snapshot.index >= allExercises.length - 1) setState('done');
-              else { setState('active'); setIndex((i) => i + 1); }
+              finishExercise(snapshot.index);
             }
           }, 1000);
           saveSnap('timing', snapshot.index, { currentSide: 2 });
         } else {
-          if (audioRef.current) {
-            if (snapshot.index >= allExercises.length - 1) playDone();
-            else playTransition();
-          }
-          if (snapshot.index >= allExercises.length - 1) setState('done');
-          else { setState('active'); setIndex((i) => i + 1); }
+          finishExercise(snapshot.index);
         }
       }
     }
@@ -384,9 +360,7 @@ export default function SessionRunner({
     } else if (isLast) {
       setState('done');
     } else {
-      saveSnap('active', index + 1, { restEndsAt: null, timingEndsAt: null });
-      setState('active');
-      setIndex((i) => i + 1);
+      advance(index);
     }
   }, [current, index, isLast, sessionId, startRest]);
 
@@ -419,9 +393,7 @@ export default function SessionRunner({
     } else if (isLast) {
       setState('done');
     } else {
-      saveSnap('active', index + 1, { restEndsAt: null, timingEndsAt: null });
-      setState('active');
-      setIndex((i) => i + 1);
+      advance(index);
     }
   }, [current, index, isLast, repsInputs, startRest, sessionId]);
 
@@ -437,9 +409,7 @@ export default function SessionRunner({
     if (isLast) {
       setState('done');
     } else {
-      saveSnap('active', index + 1, { restEndsAt: null, timingEndsAt: null });
-      setState('active');
-      setIndex((i) => i + 1);
+      advance(index);
     }
   }, [index, isLast, recordActualRest, sessionId]);
 
