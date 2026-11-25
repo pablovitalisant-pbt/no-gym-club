@@ -22,9 +22,9 @@ import { resolveSessionEntry, snapshotForEntry } from '@/lib/session/entry';
 import { loadRunMode, saveRunMode } from '@/lib/session/run-mode';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playDone, playTick, playTransition } from '@/lib/audio';
+import { useRunnerSnapshot } from '@/lib/session/useRunnerSnapshot';
 import { useAudioPreference } from '@/lib/useAudioPreference';
 import {
-  saveSnapshot,
   loadSnapshot,
   clearSnapshot,
   loadContinuousSnapshot,
@@ -95,6 +95,9 @@ export default function SessionRunner({
   const timingEndsAtRef = useRef<number | null>(null);
   const sideRef = useRef<1 | 2 | null>(null);
   const [side, setSide] = useState<1 | 2 | null>(null);
+  const saveSnap = useRunnerSnapshot(sessionId, {
+    restInfoRef, restTimesRef, exerciseLogRef, restEndsAtRef, timingEndsAtRef,
+  });
   const [audioEnabled, toggleAudio] = useAudioPreference();
   const audioRef = useRef(audioEnabled);
   audioRef.current = audioEnabled;
@@ -222,12 +225,7 @@ export default function SessionRunner({
                   else { setState('active'); setIndex((i) => i + 1); }
                 }
               }, 1000);
-              saveSnapshot({
-                sessionId, state: 'timing', currentSide: 2, index: snapshot.index,
-                restEndsAt: restEndsAtRef.current, timingEndsAt: timingEndsAtRef.current,
-                restInfo: restInfoRef.current, restTimes: restTimesRef.current,
-                exerciseLog: exerciseLogRef.current, updatedAt: Date.now(),
-              });
+              saveSnap('timing', snapshot.index, { currentSide: 2 });
               return;
             }
             timingEndsAtRef.current = null;
@@ -266,12 +264,7 @@ export default function SessionRunner({
               else { setState('active'); setIndex((i) => i + 1); }
             }
           }, 1000);
-          saveSnapshot({
-            sessionId, state: 'timing', currentSide: 2, index: snapshot.index,
-            restEndsAt: restEndsAtRef.current, timingEndsAt: timingEndsAtRef.current,
-            restInfo: restInfoRef.current, restTimes: restTimesRef.current,
-            exerciseLog: exerciseLogRef.current, updatedAt: Date.now(),
-          });
+          saveSnap('timing', snapshot.index, { currentSide: 2 });
         } else {
           if (audioRef.current) {
             if (snapshot.index >= allExercises.length - 1) playDone();
@@ -308,16 +301,9 @@ export default function SessionRunner({
     }
     // El RPE aún no se guardó: persistir la etapa para reanudar acá tras recargar.
     if (state === 'done') {
-      saveSnapshot({
-        sessionId,
-        state: 'done',
-        index,
+      saveSnap('done', index, {
         restEndsAt: null,
         timingEndsAt: null,
-        restInfo: restInfoRef.current,
-        restTimes: restTimesRef.current,
-        exerciseLog: exerciseLogRef.current,
-        updatedAt: Date.now(),
         stage: 'rpe',
         recordedReps: recordedRepsRef.current ?? undefined,
       });
@@ -372,17 +358,7 @@ export default function SessionRunner({
           setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
         }
       }, 1000);
-      saveSnapshot({
-        sessionId,
-        state: 'rest',
-        index,
-        restEndsAt: endsAt,
-        timingEndsAt: timingEndsAtRef.current,
-        restInfo: restInfoRef.current,
-        restTimes: restTimesRef.current,
-        exerciseLog: exerciseLogRef.current,
-        updatedAt: Date.now(),
-      });
+      saveSnap('rest', index, { restEndsAt: endsAt });
     },
     [allExercises.length, index, recordActualRest, sessionId],
   );
@@ -408,17 +384,7 @@ export default function SessionRunner({
     } else if (isLast) {
       setState('done');
     } else {
-      saveSnapshot({
-        sessionId,
-        state: 'active',
-        index: index + 1,
-        restEndsAt: null,
-        timingEndsAt: null,
-        restInfo: restInfoRef.current,
-        restTimes: restTimesRef.current,
-        exerciseLog: exerciseLogRef.current,
-        updatedAt: Date.now(),
-      });
+      saveSnap('active', index + 1, { restEndsAt: null, timingEndsAt: null });
       setState('active');
       setIndex((i) => i + 1);
     }
@@ -446,34 +412,14 @@ export default function SessionRunner({
         if (!res.success) return saveExerciseReps(sessionId, exerciseLogRef.current);
       })
       .catch(() => {});
-    saveSnapshot({
-      sessionId,
-      state: 'reps',
-      index,
-      restEndsAt: restEndsAtRef.current,
-      timingEndsAt: timingEndsAtRef.current,
-      restInfo: restInfoRef.current,
-      restTimes: restTimesRef.current,
-      exerciseLog: exerciseLogRef.current,
-      updatedAt: Date.now(),
-    });
+    saveSnap('reps', index);
 
     if (ex.rest_seconds && ex.rest_seconds > 0) {
       startRest(ex.rest_seconds, index, ex.exercise);
     } else if (isLast) {
       setState('done');
     } else {
-      saveSnapshot({
-        sessionId,
-        state: 'active',
-        index: index + 1,
-        restEndsAt: null,
-        timingEndsAt: null,
-        restInfo: restInfoRef.current,
-        restTimes: restTimesRef.current,
-        exerciseLog: exerciseLogRef.current,
-        updatedAt: Date.now(),
-      });
+      saveSnap('active', index + 1, { restEndsAt: null, timingEndsAt: null });
       setState('active');
       setIndex((i) => i + 1);
     }
@@ -491,17 +437,7 @@ export default function SessionRunner({
     if (isLast) {
       setState('done');
     } else {
-      saveSnapshot({
-        sessionId,
-        state: 'active',
-        index: index + 1,
-        restEndsAt: null,
-        timingEndsAt: null,
-        restInfo: restInfoRef.current,
-        restTimes: restTimesRef.current,
-        exerciseLog: exerciseLogRef.current,
-        updatedAt: Date.now(),
-      });
+      saveSnap('active', index + 1, { restEndsAt: null, timingEndsAt: null });
       setState('active');
       setIndex((i) => i + 1);
     }
@@ -545,18 +481,7 @@ export default function SessionRunner({
               handleDone();
             }
           }, 1000);
-          saveSnapshot({
-            sessionId,
-            state: 'timing',
-            currentSide: 2,
-            index,
-            restEndsAt: restEndsAtRef.current,
-            timingEndsAt: timingEndsAtRef.current,
-            restInfo: restInfoRef.current,
-            restTimes: restTimesRef.current,
-            exerciseLog: exerciseLogRef.current,
-            updatedAt: Date.now(),
-          });
+          saveSnap('timing', index, { currentSide: 2 });
           return;
         }
         timingEndsAtRef.current = null;
@@ -564,18 +489,7 @@ export default function SessionRunner({
         handleDone();
       }
     }, 1000);
-    saveSnapshot({
-      sessionId,
-      state: 'timing',
-      currentSide: newSide,
-      index,
-      restEndsAt: restEndsAtRef.current,
-      timingEndsAt: endsAt,
-      restInfo: restInfoRef.current,
-      restTimes: restTimesRef.current,
-      exerciseLog: exerciseLogRef.current,
-      updatedAt: Date.now(),
-    });
+    saveSnap('timing', index, { currentSide: newSide, timingEndsAt: endsAt });
   }, [current, handleDone, index, sessionId]);
 
   const nextEx = allExercises[index + 1];
@@ -655,16 +569,11 @@ export default function SessionRunner({
             setRecordedReps(reps);
             setState('summary');
             const base = loadSnapshot(sessionId);
-            saveSnapshot({
-              sessionId,
-              state: 'summary',
-              index: base?.index ?? index,
+            saveSnap('summary', base?.index ?? index, {
               restEndsAt: null,
               timingEndsAt: null,
-              restInfo: restInfoRef.current,
               restTimes: base?.restTimes ?? restTimesRef.current,
               exerciseLog: base?.exerciseLog ?? exerciseLogRef.current,
-              updatedAt: Date.now(),
               stage: 'summary',
               recordedReps: reps,
             });
