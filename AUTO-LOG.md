@@ -98,3 +98,16 @@ Registro de slices ejecutados en Modo PowerShell (Director → Programador). Una
 ## 2026-11-24 - Release: v2-27 (componentes shadcn en login, signup y evaluacion)
 - Aprobado por Pablo (10:42). Push c08e5f4..f9bdb2d, deploy Vercel. Sin variables de entorno nuevas; verificar.ps1 verde (742/742, build 0)
 - Humo manual del DT en produccion (375 px): login boton bg 232,87,10, texto 10,10,10, alto 56, radio 0, peso 700; campos con borde 1px y alto 74; signup igual con 3 campos; landing carga; 0 recursos con error. Evaluacion en produccion no verificada (requiere sesion; cubierta en QA local)
+
+## 2026-11-24 - Slices v3-01..v3-05: motor de sesion (cookies, audio, reps/modo manual, UI del player, resumen/RPE/pantalla final)
+- Programador: deep (deepseek-flash). v3-01..v3-04 ya commiteados (6a3c8d7, 659dee1); v3-05 verificado y commiteado por el DT en 932920c
+- v3-05: ContinuousSummary con tarjetas de reps por serie, LogForm RPE 5x2 legible, SessionDoneScreen, reanudacion (resolveSessionEntry), flag session_done_screen=false. ~300 lineas modificadas + 3 archivos nuevos (supera 200, aceptado)
+- Tests (verificar.ps1 DT): typecheck 0, lint 0, 858/858, build 0
+- Pendiente: Fase E de v3-04/v3-05 (QA de UI), encender session_done_screen, release (Senal 3) con UAT de Pablo en su celular; no commiteados y ajenos al slice: scripts/import-exercisedb-bodyweight.ts, scripts/seed-corpus-json.ts, supabase/corpus.json, supabase/seed-corpus-embeddings-clean.sql
+- Desvios: sin RepsStepper.tsx (el stepper vive en RepsScreen); "Ver calendario" apunta al dashboard
+
+## 2026-11-25 - Release v3: motor de sesion (v3-01..v3-08)
+- Fase E v3-04/05: FALLA (QA-02 serie siguiente en descanso, QA-04 STOP cortado) + 4 hallazgos bajos -> v3-06 (638fa11, sonnet/deep) -> re-QA PASA 4/4
+- Ponytail audit v3: ROJO (1 critico = flag vs test; 2 altos = reps perdidas en silencio y doble guardado; medios: localStorage, snapshot, calendario) -> v3-07 (deep) + v3-08 (sonnet, guardado que lanza excepcion) -> a05766b. Backlog: refactor session-runner.tsx (914 L), etiqueta S{n} sin i18n
+- Verificacion DT: 889/889, typecheck/lint/build 0. Re-QA del cierre (v3-07): QA-01,03,04 PASA; QA-02 (red caida) BLOQUEADO por limite del agente, cubierto por revision de codigo + tests
+- Release aprobado por Pablo (21:52, "enciende flags, commit y push"): session_done_screen=true. Sin variables de entorno nuevas ni migraciones

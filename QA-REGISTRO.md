@@ -63,3 +63,30 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 - Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v2-27
 - [x] P-20261124-1028-1 (media) HALLAZGO: EXP-1 — Login a 320 px con correo y contraseña muy largos: sin desborde -> DESCARTADO sin defecto: el agente lo marco informativo (sin desborde); el error en ingles ya esta en BUGS.md #13
 - [x] P-20261124-1028-2 (media) HALLAZGO: EXP-2 — Signup a 320 px -> DESCARTADO sin defecto: informativo, sin desborde visible
+
+## 2026-11-24 19:39 - v3-04-05 - commit 932920c - INVALIDO
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v3-04-05
+- Sin pendientes nuevos.
+
+## 2026-11-24 21:04 - v3-04-05b - commit 932920c - FALLA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v3-04-05b
+- [ ] P-20261124-2104-1 (media) FALLA: QA-02 — El descanso tras SERIE HECHA muestra la misma serie, no la siguiente
+- [ ] P-20261124-2104-2 (baja) HALLAZGO: EXP-1 — "Serie 1 de 0" en ejercicios por tiempo
+- [ ] P-20261124-2104-3 (baja) HALLAZGO: EXP-2 — "Saltar" no hace nada en la pantalla de repeticiones
+- [ ] P-20261124-2104-4 (baja) HALLAZGO: EXP-3 — Errores de consola en el resumen
+- [ ] P-20261124-2104-5 (media) HALLAZGO: Sin hallazgos
+- [ ] P-20261124-2104-6 (media) CONSOLA: IntlError: FORMATTING_ERROR: The intl string context variable "name" was not provided to the string "¡Buen trabajo, {name}!"
+
+## 2026-11-24 21:31 - v3-06 - commit 638fa11 - PASA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v3-06
+- [ ] P-20261124-2131-1 (baja) HALLAZGO: EXP-1 — Plural incorrecto "1 ejercicios" / "1 exercises" en el resumen del día
+- [ ] P-20261124-2131-2 (baja) HALLAZGO: EXP-2 — Entrar desde /en/login redirige a /es/dashboard (qa.intermedio)
+- [ ] P-20261124-2131-3 (baja) HALLAZGO: EXP-3 — Etiqueta "Tema" en español dentro de /en/settings
+- [ ] P-20261124-2131-4 (media) HALLAZGO: Modo Manual en el descanso: no probado
+
+## 2026-11-24 22:03 - v3-07 - commit a05766b - BLOQUEADO
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v3-07
+- [ ] P-20261124-2203-1 (media) HALLAZGO: EXP-1 — Cerrar y reabrir en el RPE retoma
+- [ ] P-20261124-2203-2 (media) HALLAZGO: EXP-2 — /en
+- [ ] P-20261124-2203-3 (media) HALLAZGO: EXP-3 — Tema claro
+- [ ] P-20261124-2203-4 (media) HALLAZGO: EXP-4 — Carga lenta, no es un defecto
