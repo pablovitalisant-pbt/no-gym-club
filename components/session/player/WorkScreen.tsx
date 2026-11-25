@@ -6,6 +6,7 @@ interface Props {
   exerciseName: string;
   set: number;
   sets: number;
+  showSet: boolean;
   side?: 'left' | 'right';
   remaining: number;
   progress: number;
@@ -18,6 +19,7 @@ export default function WorkScreen({
   exerciseName,
   set,
   sets,
+  showSet,
   side,
   remaining,
   progress,
@@ -31,10 +33,12 @@ export default function WorkScreen({
         {t('work')}
       </p>
       <h2 className="font-headline-lg text-headline-lg uppercase mt-1">{exerciseName}</h2>
-      <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-        {t('setOf', { current: set, total: sets })}
-        {side && ` · ${t('side', { n: side === 'left' ? 1 : 2 })}`}
-      </p>
+      {(showSet || side) && (
+        <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+          {showSet && t('setOf', { current: set, total: sets })}
+          {side && `${showSet ? ' · ' : ''}${t('side', { n: side === 'left' ? 1 : 2 })}`}
+        </p>
+      )}
 
       <p className="font-display-lg text-[112px] leading-none text-primary tabular-nums my-md" aria-live="polite">
         {remaining}

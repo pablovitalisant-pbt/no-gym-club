@@ -5,8 +5,10 @@ import { useTranslations } from 'next-intl';
 interface Props {
   remaining: number;
   nextLabel: string | null;
-  set: number;
-  sets: number;
+  /** Serie del segmento siguiente; null si no hay siguiente. */
+  nextSet: number | null;
+  nextSets: number;
+  showSet: boolean;
   manual: boolean;
   waiting: boolean;
   onAddSeconds: () => void;
@@ -18,8 +20,9 @@ interface Props {
 export default function RestScreen({
   remaining,
   nextLabel,
-  set,
-  sets,
+  nextSet,
+  nextSets,
+  showSet,
   manual,
   waiting,
   onAddSeconds,
@@ -42,7 +45,8 @@ export default function RestScreen({
 
       {nextLabel && (
         <p className="font-body-lg text-body-lg text-rest-fg">
-          {t('nextUp')}: {nextLabel} · {t('setOf', { current: set, total: sets })}
+          {t('nextUp')}: {nextLabel}
+          {showSet && nextSet !== null && ` · ${t('setOf', { current: nextSet, total: nextSets })}`}
         </p>
       )}
 

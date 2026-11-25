@@ -26,6 +26,12 @@ export interface SegmentView {
   exerciseName: string;
   set: number;
   sets: number;
+  /** Mostrar "Serie X de Y": solo reps con más de una serie. */
+  showSet: boolean;
+  /** Serie/ejercicio que viene en el segmento siguiente (para el descanso). */
+  nextSet: number | null;
+  nextSets: number;
+  nextShowSet: boolean;
   side?: 'left' | 'right';
   nextLabel: string | null;
   /** 0..1 — fracción de la línea de tiempo ya consumida. */
@@ -44,12 +50,19 @@ export function segmentView(
   const total = timeline.reduce((sum, s) => sum + s.seconds, 0);
   const before = timeline.slice(0, index).reduce((sum, s) => sum + s.seconds, 0);
   const elapsed = before + Math.max(0, segment.seconds - remaining);
+  const sets = exercises[segment.exerciseIndex]?.sets ?? 0;
+  const next = timeline[index + 1];
+  const nextSets = next ? (exercises[next.exerciseIndex]?.sets ?? 0) : 0;
 
   return {
     phase: segment.kind,
     exerciseName: exercises[segment.exerciseIndex]?.exercise ?? '',
     set: segment.set,
-    sets: exercises[segment.exerciseIndex]?.sets ?? 0,
+    sets,
+    showSet: segment.kind === 'reps' && sets > 1,
+    nextSet: next ? next.set : null,
+    nextSets,
+    nextShowSet: next !== undefined && next.kind === 'reps' && nextSets > 1,
     side: segment.side,
     nextLabel: segment.nextLabel ?? nextExerciseLabel(timeline, exercises, index),
     progress: total > 0 ? Math.min(1, elapsed / total) : 0,

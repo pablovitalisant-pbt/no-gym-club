@@ -890,7 +890,7 @@ export default function SessionRunner({
       {state === 'done' && (
         <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile py-8 space-y-6">
           <p className="text-2xl font-bold break-words text-on-surface">
-            {greetingText(t('completeGreeting'), displayName) ?? t('complete')}
+            {greetingText(t.raw('completeGreeting'), displayName) ?? t('complete')}
           </p>
           <LogForm
             sessionId={sessionId}

@@ -6,6 +6,7 @@ interface Props {
   exerciseName: string;
   set: number;
   sets: number;
+  showSet: boolean;
   side?: 'left' | 'right';
   prescribed: string;
   value: string;
@@ -24,6 +25,7 @@ export default function RepsScreen({
   exerciseName,
   set,
   sets,
+  showSet,
   side,
   prescribed,
   value,
@@ -34,10 +36,12 @@ export default function RepsScreen({
   return (
     <div className="flex-grow flex flex-col items-center justify-center bg-background text-on-surface px-margin-mobile py-md text-center">
       <h2 className="font-headline-lg text-headline-lg uppercase">{exerciseName}</h2>
-      <p className="font-body-md text-body-md text-on-surface-variant mt-1">
-        {t('setOf', { current: set, total: sets })}
-        {side && ` · ${t('side', { n: side === 'left' ? 1 : 2 })}`}
-      </p>
+      {(showSet || side) && (
+        <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+          {showSet && t('setOf', { current: set, total: sets })}
+          {side && `${showSet ? ' · ' : ''}${t('side', { n: side === 'left' ? 1 : 2 })}`}
+        </p>
+      )}
 
       <p className="font-label-bold text-label-bold uppercase tracking-widest text-primary-container mt-md">
         {t('objective')}

@@ -100,7 +100,7 @@ describe('Slice v2-21 — saludo con y sin nombre', () => {
     const dashboard = read('app/[locale]/(app)/dashboard/page.tsx');
     expect(dashboard).toContain('display_name');
     expect(dashboard).toContain('greetingText');
-    expect(dashboard).toContain("t('greeting'");
+    expect(dashboard).toMatch(/t(\.raw)?\('greeting'/);
 
     const summary = read('components/session/ContinuousSummary.tsx');
     expect(summary).toContain('displayName');

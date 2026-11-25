@@ -109,7 +109,7 @@ export default async function DashboardPage({
     }
   }
 
-  const greeting = greetingText(t('greeting'), displayName);
+  const greeting = greetingText(t.raw('greeting'), displayName);
 
   return (
     <div>

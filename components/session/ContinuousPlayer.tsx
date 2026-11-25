@@ -63,6 +63,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
           exerciseName={name}
           set={info.set}
           sets={info.sets}
+          showSet={info.showSet}
           side={info.side}
           remaining={p.remaining}
           progress={info.progress}
@@ -75,6 +76,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
           exerciseName={name}
           set={info.set}
           sets={info.sets}
+          showSet={info.showSet}
           side={info.side}
           prescribed={prescribed}
           value={repsValue}
@@ -89,8 +91,9 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
         <RestScreen
           remaining={p.remaining}
           nextLabel={nextName}
-          set={info.set}
-          sets={info.sets}
+          nextSet={info.nextSet}
+          nextSets={info.nextSets}
+          showSet={info.nextShowSet}
           manual={p.mode === 'manual'}
           waiting={p.waiting}
           onAddSeconds={() => p.extendRest(15)}
@@ -112,6 +115,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
           running={p.running}
           onPauseToggle={p.running ? p.onPause : p.onResume}
           onSkip={p.onSkip}
+          canSkip={info.phase !== 'reps'}
           onStopRequest={() => p.setConfirmStop(true)}
         />
         {p.confirmStop && (

@@ -60,7 +60,7 @@ export default function ContinuousSummary({
     setTimeout(onDone, 1500);
   }
 
-  const greeting = greetingText(t('summaryGreeting'), displayName);
+  const greeting = greetingText(t.raw('summaryGreeting'), displayName);
 
   return (
     <div className="flex-grow flex flex-col px-margin-mobile py-8 space-y-md text-on-surface bg-background">
