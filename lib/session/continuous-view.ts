@@ -32,6 +32,7 @@ export interface SegmentView {
   nextSet: number | null;
   nextSets: number;
   nextShowSet: boolean;
+  nextGifUrl: string | null;
   side?: 'left' | 'right';
   nextLabel: string | null;
   /** 0..1 — fracción de la línea de tiempo ya consumida. */
@@ -54,6 +55,7 @@ export function segmentView(
   const sets = exercises[segment.exerciseIndex]?.sets ?? 0;
   const next = timeline[index + 1];
   const nextSets = next ? (exercises[next.exerciseIndex]?.sets ?? 0) : 0;
+  const nextGifUrl = next ? exercises[next.exerciseIndex]?.gif_url ?? null : null;
 
   return {
     phase: segment.kind,
@@ -64,6 +66,7 @@ export function segmentView(
     nextSet: next ? next.set : null,
     nextSets,
     nextShowSet: next !== undefined && next.kind === 'reps' && nextSets > 1,
+    nextGifUrl,
     side: segment.side,
     nextLabel: segment.nextLabel ?? nextExerciseLabel(timeline, exercises, index),
     progress: total > 0 ? Math.min(1, elapsed / total) : 0,

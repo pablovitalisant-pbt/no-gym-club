@@ -85,6 +85,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
           nextLabel={nextName}
           nextSet={info.nextSet}
           nextSets={info.nextSets}
+          nextGifUrl={info.nextGifUrl}
           showSet={info.nextShowSet}
           manual={p.mode === 'manual'}
           waiting={p.waiting}
@@ -95,13 +96,8 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
       )}
 
       <div className="bg-background px-margin-mobile py-sm space-y-2 border-t-2 border-outline-variant">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
           <ModeToggle mode={p.mode} onChange={p.onSetMode} />
-          {info.phase === 'rest' && (
-            <span className="font-body-md text-body-md text-on-surface-variant tabular-nums">
-              {p.remaining}s
-            </span>
-          )}
         </div>
         <PlayerControls
           running={p.running}

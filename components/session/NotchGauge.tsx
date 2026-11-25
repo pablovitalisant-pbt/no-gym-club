@@ -5,12 +5,13 @@ import { useTranslations } from 'next-intl';
 
 export const NOTCH_COUNT = 30;
 
-export function gaugeGeometry(size: number) {
+export function gaugeGeometry(size: number, numberSize = 112) {
   const stroke = 10;
   const radius = size * 0.39;
   const cx = size / 2;
   const cy = radius + stroke;
-  return { width: size, height: cy + stroke / 2, cx, cy, radius };
+  const numberTop = cy - radius * 0.55;
+  return { width: size, height: Math.max(cy + stroke / 2, numberTop + numberSize * 0.9), cx, cy, radius, numberTop };
 }
 
 export function notchState(progress: number, index: number, count: number) {
@@ -23,7 +24,7 @@ interface Props { progress: number; children?: ReactNode; size?: number; numberS
 
 export default function NotchGauge({ progress, children, size = 320, numberSize = 112 }: Props) {
   const t = useTranslations('session');
-  const { width, height, cx, cy, radius } = gaugeGeometry(size);
+  const { width, height, cx, cy, radius, numberTop } = gaugeGeometry(size, numberSize);
   return (
     <div className="relative flex items-center justify-center" style={{ width, height, aspectRatio: `${width} / ${height}` }}>
       <svg viewBox={`0 0 ${width} ${height}`} role="img" aria-label={t('gaugeLabel')} className="absolute inset-0 h-full w-full">
@@ -38,7 +39,7 @@ export default function NotchGauge({ progress, children, size = 320, numberSize 
           return <line key={i} x1={x1} y1={y1} x2={x2} y2={y2} stroke={stroke} strokeWidth="10" strokeLinecap="round" />;
         })}
       </svg>
-      <div className="absolute z-10 font-display-lg leading-none tabular-nums" style={{ top: cy - radius * 0.55, fontSize: numberSize }} aria-live="polite">{children}</div>
+      <div className="absolute z-10 font-display-lg leading-none tabular-nums" style={{ top: numberTop, fontSize: numberSize }} aria-live="polite">{children}</div>
     </div>
   );
 }

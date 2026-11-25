@@ -17,22 +17,24 @@ export default function ModeToggle({ mode, onChange }: Props) {
   ];
 
   return (
-    <div className="flex gap-1 border-2 border-control-bg bg-background">
+    <div className="flex items-center gap-2">
+      <span className="text-xs font-label-bold uppercase tracking-wider text-on-surface-variant">{t('modeLabel')}</span>
+      <div role="radiogroup" aria-label={t('modeLabel')} className="flex gap-1 rounded-full border border-outline-variant bg-surface-900 p-1">
       {options.map((option) => {
         const active = option.value === mode;
         return (
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            aria-pressed={active}
-            className={`min-h-[44px] px-4 font-label-bold text-label-bold uppercase bg-control-bg text-control-fg ${
-              active ? 'underline underline-offset-4 decoration-[4px]' : 'border-2 border-transparent'
-            }`}
+            role="radio"
+            aria-checked={active}
+            className={`min-h-[44px] rounded-full px-4 font-label-bold text-label-bold uppercase tracking-wide transition-colors motion-reduce:transition-none ${active ? 'bg-primary text-on-primary' : 'text-on-surface-variant'}`}
           >
             {option.label}
           </button>
         );
       })}
+      </div>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import NotchGauge from '@/components/session/NotchGauge';
 
@@ -11,6 +12,7 @@ interface Props {
   /** Serie del segmento siguiente; null si no hay siguiente. */
   nextSet: number | null;
   nextSets: number;
+  nextGifUrl: string | null;
   showSet: boolean;
   manual: boolean;
   waiting: boolean;
@@ -27,6 +29,7 @@ export default function RestScreen({
   nextLabel,
   nextSet,
   nextSets,
+  nextGifUrl,
   showSet,
   manual,
   waiting,
@@ -35,8 +38,14 @@ export default function RestScreen({
   onContinue,
 }: Props) {
   const t = useTranslations('session');
+  const [showNext, setShowNext] = useState(false);
+  const [gifFailed, setGifFailed] = useState(false);
+  useEffect(() => {
+    setShowNext(false);
+    setGifFailed(false);
+  }, [nextLabel]);
   return (
-    <div className="flex-grow flex flex-col items-center justify-center bg-rest-bg text-rest-fg px-margin-mobile py-md text-center">
+    <div className="flex-grow min-h-0 overflow-y-auto flex flex-col items-center justify-center bg-rest-bg text-rest-fg px-margin-mobile py-md text-center">
       <h2 className="font-headline-lg text-headline-lg uppercase tracking-widest">{t('restTitle')}</h2>
 
       <div className={remaining <= 0 ? 'rest-blink' : ''} aria-live="polite">
@@ -44,10 +53,28 @@ export default function RestScreen({
       </div>
 
       {nextLabel && (
-        <p className="font-body-lg text-body-lg text-rest-fg">
+        <div className="font-body-lg text-body-lg text-rest-fg">
+          <p>
           {t('nextUp')}: {nextLabel}
           {showSet && nextSet !== null && <strong className="font-bold text-[22px]"> · {t('setOf', { current: nextSet, total: nextSets })}</strong>}
-        </p>
+          </p>
+          {nextGifUrl && (
+            <>
+              <button type="button" onClick={() => setShowNext((open) => !open)} aria-expanded={showNext} aria-controls="next-exercise-gif" className="mt-3 min-h-[56px] border-2 border-rest-fg bg-transparent px-5 text-base font-label-bold uppercase">
+                {showNext ? t('hideNextExercise') : t('showNextExercise')}
+              </button>
+              {showNext && (
+                <div id="next-exercise-gif" className="mt-3">
+                  {gifFailed ? (
+                    <p>{t('noImage')}</p>
+                  ) : (
+                    <img src={nextGifUrl} loading="lazy" alt={t('nextExerciseGifAlt', { name: nextLabel })} className="max-h-[40vh] object-contain bg-surface-900" onError={() => setGifFailed(true)} />
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
       )}
 
       <div className="flex flex-wrap items-center justify-center gap-3 mt-md w-full max-w-sm">
