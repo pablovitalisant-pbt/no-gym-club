@@ -21,6 +21,7 @@ import { flattenSession, type SessionSection } from '@/lib/session/flatten';
 import { startOptions, resumeRunnerState } from '@/lib/session/continuous-view';
 import { buildTimeline, type RunMode } from '@/lib/session/continuous';
 import { resolveSessionEntry, snapshotForEntry } from '@/lib/session/entry';
+import { computeRestore, applyRestore } from '@/lib/session/restore';
 import { loadRunMode, saveRunMode } from '@/lib/session/run-mode';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playDone, playTick, playTransition } from '@/lib/audio';
@@ -118,134 +119,35 @@ export default function SessionRunner({
       serverRow,
       snapshotForEntry(snapshot, continuous, continuousDone),
     );
-    if (entry === 'done') {
-      setSavedRpe(serverRow.rpe);
-      setState('saved');
-      return;
-    }
-    if (entry === 'summary') {
-      const recorded = snapshot?.recordedReps ?? null;
-      recordedRepsRef.current = recorded;
-      setRecordedReps(recorded);
-      setState('summary');
-      return;
-    }
-    if (entry === 'rpe') {
-      if (snapshot?.recordedReps) {
-        recordedRepsRef.current = snapshot.recordedReps;
-        setRecordedReps(snapshot.recordedReps);
-      }
-      setState('done');
-      return;
-    }
-    if (entry === 'continuous') {
-      setState('continuous');
-      return;
-    }
-    if (!snapshot) return;
-    restTimesRef.current = snapshot.restTimes;
-    exerciseLogRef.current = snapshot.exerciseLog;
-    restInfoRef.current = snapshot.restInfo;
-    setState(snapshot.state as RunnerState);
-    setIndex(snapshot.index);
-    if (snapshot.currentSide != null) {
-      sideRef.current = snapshot.currentSide as 1 | 2;
-      setSide(sideRef.current);
-    }
-    if (snapshot.state === 'rest' && snapshot.restEndsAt != null) {
-      restEndsAtRef.current = snapshot.restEndsAt;
-      const remaining = Math.max(0, Math.round((snapshot.restEndsAt - Date.now()) / 1000));
-      if (remaining > 0) {
-        setRestSeconds(remaining);
-        timerRef.current = setInterval(() => {
-          const rem = restEndsAtRef.current
-            ? Math.max(0, Math.round((restEndsAtRef.current - Date.now()) / 1000))
-            : 0;
-          setRestSeconds(rem);
-          if (rem <= 0 && timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-            restEndsAtRef.current = null;
-            recordActualRest();
-            if (audioRef.current) playTransition();
-            setState('active');
-            setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
-          }
-        }, 1000);
-      } else {
-        restEndsAtRef.current = null;
-        setRestSeconds(0);
-        finishExercise(snapshot.index);
-      }
-    } else if (snapshot.state === 'timing' && snapshot.timingEndsAt != null) {
-      const restoreEx = allExercises[snapshot.index];
-      timingEndsAtRef.current = snapshot.timingEndsAt;
-      const remaining = Math.max(0, Math.round((snapshot.timingEndsAt - Date.now()) / 1000));
-      if (remaining > 0) {
-        setTimingSeconds(remaining);
-        if (audioRef.current && remaining <= 3 && remaining >= 1) playTick();
-        timerRef.current = setInterval(() => {
-          const rem = timingEndsAtRef.current
-            ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
-            : 0;
-          setTimingSeconds(rem);
-          if (rem <= 0 && timerRef.current) {
-            clearInterval(timerRef.current);
-            timerRef.current = null;
-            if (restoreEx?.bilateral && snapshot.currentSide === 1) {
-              // Switch to side 2 with new timer
-              if (audioRef.current) playTransition();
-              timingEndsAtRef.current = Date.now() + (restoreEx.duration_seconds ?? 0) * 1000;
-              sideRef.current = 2;
-              setSide(2);
-              setTimingSeconds(restoreEx.duration_seconds ?? 0);
-              timerRef.current = setInterval(() => {
-                const rem2 = timingEndsAtRef.current
-                  ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
-                  : 0;
-                setTimingSeconds(rem2);
-                if (rem2 <= 0 && timerRef.current) {
-                  clearInterval(timerRef.current);
-                  timerRef.current = null;
-                  timingEndsAtRef.current = null;
-                  finishExercise(snapshot.index);
-                }
-              }, 1000);
-              saveSnap('timing', snapshot.index, { currentSide: 2 });
-              return;
-            }
-            timingEndsAtRef.current = null;
-            finishExercise(snapshot.index);
-          }
-        }, 1000);
-      } else {
-        timingEndsAtRef.current = null;
-        setTimingSeconds(0);
-        if (restoreEx?.bilateral && snapshot.currentSide === 1) {
-          // Side 1 expired while away — switch to side 2 immediately
-          if (audioRef.current) playTransition();
-          timingEndsAtRef.current = Date.now() + (restoreEx.duration_seconds ?? 0) * 1000;
-          sideRef.current = 2;
-          setSide(2);
-          setTimingSeconds(restoreEx.duration_seconds ?? 0);
-          timerRef.current = setInterval(() => {
-            const rem2 = timingEndsAtRef.current
-              ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
-              : 0;
-            setTimingSeconds(rem2);
-            if (rem2 <= 0 && timerRef.current) {
-              clearInterval(timerRef.current);
-              timerRef.current = null;
-              timingEndsAtRef.current = null;
-              finishExercise(snapshot.index);
-            }
-          }, 1000);
-          saveSnap('timing', snapshot.index, { currentSide: 2 });
-        } else {
-          finishExercise(snapshot.index);
-        }
-      }
-    }
+    const action = computeRestore(snapshot, Date.now(), {
+      entry,
+      exercises: allExercises,
+      serverRpe: serverRow.rpe,
+    });
+    applyRestore(action, {
+      total: allExercises.length,
+      timerRef,
+      restEndsAtRef,
+      timingEndsAtRef,
+      sideRef,
+      recordedRepsRef,
+      restInfoRef,
+      restTimesRef,
+      exerciseLogRef,
+      audioRef,
+      recordActualRest,
+      finishExercise,
+      saveSnap,
+      setState: (next) => setState(next as RunnerState),
+      setIndex,
+      setRestSeconds,
+      setTimingSeconds,
+      setSide,
+      setRecordedReps,
+      setSavedRpe,
+      playTick,
+      playTransition,
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

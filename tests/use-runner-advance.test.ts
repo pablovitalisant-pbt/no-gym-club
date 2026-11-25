@@ -52,9 +52,16 @@ describe('v3-ref-2 · useRunnerAdvance (caracterización)', () => {
       resolve(__dirname, '..', 'app/[locale]/(session)/session/[id]/session-runner.tsx'),
       'utf-8',
     );
+    // v3-ref-5: los puntos de decisión de finishExercise viven en lib/session/restore.ts.
+    const restore = readFileSync(resolve(__dirname, '..', 'lib/session/restore.ts'), 'utf-8');
     expect(runner).toContain('useRunnerAdvance');
     expect((runner.match(/advance\(index\)/g) || []).length).toBe(3);
-    expect((runner.match(/finishExercise\(snapshot\.index\)/g) || []).length).toBe(5);
+    expect((runner.match(/finishExercise\(snapshot\.index\)/g) || []).length).toBe(0);
+    // 5 llamadas originales: 4 ramas distintas, el bloque duplicado de lado 2 quedó
+    // compartido en startSide2() (2 llamadas → 1).
+    expect((restore.match(/d\.finishExercise\(/g) || []).length).toBe(4);
+    expect((restore.match(/startSide2\(\)/g) || []).length).toBe(2); // vigente al expirar + vencido al montar
+    expect(runner).toContain('finishExercise,');
     expect(runner).not.toContain("saveSnap('active', index + 1");
   });
 });

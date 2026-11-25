@@ -91,18 +91,17 @@ describe('Slice Persistencia — restauración de estado al recargar', () => {
   });
 
   // ─── Riesgo 6: Restauración usa snapshot.state como guard, no solo timestamp ───
+  // (v3-ref-5: la restauración vive en lib/session/restore.ts)
   it('restauración decide por snapshot.state (evita rama errónea si ref quedó sucio)', () => {
+    const restoreSrc = readFileSync(resolve(root, 'lib/session/restore.ts'), 'utf-8');
     // Debe checkear snapshot.state antes de restEndsAt/timingEndsAt
-    const restoreEffectStart = runner.indexOf('// Restore snapshot on mount');
-    const restoreEffectEnd = runner.indexOf('// Cleanup timer on unmount');
-    const block = runner.slice(restoreEffectStart, restoreEffectEnd);
-    expect(block).toContain("snapshot.state === 'rest'");
-    expect(block).toContain("snapshot.state === 'timing'");
+    expect(restoreSrc).toContain("snapshot.state === 'rest'");
+    expect(restoreSrc).toContain("snapshot.state === 'timing'");
     // No debe decidir solo por != null del timestamp
     const soloRestNull = /if\s*\(\s*snapshot\.restEndsAt\s*!=\s*null\s*\)\s*\{/;
     const soloTimingNull = /if\s*\(\s*snapshot\.timingEndsAt\s*!=\s*null\s*\)\s*\{/;
-    expect(soloRestNull.test(block)).toBe(false);
-    expect(soloTimingNull.test(block)).toBe(false);
+    expect(soloRestNull.test(restoreSrc)).toBe(false);
+    expect(soloTimingNull.test(restoreSrc)).toBe(false);
   });
 
   // ─── Riesgo 7: feature-flags.json sigue igual (session_runner: true) ───

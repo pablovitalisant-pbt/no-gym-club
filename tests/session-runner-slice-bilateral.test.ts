@@ -19,6 +19,7 @@ describe('Slice bilateral — types + runner + persistence + i18n', () => {
   const actions = readFileSync(actionsPath, 'utf-8');
   const persistencePath = resolve(root, 'lib/session/runner-persistence.ts');
   const persistence = readFileSync(persistencePath, 'utf-8');
+  const restore = readFileSync(resolve(root, 'lib/session/restore.ts'), 'utf-8');
 
   // ─── 1: SessionExercise tiene bilateral?: boolean ───
   it('SessionExercise en types/session.ts tiene bilateral?: boolean', () => {
@@ -74,30 +75,25 @@ describe('Slice bilateral — types + runner + persistence + i18n', () => {
   });
 
   // ─── 7: Guards de restauración por snapshot.state siguen intactos ───
+  // (v3-ref-5: la restauración vive en lib/session/restore.ts)
   it('restauración sigue usando snapshot.state === rest/timing (fix slice 1)', () => {
-    const restoreStart = runner.indexOf('// Restore snapshot on mount');
-    const restoreEnd = runner.indexOf('// Cleanup timer on unmount');
-    const block = runner.slice(restoreStart, restoreEnd);
-    expect(block).toContain("snapshot.state === 'rest'");
-    expect(block).toContain("snapshot.state === 'timing'");
+    expect(restore).toContain("snapshot.state === 'rest'");
+    expect(restore).toContain("snapshot.state === 'timing'");
   });
 
   // ─── 8: Restore effect maneja bilateral timing (no avanza al terminar lado 1) ───
   it('restauración bilateral: timer expirado en lado 1 cambia a lado 2 en vez de avanzar', () => {
-    const restoreStart = runner.indexOf('// Restore snapshot on mount');
-    const restoreEnd = runner.indexOf('// Cleanup timer on unmount');
-    const block = runner.slice(restoreStart, restoreEnd);
     // Debe reconstruir currentSide
-    expect(block).toContain('currentSide');
+    expect(restore).toContain('currentSide');
     // Debe chequear bilateral && currentSide === 1 en la rama de timing
-    expect(block).toContain('bilateral');
-    expect(block).toContain("snapshot.currentSide === 1");
+    expect(restore).toContain('bilateral');
+    expect(restore).toContain("snapshot.currentSide === 1");
     // Debe referenciar el ejercicio desde allExercises y snapshot.index
-    expect(block).toContain('restoreEx?.bilateral');
-    // Debe generar un nuevo lado 2 (setSide(2)) dentro del restore effect
-    expect(block).toContain('setSide(2)');
+    expect(restore).toContain('restoreEx?.bilateral');
+    // Debe generar un nuevo lado 2 (setSide(2)) dentro de la restauración
+    expect(restore).toContain('setSide(2)');
     // Debe generar nuevo endsAt dentro del timing restoration
-    expect(block).toContain('Date.now() + (restoreEx.duration_seconds');
+    expect(restore).toContain('Date.now() + t.duration * 1000');
   });
 
   // ─── 9: UI reps bilateral renderiza 2×series ───
