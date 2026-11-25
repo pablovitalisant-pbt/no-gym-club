@@ -105,3 +105,6 @@ Registro de bugs resueltos. Una entrada por bug, completada en Fase 6 del protoc
 - 3. Pie "MANUAL V4.01 — AUTH MODULE" de login/signup se parte en dos lineas a 375 px.
 - 4. Botones naranjos grandes con peso de letra distinto segun el llamado (className de cada pantalla); unificar al migrar a shadcn.
 - 5. Evaluacion en 375 px: al pasar de paso con la pagina desplazada, la cabecera pegajosa tapa "Paso X de 5"; hacer scroll al indicador al cambiar de paso.
+
+## Backlog menor (QA v3, 2026-11-25)
+- Plural "1 ejercicios"/"1 exercises" en la pantalla final; /en/login redirige a /es/dashboard; etiqueta "Tema" sin traducir en /en/settings; etiqueta S{n} de las tarjetas de reps sin i18n; refactor de session-runner.tsx (914 L, ~7 bloques saveSnapshot repetidos).
