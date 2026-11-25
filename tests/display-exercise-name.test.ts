@@ -40,6 +40,8 @@ describe('componentes muestran el nombre vía displayExerciseName', () => {
     'app/[locale]/(app)/dashboard/dashboard-client.tsx',
     'app/[locale]/(session)/session/[id]/session-runner.tsx',
     'components/session/ContinuousPlayer.tsx',
+    'components/session/runner/ActiveScreen.tsx',
+    'components/session/runner/TimingScreen.tsx',
     'components/session/ContinuousSummary.tsx',
     'app/[locale]/(app)/exercises/page.tsx',
     'app/[locale]/(app)/exercises/[slug]/page.tsx',

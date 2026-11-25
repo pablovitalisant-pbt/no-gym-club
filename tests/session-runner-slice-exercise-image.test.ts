@@ -27,14 +27,15 @@ describe('Slice imagen de ejercicio — runner + page + types + i18n', () => {
 
   // ─── Riesgo 2: runner renderiza imagen con fallback a placeholder ───
   it('runner renderiza imagen condicionada con gif_url y imageError, con placeholder', () => {
-    expect(runner).toContain('gif_url');
+    const active = readFileSync(resolve(root, 'components/session/runner/ActiveScreen.tsx'), 'utf-8');
+    expect(active).toContain('gif_url');
     // El render debe condicionar sobre gif_url Y imageError (no solo gif_url)
-    const hasBothConditions = runner.includes('gif_url && !imageError');
+    const hasBothConditions = active.includes('gif_url && !imageError');
     expect(hasBothConditions).toBe(true);
     // Debe tener un placeholder (texto o ícono)
-    expect(runner).toContain('noImage');
+    expect(active).toContain('noImage');
     // El placeholder se muestra cuando no hay gif_url O cuando imageError es true
-    expect(runner).toContain('imageError');
+    expect(active).toContain('imageError');
   });
 
   // ─── Riesgo 3: imagen tiene useState imageError + onError con setter ───
@@ -42,7 +43,9 @@ describe('Slice imagen de ejercicio — runner + page + types + i18n', () => {
     expect(runner).toContain('imageError');
     expect(runner).toContain('setImageError');
     // onError debe llamar al setter, no manipular DOM directamente
-    expect(runner).toContain('onError={() => setImageError(true)}');
+    const active = readFileSync(resolve(root, 'components/session/runner/ActiveScreen.tsx'), 'utf-8');
+    expect(active).toContain('onError={onImageError}');
+    expect(runner).toContain('onImageError={() => setImageError(true)}');
     // imageError se resetea en useEffect con dependencia [index]
     expect(runner).toContain('setImageError(false)');
     expect(runner).toContain('}, [index]);');

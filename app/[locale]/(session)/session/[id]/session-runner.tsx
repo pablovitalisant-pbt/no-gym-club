@@ -4,14 +4,15 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { Button } from '@/components/ui/Button';
-import { Volume2, VolumeX, Check, Dumbbell } from 'lucide-react';
-import BackButton from '@/components/ui/BackButton';
+import { Volume2, VolumeX, Check } from 'lucide-react';
+import IdleScreen from '@/components/session/runner/IdleScreen';
+import ActiveScreen from '@/components/session/runner/ActiveScreen';
+import TimingScreen from '@/components/session/runner/TimingScreen';
 import LogForm from '@/components/session/LogForm';
 import CircularTimer from '@/components/session/CircularTimer';
 import ContinuousPlayer from '@/components/session/ContinuousPlayer';
 import ContinuousSummary from '@/components/session/ContinuousSummary';
 import SessionDoneScreen from '@/components/session/SessionDoneScreen';
-import ModeToggle from '@/components/session/player/ModeToggle';
 import { greetingText } from '@/lib/settings/greeting';
 import type { SessionData } from '@/lib/types/session';
 import { displayExerciseName } from '@/lib/exercises/display-name';
@@ -41,14 +42,6 @@ type RunnerState =
   | 'summary'
   | 'done'
   | 'saved';
-
-const SECTION_BADGES: Record<SessionSection, string> = {
-  warmup: 'bg-green-500/20 text-green-500 border-green-500/40',
-  main: 'bg-primary-container text-on-primary-container',
-  finisher: 'bg-orange-500/20 text-orange-500 border-orange-500/40',
-  cardio: 'bg-purple-500/20 text-purple-500 border-purple-500/40',
-  cooldown: 'bg-blue-500/20 text-blue-500 border-blue-500/40',
-};
 
 // ─── Main component ───
 
@@ -485,47 +478,18 @@ export default function SessionRunner({
 
       {/* Idle: Start screen */}
       {state === 'idle' && (
-        <div className="flex-grow flex flex-col">
-          <div className="px-margin-mobile pt-4">
-            <BackButton
-              fallbackHref={`/${locale}/dashboard`}
-              className="inline-flex items-center min-h-[44px] text-base font-bold text-on-surface"
-            >
-              ← {t('backToPanel')}
-            </BackButton>
-          </div>
-          <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile pb-16 space-y-6">
-            <h1 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase">
-              {session.title_es}
-            </h1>
-            <p className="font-body-md text-body-md text-on-surface-variant">
-              {allExercises.length} {t('exercise')}s · {t('warmup')} ({session.warmup.length}) ·{' '}
-              {t('main')} ({session.main.length}) · {t('cooldown')} ({session.cooldown.length})
-            </p>
-            {startOptions(continuousEnabled).map((option) => (
-              <Button
-                key={option}
-                onClick={() => setState(option === 'continuous' ? 'continuous' : 'active')}
-                className="w-full max-w-xs !py-4 !text-body-md uppercase"
-              >
-                {t(
-                  option === 'continuous'
-                    ? 'continuousStart'
-                    : continuousEnabled
-                      ? 'stepByStep'
-                      : 'start',
-                )}
-              </Button>
-            ))}
-            <ModeToggle
-              mode={idleMode}
-              onChange={(m) => {
-                setIdleMode(m);
-                saveRunMode(m);
-              }}
-            />
-          </div>
-        </div>
+        <IdleScreen
+          locale={locale}
+          session={session}
+          exerciseCount={allExercises.length}
+          continuousEnabled={continuousEnabled}
+          onStart={(option) => setState(option === 'continuous' ? 'continuous' : 'active')}
+          idleMode={idleMode}
+          onModeChange={(m) => {
+            setIdleMode(m);
+            saveRunMode(m);
+          }}
+        />
       )}
 
       {/* Continuous: modo de corrido */}
@@ -564,110 +528,20 @@ export default function SessionRunner({
 
       {/* Active: Current exercise */}
       {state === 'active' && current && (
-        <div className="flex-grow flex flex-col px-margin-mobile pt-sm pb-gutter overflow-hidden">
-          {/* Progress */}
-          <p className="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-sm">
-            {t('progress', { current: index + 1, total: allExercises.length })}
-          </p>
-
-          {/* Section badge */}
-          <span className={`inline-block px-3 py-1 font-label-bold text-label-sm uppercase tracking-tighter mb-sm ${SECTION_BADGES[current.section]}`}>
-            {t(current.section)}
-          </span>
-
-          {/* Exercise name */}
-          <h2 className="font-headline-lg-mobile text-headline-lg-mobile text-on-surface uppercase mb-1">
-            {displayExerciseName(current.exercise)}
-          </h2>
-
-          {/* Exercise image / placeholder */}
-          <div className="flex justify-center mb-md">
-            {current.gif_url && !imageError ? (
-              <img
-                src={current.gif_url}
-                alt={displayExerciseName(current.exercise)}
-                className="w-48 h-48 object-contain rounded-lg"
-                onError={() => setImageError(true)}
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center w-48 h-48 bg-surface-800 rounded-lg">
-                <Dumbbell size={48} className="text-on-surface-variant mb-2" />
-                <p className="font-label-sm text-label-sm text-on-surface-variant">{t('noImage')}</p>
-              </div>
-            )}
-          </div>
-
-          {/* Prescription */}
-          {current.sets != null && current.reps && (
-            <p className="font-headline-md text-headline-md text-primary-container tracking-tight mb-md">
-              {current.sets} × {current.reps}
-              {current.rpe != null && <span className="text-body-md font-normal"> · RPE {current.rpe}</span>}
-            </p>
-          )}
-          {current.duration_seconds != null && (
-            <p className="font-headline-md text-headline-md text-primary-container tracking-tight mb-md">
-              {current.duration_seconds}s
-            </p>
-          )}
-
-          {/* Technique notes */}
-          {current.notes_es && (
-            <div className="brutalist-border p-sm bg-surface-800 mb-md shrink-0">
-              <h3 className="font-label-bold text-label-sm text-on-surface-variant uppercase mb-2">
-                {t('technique')}
-              </h3>
-              <p className="font-body-md text-body-md text-on-surface">
-                {current.notes_es}
-              </p>
-            </div>
-          )}
-
-          {/* Spacer */}
-          <div className="flex-grow" />
-
-          {/* Action button */}
-          {current.duration_seconds != null ? (
-            <Button onClick={handleStartTimer} className="w-full h-16 !font-label-bold !text-headline-md uppercase">
-              {t('startTimer')}
-            </Button>
-          ) : (
-            <Button onClick={handleDone} className="w-full h-16 !font-label-bold !text-headline-md uppercase">
-              {t('done')}
-            </Button>
-          )}
-        </div>
+        <ActiveScreen
+          current={current}
+          index={index}
+          total={allExercises.length}
+          imageError={imageError}
+          onImageError={() => setImageError(true)}
+          onStartTimer={handleStartTimer}
+          onDone={handleDone}
+        />
       )}
 
       {/* Timing: Countdown for timed exercises */}
       {state === 'timing' && (
-        <div className="flex-grow flex flex-col items-center justify-center text-center px-margin-mobile">
-          <p className="font-label-bold text-label-sm uppercase text-on-surface-variant tracking-widest mb-md">
-            {t('timer')}
-          </p>
-
-          {side != null && (
-            <p className="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-wider mb-1">
-              {t('side', { n: side })}
-            </p>
-          )}
-
-          <div className="relative flex items-center justify-center">
-            <CircularTimer remaining={timingSeconds} total={current?.duration_seconds ?? 0} size={340} />
-            <p className="absolute font-display-lg text-[100px] leading-none text-primary countdown-glow tabular-nums translate-y-8">
-              {timingSeconds}
-            </p>
-          </div>
-
-          <p className="font-headline-md text-headline-md text-on-surface mt-md">
-            {current && displayExerciseName(current.exercise)}
-          </p>
-
-          {nextEx && (
-            <p className="font-body-md text-body-md text-on-surface-variant mt-sm">
-              {t('nextExercise')}: <span className="text-on-surface font-medium">{displayExerciseName(nextEx.exercise)}</span>
-            </p>
-          )}
-        </div>
+        <TimingScreen side={side} timingSeconds={timingSeconds} current={current} nextEx={nextEx} />
       )}
 
       {/* Reps: Input actual reps for sets/reps exercises */}

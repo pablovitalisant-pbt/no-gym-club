@@ -70,6 +70,9 @@ describe('Slice v2-20 — tokens de color como variables CSS', () => {
       'app/[locale]/(app)/weekly-report/sections.tsx',
       'app/[locale]/(session)/session/[id]/session-runner.tsx',
       'components/session/CircularTimer.tsx',
+      'components/session/runner/IdleScreen.tsx',
+      'components/session/runner/ActiveScreen.tsx',
+      'components/session/runner/TimingScreen.tsx',
     ];
     for (const file of files) {
       const src = readFileSync(resolve(root, file), 'utf-8');

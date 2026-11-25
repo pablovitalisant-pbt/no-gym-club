@@ -26,8 +26,10 @@ describe('Slice CircularTimer — integración en session-runner', () => {
 
   // ─── 3: Usado en state === timing con timingSeconds y duration_seconds ───
   it('se usa en bloque de timing con remaining=timingSeconds y total=current?.duration_seconds', () => {
-    const timingIdx = runner.indexOf("{state === 'timing'");
-    const timingBlock = runner.slice(timingIdx, timingIdx + 800);
+    const timingBlock = readFileSync(
+      resolve(__dirname, '..', 'components/session/runner/TimingScreen.tsx'),
+      'utf-8',
+    );
     expect(timingBlock).toContain('remaining={timingSeconds}');
     expect(timingBlock).toContain('duration_seconds');
   });

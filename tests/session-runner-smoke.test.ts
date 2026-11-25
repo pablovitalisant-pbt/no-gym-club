@@ -107,7 +107,9 @@ describe('Slice 8 — session runner (tap timer)', () => {
       root,
       'app/[locale]/(session)/session/[id]/session-runner.tsx',
     );
-    const raw = readFileSync(path, 'utf-8');
+    const raw =
+      readFileSync(path, 'utf-8') +
+      readFileSync(resolve(root, 'components/session/runner/IdleScreen.tsx'), 'utf-8');
     // Debe trabajar con las 3 secciones
     expect(raw, 'debe referenciar warmup').toContain('warmup');
     expect(raw, 'debe referenciar main').toContain('main');

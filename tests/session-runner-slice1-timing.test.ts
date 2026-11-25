@@ -21,7 +21,11 @@ describe('Slice 1 — cronómetro + alarma para ejercicios por tiempo', () => {
     // Debe chequear duration_seconds antes de mostrar el botón de timer
     expect(runner).toContain('duration_seconds');
     // El botón usa la key i18n startTimer
-    expect(runner).toContain('startTimer');
+    const active = readFileSync(
+      resolve(__dirname, '..', 'components/session/runner/ActiveScreen.tsx'),
+      'utf-8',
+    );
+    expect(active).toContain('startTimer');
   });
 
   // ─── Riesgo 3: la alarma suena al terminar el countdown ───
