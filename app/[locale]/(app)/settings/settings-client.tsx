@@ -28,6 +28,7 @@ interface Props {
   displayName: string | null;
   avatarUrl: string | null;
   planId: string | null;
+  redoEnabled: boolean;
   showCommunity: boolean;
 }
 
@@ -265,7 +266,7 @@ export default function SettingsClient(p: Props) {
 
       <section className={sectionCls}>
         <h2 className={titleCls}>{t('programSection')}</h2>
-        {p.planId ? (
+        {p.redoEnabled && p.planId ? (
           <RedoProgram planId={p.planId} assessmentHref="/assessment" />
         ) : (
           <Link href="/assessment" className="text-label-sm underline text-on-surface-variant">

@@ -15,7 +15,6 @@ import DayView from './DayView';
 import PlanCalendar from './PlanCalendar';
 import CreatePlanCard from './CreatePlanCard';
 import { completePlanDay, setCurrentPlanDay, startPlanSession } from '@/app/[locale]/(app)/dashboard/plan-actions';
-import RedoProgram from './RedoProgram';
 
 export default function PlanDashboard({
   locale,
@@ -23,13 +22,13 @@ export default function PlanDashboard({
   hasAssessment,
   assessmentHref = '/assessment',
   initialDay,
-  startEnabled = false, todayCardEnabled = false, redoEnabled = false, mediaIndex = {}, generatingMessagesEnabled = false,
+  startEnabled = false, todayCardEnabled = false, mediaIndex = {}, generatingMessagesEnabled = false,
 }: {
   locale: string;
   plan: PlanRow | null;
   hasAssessment: boolean;
   assessmentHref?: string; initialDay?: number | null;
-  startEnabled?: boolean; todayCardEnabled?: boolean; redoEnabled?: boolean;
+  startEnabled?: boolean; todayCardEnabled?: boolean;
   mediaIndex?: MediaIndex; generatingMessagesEnabled?: boolean;
 }) {
   const t = useTranslations('dashboard.plan');
@@ -129,7 +128,6 @@ export default function PlanDashboard({
       <p className="text-label-sm text-on-surface-variant mt-md">
         {t('completedCount', { done: completed.length, total: TOTAL_DAYS })}
       </p>
-      {redoEnabled && <RedoProgram planId={planId} assessmentHref={assessmentHref} />}
       {calendarOpen && plan && (
         <PlanCalendar
           plan={plan.plan_data}

@@ -55,6 +55,7 @@ export default async function SettingsPage({
       displayName={profile?.display_name ?? null}
       avatarUrl={profile?.avatar_url ?? null}
       planId={plan?.id ?? null}
+      redoEnabled={getFlag('redo_program_plan')}
       showCommunity={getFlag('community')}
     />
   );

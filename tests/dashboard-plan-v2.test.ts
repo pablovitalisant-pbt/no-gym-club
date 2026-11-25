@@ -7,6 +7,7 @@ const read = (p: string) => readFileSync(p, 'utf-8');
 
 const pagePath = resolve(root, 'app/[locale]/(app)/dashboard/page.tsx');
 const planDir = resolve(root, 'components/plan');
+const settingsPath = resolve(root, 'app/[locale]/(app)/settings/settings-client.tsx');
 
 describe('Slice v2-06a — dashboard con plan v2', () => {
   it('el flag training_plan_v2 existe y es booleano', () => {
@@ -95,5 +96,24 @@ describe('Slice v2-06a — dashboard con plan v2', () => {
       expect(es.dashboard.plan[k]).toBeTruthy();
       expect(en.dashboard.plan[k]).toBeTruthy();
     }
+  });
+
+  it('el dashboard no ofrece rehacer ni actualizar la evaluacion', () => {
+    const planSrc = read(resolve(planDir, 'PlanDashboard.tsx'));
+    const pageSrc = read(pagePath);
+    expect(planSrc).not.toContain("from './RedoProgram'");
+    expect(planSrc).not.toContain('RedoProgram');
+    expect(planSrc).not.toContain('updateAssessment');
+    expect(planSrc).not.toContain('redoEnabled');
+    expect(pageSrc).not.toContain('redoEnabled=');
+    expect(pageSrc).not.toContain("getFlag('redo_program_plan')");
+    expect(planSrc).toContain('!hasAssessment');
+  });
+
+  it('Configuracion conserva RedoProgram y el enlace de actualizar evaluacion', () => {
+    const src = read(settingsPath);
+    expect(src).toContain("import RedoProgram from '@/components/plan/RedoProgram'");
+    expect(src).toContain('<RedoProgram');
+    expect(src).toContain("t('updateAssessment')");
   });
 });
