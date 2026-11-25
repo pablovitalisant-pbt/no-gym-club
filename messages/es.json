@@ -311,6 +311,7 @@
     "addSeconds": "+15 s",
     "continue": "Continuar",
     "objective": "Objetivo"
+    ,"gaugeLabel": "Progreso del temporizador"
   },
   "assessment": {
     "fallback": "Assessment — próximamente",

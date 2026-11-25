@@ -37,7 +37,7 @@ export default function RepsScreen({
     <div className="flex-grow flex flex-col items-center justify-center bg-background text-on-surface px-margin-mobile py-md text-center">
       <h2 className="font-headline-lg text-headline-lg uppercase">{exerciseName}</h2>
       {(showSet || side) && (
-        <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+        <p className="font-label-bold text-[32px] text-on-surface mt-1">
           {showSet && t('setOf', { current: set, total: sets })}
           {side && `${showSet ? ' · ' : ''}${t('side', { n: side === 'left' ? 1 : 2 })}`}
         </p>
@@ -61,6 +61,8 @@ export default function RepsScreen({
           inputMode="numeric"
           min={0}
           value={value}
+          onFocus={(e) => { e.currentTarget.select(); setTimeout(() => e.currentTarget.select(), 0); }}
+          onClick={(e) => { e.currentTarget.select(); setTimeout(() => e.currentTarget.select(), 0); }}
           onChange={(e) => onChange(e.target.value)}
           aria-label={t('repsDone')}
           className="w-28 h-16 text-center font-display-lg text-[40px] leading-none border-2 border-outline-variant bg-surface-900 text-on-surface tabular-nums"

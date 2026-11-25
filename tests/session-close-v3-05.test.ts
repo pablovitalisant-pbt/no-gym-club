@@ -270,7 +270,9 @@ describe('v3-05 · session-runner', () => {
   it('idle permite volver e indica el modo auto/manual', () => {
     const idle = src('components/session/runner/IdleScreen.tsx');
     expect(idle).toContain('BackButton');
-    expect(idle).toContain('ModeToggle');
+    expect(idle).toContain('startOptions');
+    const player = src('components/session/ContinuousPlayer.tsx');
+    expect(player).toContain('ModeToggle');
   });
 });
 

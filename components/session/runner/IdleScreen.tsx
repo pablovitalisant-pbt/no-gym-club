@@ -3,9 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/Button';
 import BackButton from '@/components/ui/BackButton';
-import ModeToggle from '@/components/session/player/ModeToggle';
 import { startOptions } from '@/lib/session/continuous-view';
-import type { RunMode } from '@/lib/session/continuous';
 import type { SessionData } from '@/lib/types/session';
 
 export default function IdleScreen({
@@ -14,16 +12,12 @@ export default function IdleScreen({
   exerciseCount,
   continuousEnabled,
   onStart,
-  idleMode,
-  onModeChange,
 }: {
   locale: string;
   session: SessionData;
   exerciseCount: number;
   continuousEnabled: boolean;
   onStart: (option: ReturnType<typeof startOptions>[number]) => void;
-  idleMode: RunMode;
-  onModeChange: (m: RunMode) => void;
 }) {
   const t = useTranslations('session');
   return (
@@ -59,7 +53,6 @@ export default function IdleScreen({
             )}
           </Button>
         ))}
-        <ModeToggle mode={idleMode} onChange={onModeChange} />
       </div>
     </div>
   );

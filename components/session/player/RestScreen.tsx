@@ -1,9 +1,12 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import NotchGauge from '@/components/session/NotchGauge';
 
 interface Props {
   remaining: number;
+  total?: number;
+  numberSize?: number;
   nextLabel: string | null;
   /** Serie del segmento siguiente; null si no hay siguiente. */
   nextSet: number | null;
@@ -19,6 +22,8 @@ interface Props {
 /** Descanso a pantalla completa: countdown gigante y acciones inmediatas. */
 export default function RestScreen({
   remaining,
+  total,
+  numberSize = 128,
   nextLabel,
   nextSet,
   nextSets,
@@ -34,19 +39,14 @@ export default function RestScreen({
     <div className="flex-grow flex flex-col items-center justify-center bg-rest-bg text-rest-fg px-margin-mobile py-md text-center">
       <h2 className="font-headline-lg text-headline-lg uppercase tracking-widest">{t('restTitle')}</h2>
 
-      <p
-        className={`font-display-lg text-[128px] leading-none tabular-nums my-sm ${
-          remaining <= 0 ? 'rest-blink' : ''
-        }`}
-        aria-live="polite"
-      >
-        {remaining}
-      </p>
+      <div className={remaining <= 0 ? 'rest-blink' : ''} aria-live="polite">
+        <NotchGauge numberSize={numberSize} progress={total && total > 0 ? 1 - remaining / total : 0}>{remaining}</NotchGauge>
+      </div>
 
       {nextLabel && (
         <p className="font-body-lg text-body-lg text-rest-fg">
           {t('nextUp')}: {nextLabel}
-          {showSet && nextSet !== null && ` · ${t('setOf', { current: nextSet, total: nextSets })}`}
+          {showSet && nextSet !== null && <strong className="font-bold text-[22px]"> · {t('setOf', { current: nextSet, total: nextSets })}</strong>}
         </p>
       )}
 

@@ -36,6 +36,7 @@ export interface SegmentView {
   nextLabel: string | null;
   /** 0..1 — fracción de la línea de tiempo ya consumida. */
   progress: number;
+  duration: number;
 }
 
 export function segmentView(
@@ -66,6 +67,7 @@ export function segmentView(
     side: segment.side,
     nextLabel: segment.nextLabel ?? nextExerciseLabel(timeline, exercises, index),
     progress: total > 0 ? Math.min(1, elapsed / total) : 0,
+    duration: segment.seconds,
   };
 }
 

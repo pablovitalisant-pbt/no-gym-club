@@ -19,10 +19,9 @@ import type { SessionData } from '@/lib/types/session';
 import { displayExerciseName } from '@/lib/exercises/display-name';
 import { flattenSession, type SessionSection } from '@/lib/session/flatten';
 import { startOptions, resumeRunnerState } from '@/lib/session/continuous-view';
-import { buildTimeline, type RunMode } from '@/lib/session/continuous';
+import { buildTimeline } from '@/lib/session/continuous';
 import { resolveSessionEntry, snapshotForEntry } from '@/lib/session/entry';
 import { computeRestore, applyRestore } from '@/lib/session/restore';
-import { loadRunMode, saveRunMode } from '@/lib/session/run-mode';
 import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry } from './actions';
 import { playDone, playTick, playTransition } from '@/lib/audio';
 import { useRunnerSnapshot } from '@/lib/session/useRunnerSnapshot';
@@ -76,7 +75,6 @@ export default function SessionRunner({
   const [imageError, setImageError] = useState(false);
   const [recordedReps, setRecordedReps] = useState<Record<string, string> | null>(null);
   const [savedRpe, setSavedRpe] = useState<number | null>(null);
-  const [idleMode, setIdleMode] = useState<RunMode>(() => loadRunMode());
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const recordedRepsRef = useRef<Record<string, string> | null>(null);
   const restStartRef = useRef<number>(0);
@@ -375,11 +373,6 @@ export default function SessionRunner({
           exerciseCount={allExercises.length}
           continuousEnabled={continuousEnabled}
           onStart={(option) => setState(option === 'continuous' ? 'continuous' : 'active')}
-          idleMode={idleMode}
-          onModeChange={(m) => {
-            setIdleMode(m);
-            saveRunMode(m);
-          }}
         />
       )}
 

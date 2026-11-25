@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import NotchGauge from '@/components/session/NotchGauge';
 
 interface Props {
   exerciseName: string;
@@ -9,7 +10,7 @@ interface Props {
   showSet: boolean;
   side?: 'left' | 'right';
   remaining: number;
-  progress: number;
+  total: number;
   waiting: boolean;
   onContinue: () => void;
 }
@@ -22,7 +23,7 @@ export default function WorkScreen({
   showSet,
   side,
   remaining,
-  progress,
+  total,
   waiting,
   onContinue,
 }: Props) {
@@ -34,19 +35,13 @@ export default function WorkScreen({
       </p>
       <h2 className="font-headline-lg text-headline-lg uppercase mt-1">{exerciseName}</h2>
       {(showSet || side) && (
-        <p className="font-body-md text-body-md text-on-surface-variant mt-1">
+        <p className="font-label-bold text-[32px] text-on-surface mt-1">
           {showSet && t('setOf', { current: set, total: sets })}
           {side && `${showSet ? ' · ' : ''}${t('side', { n: side === 'left' ? 1 : 2 })}`}
         </p>
       )}
 
-      <p className="font-display-lg text-[112px] leading-none text-primary tabular-nums my-md" aria-live="polite">
-        {remaining}
-      </p>
-
-      <div className="w-full max-w-sm h-2 bg-surface-700 overflow-hidden">
-        <div className="h-full bg-primary-container" style={{ width: `${progress * 100}%` }} />
-      </div>
+      <NotchGauge progress={total > 0 ? 1 - remaining / total : 0}>{remaining}</NotchGauge>
 
       {waiting && (
         <button

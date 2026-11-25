@@ -15,10 +15,10 @@ describe('v3-ref-3a — pantallas presentacionales idle/active/timing', () => {
     expect(existsSync(resolve(root, dir, `${n}.tsx`))).toBe(true);
   });
 
-  it('IdleScreen: BackButton y ModeToggle una sola vez, botones de inicio', () => {
+  it('IdleScreen: BackButton una vez, sin ModeToggle, botones de inicio', () => {
     const s = src('IdleScreen.tsx');
     expect(s.match(/<BackButton/g)).toHaveLength(1);
-    expect(s.match(/<ModeToggle/g)).toHaveLength(1);
+    expect(s).not.toContain('ModeToggle');
     expect(s).toContain('backToPanel');
     expect(s).toContain('continuousStart');
     expect(s).toContain('stepByStep');

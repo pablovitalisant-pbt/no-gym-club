@@ -57,7 +57,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
           showSet={info.showSet}
           side={info.side}
           remaining={p.remaining}
-          progress={info.progress}
+          total={info.duration}
           waiting={p.waiting}
           onContinue={p.onAdvance}
         />
@@ -81,6 +81,7 @@ export default function ContinuousPlayer({ sessionId, exercises, audioEnabled, o
       {info.phase === 'rest' && (
         <RestScreen
           remaining={p.remaining}
+          total={info.duration}
           nextLabel={nextName}
           nextSet={info.nextSet}
           nextSets={info.nextSets}

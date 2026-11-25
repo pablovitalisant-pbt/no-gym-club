@@ -280,7 +280,8 @@ describe('v3-04 · subcomponentes del reproductor', () => {
     expect(rest).toContain('addSeconds');
     expect(rest).toContain('skipRest');
     const sizes = [...rest.matchAll(/text-\[(\d+)px\]/g)].map((m) => Number(m[1]));
-    expect(Math.max(...sizes), 'countdown >= 120px').toBeGreaterThanOrEqual(120);
+    expect(rest).toContain('numberSize = 128');
+    expect(rest).toContain('numberSize={numberSize}');
   });
 
   it('título y objetivo de reps son grandes', () => {

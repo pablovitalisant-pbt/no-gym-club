@@ -311,6 +311,7 @@
     "addSeconds": "+15 s",
     "continue": "Continue",
     "objective": "Target"
+    ,"gaugeLabel": "Timer progress"
   },
   "assessment": {
     "fallback": "Assessment — coming soon",
