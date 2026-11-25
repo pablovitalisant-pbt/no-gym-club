@@ -26,6 +26,7 @@ import { saveSessionTimes, saveExerciseReps, type RestTimeEntry, type RepEntry }
 import { playDone, playTick, playTransition } from '@/lib/audio';
 import { useRunnerSnapshot } from '@/lib/session/useRunnerSnapshot';
 import { useRunnerAdvance } from '@/lib/session/useRunnerAdvance';
+import { startCountdown } from '@/lib/session/startCountdown';
 import { useAudioPreference } from '@/lib/useAudioPreference';
 import {
   loadSnapshot,
@@ -312,22 +313,17 @@ export default function SessionRunner({
       restEndsAtRef.current = endsAt;
       setRestSeconds(seconds);
       setState('rest');
-      timerRef.current = setInterval(() => {
-        const remaining = restEndsAtRef.current
-          ? Math.max(0, Math.round((restEndsAtRef.current - Date.now()) / 1000))
-          : 0;
-        setRestSeconds(remaining);
-        if (remaining <= 0) {
-          if (timerRef.current) clearInterval(timerRef.current);
-          timerRef.current = null;
+      startCountdown(timerRef, restEndsAtRef, {
+        onTick: setRestSeconds,
+        onEnd: () => {
           restEndsAtRef.current = null;
           recordActualRest();
           if (audioRef.current) playTransition();
           // Auto-advance to next exercise
           setState('active');
           setIndex((i) => (i < allExercises.length - 1 ? i + 1 : i));
-        }
-      }, 1000);
+        },
+      });
       saveSnap('rest', index, { restEndsAt: endsAt });
     },
     [allExercises.length, index, recordActualRest, sessionId],
@@ -416,15 +412,12 @@ export default function SessionRunner({
     timingEndsAtRef.current = endsAt;
     setTimingSeconds(current.duration_seconds);
     setState('timing');
-    timerRef.current = setInterval(() => {
-      const remaining = timingEndsAtRef.current
-        ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
-        : 0;
-      setTimingSeconds(remaining);
-      if (audioRef.current && remaining <= 3 && remaining >= 1) playTick();
-      if (remaining <= 0) {
-        if (timerRef.current) clearInterval(timerRef.current);
-        timerRef.current = null;
+    startCountdown(timerRef, timingEndsAtRef, {
+      onTick: (remaining) => {
+        setTimingSeconds(remaining);
+        if (audioRef.current && remaining <= 3 && remaining >= 1) playTick();
+      },
+      onEnd: () => {
         if (current?.bilateral && sideRef.current === 1) {
           // Side 1 done — switch to side 2 with new timer
           if (audioRef.current) playTransition();
@@ -432,27 +425,22 @@ export default function SessionRunner({
           sideRef.current = 2;
           setSide(2);
           setTimingSeconds(current.duration_seconds ?? 0);
-          timerRef.current = setInterval(() => {
-            const rem = timingEndsAtRef.current
-              ? Math.max(0, Math.round((timingEndsAtRef.current - Date.now()) / 1000))
-              : 0;
-            setTimingSeconds(rem);
-            if (rem <= 0 && timerRef.current) {
-              clearInterval(timerRef.current);
-              timerRef.current = null;
+          startCountdown(timerRef, timingEndsAtRef, {
+            onTick: setTimingSeconds,
+            onEnd: () => {
               timingEndsAtRef.current = null;
               if (audioRef.current) playDone();
               handleDone();
-            }
-          }, 1000);
+            },
+          });
           saveSnap('timing', index, { currentSide: 2 });
           return;
         }
         timingEndsAtRef.current = null;
         if (audioRef.current) playDone();
         handleDone();
-      }
-    }, 1000);
+      },
+    });
     saveSnap('timing', index, { currentSide: newSide, timingEndsAt: endsAt });
   }, [current, handleDone, index, sessionId]);
 
