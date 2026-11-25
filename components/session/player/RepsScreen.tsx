@@ -14,6 +14,12 @@ interface Props {
   onDone: () => void;
 }
 
+function selectAll(e: { currentTarget: HTMLInputElement }) {
+  const el = e.currentTarget;
+  el.select();
+  setTimeout(() => { if (el.isConnected) el.select(); }, 0);
+}
+
 function bump(value: string, delta: number): string {
   const n = Number.parseInt(value, 10);
   const next = Number.isFinite(n) ? Math.max(0, n + delta) : Math.max(0, delta);
@@ -61,8 +67,8 @@ export default function RepsScreen({
           inputMode="numeric"
           min={0}
           value={value}
-          onFocus={(e) => { e.currentTarget.select(); setTimeout(() => e.currentTarget.select(), 0); }}
-          onClick={(e) => { e.currentTarget.select(); setTimeout(() => e.currentTarget.select(), 0); }}
+          onFocus={selectAll}
+          onClick={selectAll}
           onChange={(e) => onChange(e.target.value)}
           aria-label={t('repsDone')}
           className="w-28 h-16 text-center font-display-lg text-[40px] leading-none border-2 border-outline-variant bg-surface-900 text-on-surface tabular-nums"

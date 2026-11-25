@@ -53,10 +53,10 @@ export default function RestScreen({
       </div>
 
       {nextLabel && (
-        <div className="font-body-lg text-body-lg text-rest-fg">
-          <p>
-          {t('nextUp')}: {nextLabel}
-          {showSet && nextSet !== null && <strong className="font-bold text-[22px]"> · {t('setOf', { current: nextSet, total: nextSets })}</strong>}
+        <div className="mt-4 font-body-lg text-body-lg text-rest-fg">
+          <p className="flex flex-wrap items-baseline justify-center gap-x-2">
+            <span>{t('nextUp')}: {nextLabel}</span>
+            {showSet && nextSet !== null && <strong className="font-bold text-[22px]">· {t('setOf', { current: nextSet, total: nextSets })}</strong>}
           </p>
           {nextGifUrl && (
             <>
