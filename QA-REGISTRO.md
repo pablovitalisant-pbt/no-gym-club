@@ -90,3 +90,15 @@ Con pendientes (alta) o (critica) abiertos, el hook pre-commit bloquea el commit
 - [x] P-20261124-2203-2 (media) HALLAZGO: EXP-2 — /en -> DESCARTADO sin defecto: /en correcto
 - [x] P-20261124-2203-3 (media) HALLAZGO: EXP-3 — Tema claro -> DESCARTADO sin defecto: tema claro legible
 - [x] P-20261124-2203-4 (media) HALLAZGO: EXP-4 — Carga lenta, no es un defecto -> DESCARTADO carga lenta del servidor de desarrollo, no es defecto
+
+## 2026-11-25 09:05 - v3-10-12 - commit f6f4d63 - INVALIDO
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v3-10-12
+- Sin pendientes nuevos.
+
+## 2026-11-25 09:36 - v3-10-12 - commit f6f4d63 - FALLA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v3-10-12
+- [ ] P-20261125-0936-1 (baja) FALLA: QA-02 — El texto del descanso no sigue el formato esperado
+
+## 2026-11-25 09:50 - v3-13 - commit 4fb9434 - PASA
+- Evidencia: C:\Users\pablo\Documents\no-gym-club\_dt\qa\v3-13
+- [ ] P-20261125-0950-1 (media) HALLAZGO: EXP-1 — Al recargar en /en dentro de un descanso, la sesión se retoma con textos en inglés
